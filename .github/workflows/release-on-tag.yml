@@ -1,0 +1,65 @@
+# ============================================================================
+# File:        .github/workflows/release-on-tag.yml
+# Project:     AutoVersion Lite
+# Author:      Recursive Architect (Solcogito S.E.N.C.)
+# ----------------------------------------------------------------------------
+# Description:
+#   Automatically builds and publishes artifacts to GitHub Releases
+#   whenever a tag matching v* is pushed.
+# ============================================================================
+
+name: Release on Tag
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    name: Build & Publish Release
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Restore dependencies
+        run: dotnet restore src/AutoVersion.sln || dotnet restore
+
+      - name: Build (Release)
+        run: dotnet build src/AutoVersion.sln --configuration Release --no-restore
+
+      - name: Run tests
+        run: dotnet test src/AutoVersion.Tests --configuration Release --no-build --logger "trx;LogFileName=test_results.trx"
+
+      - name: Package CLI artifact
+        run: |
+          mkdir -p Builds
+          cp src/AutoVersion.Cli/bin/Release/net8.0/autoversion.dll Builds/
+          cp src/AutoVersion.Cli/bin/Release/net8.0/autoversion.exe Builds/ || true
+          echo "Packaged AutoVersion CLI artifacts."
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: AutoVersion ${{ github.ref_name }}
+          tag_name: ${{ github.ref_name }}
+          body_path: CHANGELOG.md
+          files: |
+            Builds/autoversion.dll
+            Builds/autoversion.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: "**/*.trx"

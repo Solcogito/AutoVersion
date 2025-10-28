@@ -1,0 +1,83 @@
+# ------------------------------------------------------------------------------
+# AutoVersion Lite Project .gitignore
+# Covers .NET, Unity, and common build/temp files
+# ------------------------------------------------------------------------------
+
+## Build Artifacts
+[Bb]in/
+[Oo]bj/
+[Ll]ogs/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+*.pdb
+*.exe
+*.dll
+*.cache
+*.log
+
+## Unity
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]serSettings/
+MemoryCaptures/
+*.csproj
+*.sln
+*.pidb
+*.user
+*.unityproj
+*.suo
+*.tmp
+*.booproj
+*.svd
+*.db
+*.opendb
+*.blend1
+*.prefs
+*.vs/
+
+## Visual Studio / Rider
+.vs/
+.idea/
+.vscode/
+*.DotSettings.user
+
+## System
+.DS_Store
+Thumbs.db
+desktop.ini
+
+## Packages & Dependencies
+node_modules/
+packages/
+*.nuget/
+*.nupkg
+*.lock.json
+
+## Misc
+*.bak
+*.old
+*.orig
+*.tmp
+*.log
+*.swp
+*.zip
+*.unitypackage
+*.tar.gz
+.env
+.env.*
+
+## AutoVersion build artifacts
+Builds/
+Artifacts/
+dist/
+_cache/
+_autoversion_temp/
+_autoversion_backup/
+
+# End of .gitignore

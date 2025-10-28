@@ -1,0 +1,80 @@
+# ============================================================================
+# File:        .github/workflows/lint.yml
+# Project:     AutoVersion Lite
+# Author:      Recursive Architect (Solcogito S.E.N.C.)
+# ----------------------------------------------------------------------------
+# Description:
+#   Lint & Validation Workflow
+#   Runs on all pushes and pull requests.
+#   - Validates Conventional Commits
+#   - Checks code formatting
+#   - Validates JSON schemas
+#   - Validates Markdown links
+# ============================================================================
+
+name: Lint & Validation
+
+on:
+  push:
+    branches: [ main, dev ]
+  pull_request:
+    branches: [ main, dev ]
+  workflow_dispatch:
+
+jobs:
+  commitlint:
+    name: Conventional Commits
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate commit messages
+        uses: wagoid/commitlint-github-action@v6
+        with:
+          configFile: _Infrastructure/commitlint.config.json
+
+  format-check:
+    name: Code Style Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Restore solution
+        run: dotnet restore src/AutoVersion.sln || dotnet restore
+
+      - name: Verify code format (dotnet format dry-run)
+        run: dotnet format --verify-no-changes --severity error || echo "⚠️ Formatting issues detected."
+
+  json-schema-validation:
+    name: JSON Schema Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate JSON structure (autoversion.json + schema)
+        uses: docker://ghcr.io/ajv-validator/ajv-cli:latest
+        with:
+          args: >
+            validate -s autoversion.schema.json -d autoversion.json --strict=false
+
+  markdown-link-check:
+    name: Markdown Link Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate internal markdown links
+        uses: gaurav-nelson/github-action-markdown-link-check@v1
+        with:
+          use-quiet-mode: yes
+          folder-path: ./docs
+          check-modified-files-only: no

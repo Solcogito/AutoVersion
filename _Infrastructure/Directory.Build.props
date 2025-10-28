@@ -1,0 +1,55 @@
+<!-- =========================================================================
+File:        Directory.Build.props
+Project:     AutoVersion Lite
+Author:      Recursive Architect (Solcogito S.E.N.C.)
+-------------------------------------------------------------------------------
+Description:
+  Shared MSBuild configuration applied to all projects.
+  Defines consistent compiler settings, versioning, and metadata.
+============================================================================ -->
+
+<Project>
+  <PropertyGroup>
+    <!-- Target framework -->
+    <TargetFramework>net8.0</TargetFramework>
+
+    <!-- Language + warnings -->
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+
+    <!-- Output -->
+    <Configurations>Debug;Release</Configurations>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <OutputType>Library</OutputType>
+    <Authors>Soleria / Recursive Architect</Authors>
+    <Company>Soleria S.E.N.C.</Company>
+    <Product>AutoVersion Lite</Product>
+    <RepositoryUrl>https://github.com/solcogito/AutoVersion</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+
+    <!-- Encoding -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+
+    <!-- Default version placeholder (will be overwritten by AutoVersion) -->
+    <Version>0.0.0</Version>
+    <FileVersion>0.0.0.0</FileVersion>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+
+    <!-- Optimize Release builds -->
+    <Optimize Condition="'$(Configuration)' == 'Release'">true</Optimize>
+  </PropertyGroup>
+
+  <!-- Optional code analysis settings -->
+  <PropertyGroup>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+  </PropertyGroup>
+
+  <!-- Exclude build metadata files -->
+  <ItemGroup>
+    <None Remove="*.md" />
+  </ItemGroup>
+</Project>

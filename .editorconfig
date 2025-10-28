@@ -1,0 +1,32 @@
+# EditorConfig helps maintain consistent coding styles across IDEs
+# AutoVersion Project (c) 2025 Solcogito S.E.N.C.
+
+root = true
+
+[*]
+charset = utf-8
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+end_of_line = lf
+trim_trailing_whitespace = true
+
+# C# files
+[*.cs]
+dotnet_sort_system_directives_first = true
+dotnet_style_qualification_for_field = false
+dotnet_style_qualification_for_property = false
+dotnet_style_qualification_for_method = false
+dotnet_style_qualification_for_event = false
+dotnet_style_require_accessibility_modifiers = always:suggestion
+csharp_style_expression_bodied_methods = true:suggestion
+csharp_style_expression_bodied_properties = true:suggestion
+csharp_preferred_modifier_order = public, protected, internal, private, static, readonly, override, virtual, abstract, async:suggestion
+
+# Markdown
+[*.md]
+trim_trailing_whitespace = false
+
+# JSON / YAML
+[*.{json,yml,yaml}]
+indent_size = 2

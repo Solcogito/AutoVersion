@@ -1,0 +1,59 @@
+{
+  "$schema": "./_Infrastructure/autoversion.schema.json",
+  "versionFile": "Directory.Build.props",
+
+  "files": [
+    {
+      "path": "Directory.Build.props",
+      "type": "xml",
+      "xpath": "/Project/PropertyGroup/Version"
+    },
+    {
+      "path": "src/AutoVersion.Core/Properties/AssemblyInfo.cs",
+      "type": "regex",
+      "pattern": "AssemblyVersion\\(\"(.*?)\"\\)"
+    },
+    {
+      "path": "src/AutoVersion.Cli/Properties/launchSettings.json",
+      "type": "json",
+      "key": "version"
+    }
+  ],
+
+  "artifacts": [
+    {
+      "path": "Builds/AutoVersionLite.unitypackage",
+      "rename": "AutoVersionLite_{version}.unitypackage"
+    },
+    {
+      "path": "Builds/autoversion.exe",
+      "rename": "autoversion_v{version}.exe"
+    }
+  ],
+
+  "git": {
+    "tagPrefix": "v",
+    "push": true,
+    "allowDirty": false,
+    "commitMessage": "chore(release): bump version to {version}"
+  },
+
+  "changelog": {
+    "path": "CHANGELOG.md",
+    "sections": {
+      "feat": "Added",
+      "fix": "Fixed",
+      "docs": "Documentation",
+      "refactor": "Changed",
+      "chore": "Maintenance"
+    }
+  },
+
+  "logging": {
+    "verbose": true,
+    "color": true,
+    "level": "info"
+  },
+
+  "dryRun": false
+}

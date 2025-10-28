@@ -1,0 +1,30 @@
+# Enforce LF line endings on all text files
+* text=auto eol=lf
+
+# Normalize line endings for common code/text types
+*.cs text diff=csharp
+*.json text
+*.xml text
+*.yml text
+*.md text
+*.ps1 text
+*.sh text
+*.txt text
+
+# Binary files
+*.png binary
+*.jpg binary
+*.gif binary
+*.exe binary
+*.dll binary
+*.unitypackage binary
+*.zip binary
+*.7z binary
+*.mp4 binary
+*.mov binary
+
+# Unity-specific
+*.asset text
+*.meta text
+*.unity text
+*.prefab text
