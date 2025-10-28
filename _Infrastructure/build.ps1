@@ -29,11 +29,11 @@ if (-not $dotnet) {
 
 # Restore
 Write-Host "`n[1/3] Restoring dependencies..." -ForegroundColor Yellow
-dotnet restore src/AutoVersion.sln | Out-Host
+dotnet restore AutoVersion.sln | Out-Host
 
 # Build
 Write-Host "`n[2/3] Building ($Configuration)..." -ForegroundColor Yellow
-dotnet build src/AutoVersion.sln --configuration $Configuration --no-restore | Out-Host
+dotnet build AutoVersion.sln --configuration $Configuration --no-restore | Out-Host
 
 # Tests
 if (-not $NoTests) {

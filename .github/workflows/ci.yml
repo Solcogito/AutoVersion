@@ -37,7 +37,7 @@ jobs:
           dotnet-version: "8.0.x"
 
       - name: Restore dependencies
-        run: dotnet restore src/AutoVersion.sln || dotnet restore
+        run: dotnet restore AutoVersion.sln || dotnet restore
 
       - name: Build
         run: dotnet build --configuration Release --no-restore

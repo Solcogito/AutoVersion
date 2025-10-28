@@ -32,11 +32,11 @@ fi
 
 echo ""
 echo "[1/3] Restoring dependencies..."
-dotnet restore src/AutoVersion.sln || dotnet restore
+dotnet restore AutoVersion.sln || dotnet restore
 
 echo ""
 echo "[2/3] Building ($CONFIG)..."
-dotnet build src/AutoVersion.sln --configuration $CONFIG --no-restore
+dotnet build AutoVersion.sln --configuration $CONFIG --no-restore
 
 if [ "$NO_TESTS" = false ]; then
   echo ""

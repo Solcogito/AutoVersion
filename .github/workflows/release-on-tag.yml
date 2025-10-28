@@ -29,10 +29,10 @@ jobs:
           dotnet-version: "8.0.x"
 
       - name: Restore dependencies
-        run: dotnet restore src/AutoVersion.sln || dotnet restore
+        run: dotnet restore AutoVersion.sln || dotnet restore
 
       - name: Build (Release)
-        run: dotnet build src/AutoVersion.sln --configuration Release --no-restore
+        run: dotnet build AutoVersion.sln --configuration Release --no-restore
 
       - name: Run tests
         run: dotnet test src/AutoVersion.Tests --configuration Release --no-build --logger "trx;LogFileName=test_results.trx"

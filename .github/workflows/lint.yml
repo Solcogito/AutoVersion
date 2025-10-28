@@ -47,7 +47,7 @@ jobs:
           dotnet-version: "8.0.x"
 
       - name: Restore solution
-        run: dotnet restore src/AutoVersion.sln || dotnet restore
+        run: dotnet restore AutoVersion.sln || dotnet restore
 
       - name: Verify code format (dotnet format dry-run)
         run: dotnet format --verify-no-changes --severity error || echo "⚠️ Formatting issues detected."
