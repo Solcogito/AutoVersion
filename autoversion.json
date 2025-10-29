@@ -6,28 +6,39 @@
     {
       "path": "Directory.Build.props",
       "type": "xml",
-      "xpath": "/Project/PropertyGroup/Version"
+      "xpath": "/Project/PropertyGroup/Version",
+      "encoding": "utf-8"
     },
     {
       "path": "src/AutoVersion.Core/Properties/AssemblyInfo.cs",
       "type": "regex",
-      "pattern": "AssemblyVersion\\(\"(.*?)\"\\)"
+      "pattern": "AssemblyVersion\\(\"(.*?)\"\\)",
+      "encoding": "utf-8"
     },
     {
       "path": "src/AutoVersion.Cli/Properties/launchSettings.json",
       "type": "json",
-      "key": "version"
+      "key": "version",
+      "encoding": "utf-8"
+    },
+    {
+      "path": "README.md",
+      "type": "text",
+      "token": "__VERSION__",
+      "encoding": "utf-8"
     }
   ],
 
   "artifacts": [
     {
       "path": "Builds/AutoVersionLite.unitypackage",
-      "rename": "AutoVersionLite_{version}.unitypackage"
+      "rename": "AutoVersionLite_{version}.unitypackage",
+      "overwrite": true
     },
     {
       "path": "Builds/autoversion.exe",
-      "rename": "autoversion_v{version}.exe"
+      "rename": "autoversion_v{version}.exe",
+      "overwrite": true
     }
   ],
 
@@ -40,6 +51,7 @@
 
   "changelog": {
     "path": "CHANGELOG.md",
+    "template": "## [{version}] – {date}\n### Added\n- ...\n",
     "sections": {
       "feat": "Added",
       "fix": "Fixed",

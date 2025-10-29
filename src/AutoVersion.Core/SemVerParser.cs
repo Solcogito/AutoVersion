@@ -1,12 +1,13 @@
 // ============================================================================
 // File:        SemVerParser.cs
 // Project:     AutoVersion Lite
-// Version:     0.1.0
+// Version:     0.2.0
 // Author:      Recursive Architect (Solcogito S.E.N.C.)
 // ----------------------------------------------------------------------------
 // Description:
 //   Provides utility methods for semantic version parsing and validation.
-//   Used internally by VersionModel and CLI-level logic for input sanitization.
+//   Used internally by VersionModel and CLI-level logic for input sanitization,
+//   now fully null-safe and typed.
 // ----------------------------------------------------------------------------
 // License:     MIT
 // ============================================================================
@@ -34,7 +35,7 @@ namespace Solcogito.AutoVersion.Core
         /// <summary>
         /// Attempts to parse a version string without throwing exceptions.
         /// </summary>
-        public static bool TryParse(string input, out VersionModel result)
+        public static bool TryParse(string input, out VersionModel? result)
         {
             result = null;
             var match = Pattern.Match(input);

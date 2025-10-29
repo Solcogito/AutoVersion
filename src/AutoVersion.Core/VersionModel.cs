@@ -1,13 +1,14 @@
 // ============================================================================
 // File:        VersionModel.cs
 // Project:     AutoVersion Lite
-// Version:     0.1.0
+// Version:     0.2.0
 // Author:      Recursive Architect (Solcogito S.E.N.C.)
 // ----------------------------------------------------------------------------
 // Description:
 //   Core semantic version representation and manipulation logic.
 //   Supports parsing, comparison, and controlled bumping of version fields
-//   following the Semantic Versioning 2.0.0 specification.
+//   following the Semantic Versioning 2.0.0 specification, with full
+//   nullability safety and strict compile-time enforcement.
 // ----------------------------------------------------------------------------
 // License:     MIT
 // ============================================================================
@@ -37,10 +38,10 @@ namespace Solcogito.AutoVersion.Core
         public int Patch { get; }
 
         /// <summary>Optional prerelease tag (e.g. "alpha.1").</summary>
-        public string Prerelease { get; }
+        public string? Prerelease { get; }
 
         /// <summary>Optional build metadata (e.g. "build42").</summary>
-        public string Build { get; }
+        public string? Build { get; }
 
         // --------------------------------------------------------------------
         // Internal Constants
@@ -59,7 +60,7 @@ namespace Solcogito.AutoVersion.Core
         /// <summary>
         /// Creates a new <see cref="VersionModel"/> instance.
         /// </summary>
-        public VersionModel(int major, int minor, int patch, string prerelease = null, string build = null)
+        public VersionModel(int major, int minor, int patch, string? prerelease = null, string? build = null)
         {
             Major = major;
             Minor = minor;
@@ -78,7 +79,7 @@ namespace Solcogito.AutoVersion.Core
         /// <exception cref="FormatException">If the input is not a valid SemVer.</exception>
         public static VersionModel Parse(string input)
         {
-            if (input == null)
+            if (input is null)
                 throw new ArgumentNullException(nameof(input));
 
             var match = SemVerRegex.Match(input);
@@ -103,7 +104,7 @@ namespace Solcogito.AutoVersion.Core
         /// </summary>
         /// <param name="type">One of "major", "minor", "patch", or "prerelease".</param>
         /// <param name="prerelease">Optional prerelease tag override.</param>
-        public VersionModel Bump(string type, string prerelease = null)
+        public VersionModel Bump(string type, string? prerelease = null)
         {
             return type.ToLowerInvariant() switch
             {
@@ -129,16 +130,23 @@ namespace Solcogito.AutoVersion.Core
         /// <summary>
         /// Compares this version with another SemVer instance.
         /// </summary>
-        public int CompareTo(VersionModel other)
+        public int CompareTo(VersionModel? other)
         {
-            if (other == null) return 1;
+            if (other is null) return 1;
+
             int result = Major.CompareTo(other.Major);
             if (result != 0) return result;
             result = Minor.CompareTo(other.Minor);
             if (result != 0) return result;
             result = Patch.CompareTo(other.Patch);
             if (result != 0) return result;
-            return string.Compare(Prerelease ?? "", other.Prerelease ?? "", StringComparison.Ordinal);
+
+            // Per SemVer spec, null prerelease > defined prerelease
+            if (Prerelease is null && other.Prerelease is null) return 0;
+            if (Prerelease is null) return 1;
+            if (other.Prerelease is null) return -1;
+
+            return string.Compare(Prerelease, other.Prerelease, StringComparison.Ordinal);
         }
 
         // --------------------------------------------------------------------

@@ -1,11 +1,12 @@
 // ============================================================================
 // File:        SemVerParserTests.cs
 // Project:     AutoVersion Lite (Test Suite)
-// Version:     0.1.0
+// Version:     0.2.0
 // Author:      Recursive Architect (Solcogito S.E.N.C.)
 // ----------------------------------------------------------------------------
 // Description:
 //   Tests the SemVerParser utility for validation and safe parsing behavior.
+//   Updated for nullable compliance with VersionModel? results.
 // ----------------------------------------------------------------------------
 // License:     MIT
 // ============================================================================
@@ -46,8 +47,10 @@ namespace Solcogito.AutoVersion.Tests
         public void TryParse_ReturnsTrueForValid()
         {
             var success = SemVerParser.TryParse("1.2.3-alpha", out var result);
+
             Assert.True(success);
-            Assert.Equal("1.2.3-alpha", result.ToString());
+            Assert.NotNull(result);
+            Assert.Equal("1.2.3-alpha", result!.ToString());
         }
 
         /// <summary>
