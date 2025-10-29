@@ -1,18 +1,14 @@
 # 🧾 CHANGELOG — AutoVersion Lite
 
-====================================================================
-PURPOSE
-====================================================================
+This file lists all notable changes to the AutoVersion Lite project.  
+It is maintained automatically using the `autoversion changelog` command,  
+which parses Conventional Commit messages.
 
-This file lists all notable changes to the AutoVersion Lite project.
-It is maintained automatically using the `autoversion changelog`
-command, which parses Conventional Commit messages.
+---
 
-====================================================================
-FORMAT
-====================================================================
+## 🧩 Format
 
-Each release entry follows the pattern:
+Each release entry follows this structure:
 
 ## [X.Y.Z] – YYYY-MM-DD
 ### Added
@@ -20,12 +16,10 @@ Each release entry follows the pattern:
 ### Fixed
 ### Removed
 
-AutoVersion automatically inserts new entries at the top of this file
+AutoVersion automatically inserts new entries at the top of this file  
 when a release is created or published.
 
-====================================================================
-INITIAL ENTRIES
-====================================================================
+---
 
 ## [Unreleased]
 
@@ -41,16 +35,16 @@ INITIAL ENTRIES
 ### Fixed
 - N/A
 
-====================================================================
-CHANGELOG GENERATION COMMAND
-====================================================================
+---
 
-To update this file manually:
+## 🧪 Commands
+
+Update this file manually:
     dotnet run --project src/AutoVersion.Cli -- changelog
 
-To simulate:
+Simulate generation:
     dotnet run --project src/AutoVersion.Cli -- changelog --dry-run
 
-====================================================================
-END OF CHANGELOG
-====================================================================
+---
+
+**End of Changelog**

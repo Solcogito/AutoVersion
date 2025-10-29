@@ -1,51 +1,50 @@
-# 🧭 AutoVersion Lite — README
+# 🧭 AutoVersion Lite
+### Semantic Versioning & Changelog Automation for Unity and .NET
 
-====================================================================
-PROJECT OVERVIEW
-====================================================================
+AutoVersion Lite automates version bumps, changelog generation, and Git tagging.  
+It’s built for Unity and .NET developers who want CI-ready release pipelines — without manual editing.
 
-AutoVersion Lite is a semantic versioning and changelog automation tool
-for Unity and .NET projects.
+---
 
-It automatically bumps versions, updates files, and generates changelogs
-from Conventional Commits — all from a single command.
+## 🚀 Overview
+AutoVersion Lite is a **semantic versioning** and **changelog automation** tool.  
+It updates versions, generates changelogs from Conventional Commits, and integrates directly with Git and Unity Editor menus.
 
-====================================================================
-KEY FEATURES
-====================================================================
+---
 
-• Full Semantic Versioning (SemVer 2.0.0)
-• Version bumping (major / minor / patch / prerelease)
-• Updates JSON, XML, and text files
-• Auto-generates CHANGELOG.md from Conventional Commits
-• Git tagging & changelog integration
-• Unity Editor menu integration
-• Dry-run safety mode
-• Config-driven workflow (autoversion.json)
-• MIT licensed, cross-platform, CI-ready
+## ✨ Key Features
 
-====================================================================
-INSTALLATION
-====================================================================
+- ✅ Full Semantic Versioning (SemVer 2.0.0)
+- 🔧 Version bumping (major / minor / patch / prerelease)
+- 📦 Updates JSON, XML, and text files
+- 🧾 Auto-generates `CHANGELOG.md` from Conventional Commits
+- 🏷️ Git tagging & changelog integration
+- 🎮 Unity Editor menu integration
+- 🧪 Dry-run safety mode
+- ⚙️ Config-driven workflow (`autoversion.json`)
+- 🌍 Cross-platform & CI-ready
+- 📜 MIT licensed
 
-Requirements:
-- .NET 8 SDK
-- Git 2.40+
-- (Optional) Unity 2022.3 LTS
+---
 
-Clone the repository:
-    git clone https://github.com/solcogito/AutoVersion.git
+## 🧰 Installation
+
+### Requirements
+- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+- [Git 2.40+](https://git-scm.com/)
+- *(Optional)* Unity 2022.3 LTS
+
+### Steps
+    git clone https://github.com/Solcogito/AutoVersion.git
     cd AutoVersion
-
-Build and test:
     pwsh _Infrastructure/build.ps1 -Release
 
-Run CLI:
+Run the CLI:
     dotnet run --project src/AutoVersion.Cli -- bump patch
 
-====================================================================
-BASIC USAGE
-====================================================================
+---
+
+## 🧩 Basic Usage
 
 Show current version:
     autoversion current
@@ -62,9 +61,9 @@ Generate changelog:
 Create and push tag automatically:
     pwsh _Infrastructure/publish.ps1
 
-====================================================================
-CONFIGURATION EXAMPLE (autoversion.json)
-====================================================================
+---
+
+## ⚙️ Configuration Example (autoversion.json)
 
 {
   "versionFile": "Directory.Build.props",
@@ -82,149 +81,137 @@ CONFIGURATION EXAMPLE (autoversion.json)
   }
 }
 
-====================================================================
-UNITY INTEGRATION
-====================================================================
+---
+
+## 🎮 Unity Integration
 
 Inside Unity 2022.3 LTS:
 - Open the sample project in samples/Sample.UnityProject
 - Go to menu: Tools → AutoVersion → Bump Patch
 - The version will increment and update configured files.
 
-====================================================================
-CLI COMMAND SUMMARY
-====================================================================
+---
 
-autoversion current
+## 💻 CLI Command Summary
+
+autoversion current  
     Prints current detected version
 
-autoversion bump [major|minor|patch|prerelease]
+autoversion bump [major|minor|patch|prerelease]  
     Increments selected version type
 
-autoversion changelog
+autoversion changelog  
     Generates or updates CHANGELOG.md
 
-autoversion config --validate
+autoversion config --validate  
     Checks autoversion.json against schema
 
-autoversion help
+autoversion help  
     Lists all available commands
 
-====================================================================
-RELEASE WORKFLOW (CI/CD)
-====================================================================
+---
+
+## 🧪 CI / CD Workflows
 
 GitHub Actions workflows included:
 
-ci.yml
-    - Builds and tests across Windows, macOS, and Linux
-
-lint.yml
-    - Validates Conventional Commits, code style, JSON schema, and docs
-
-release-on-tag.yml
+ci.yml  
+    - Builds and tests across Windows, macOS, and Linux  
+lint.yml  
+    - Validates Conventional Commits, code style, JSON schema, and docs  
+release-on-tag.yml  
     - Automatically builds and publishes GitHub Release on tag (v*)
 
 Example:
-    git tag v1.0.0
+    git tag v1.0.0  
     git push origin v1.0.0
 
 → AutoVersion builds, runs tests, attaches binaries to Release page.
 
-====================================================================
-ROADMAP SUMMARY
-====================================================================
+---
 
-v0.0.0 – Bootstrap
-    - Repo setup, CI, lint, docs, schema
+## 🗺️ Roadmap Summary
 
-v0.1.0 – SemVer Core
-    - Version parsing, bump logic
-
-v0.2.0 – Config & File Ops
-    - autoversion.json schema + file replacement
-
-v0.3.0 – Changelog Engine
-    - Conventional Commit parser, markdown generation
-
-v0.4.0 – Artifact Handling
-    - Versioned renaming of builds
-
-v0.5.0 – Git Integration
-    - Tag creation, push, repo checks
-
-v0.6.0 – Unity Editor Menu
-    - Tools/AutoVersion/ UI integration
-
-v0.7.0 – Documentation
-    - README, Quickstart, config guides
-
-v0.8.0 – CI + Quality Gates
-    - Matrix builds, linting, testing
-
-v0.9.0 – Polish
-    - UX, dry-run, edge cases, stability
-
-v1.0.0 – Public Lite Release
+v0.0.0 – Bootstrap  
+    - Repo setup, CI, lint, docs, schema  
+v0.1.0 – SemVer Core  
+    - Version parsing, bump logic  
+v0.2.0 – Config & File Ops  
+    - autoversion.json schema + file replacement  
+v0.3.0 – Changelog Engine  
+    - Conventional Commit parser, markdown generation  
+v0.4.0 – Artifact Handling  
+    - Versioned renaming of builds  
+v0.5.0 – Git Integration  
+    - Tag creation, push, repo checks  
+v0.6.0 – Unity Editor Menu  
+    - Tools/AutoVersion/ UI integration  
+v0.7.0 – Documentation  
+    - README, Quickstart, config guides  
+v0.8.0 – CI + Quality Gates  
+    - Matrix builds, linting, testing  
+v0.9.0 – Polish  
+    - UX, dry-run, edge cases, stability  
+v1.0.0 – Public Lite Release  
     - GitHub + Gumroad launch
 
-====================================================================
-FILE STRUCTURE
-====================================================================
+---
 
-AutoVersion/
-├── .editorconfig
-├── .gitattributes
-├── .gitignore
-├── LICENSE
-├── README.md
-├── ROADMAP.md
-├── CHANGELOG.md
-├── autoversion.json
-├── _Infrastructure/
-│   ├── Directory.Build.props
-│   ├── build.ps1
-│   ├── build.sh
-│   ├── publish.ps1
-│   ├── commitlint.config.json
-│   ├── autoversion.schema.json
-│   └── package.json
-├── src/
-│   ├── AutoVersion.Core/
-│   ├── AutoVersion.Cli/
-│   ├── AutoVersion.Unity/
-│   └── AutoVersion.Tests/
-├── samples/
-│   ├── Sample.UnityProject/
-│   └── Sample.CliProject/
-├── docs/
-│   ├── QUICKSTART.md
-│   ├── CONFIG.md
-│   ├── WORKFLOWS.md
-│   ├── UNITY.md
-│   ├── FAQ.md
-│   └── IMAGES/
-└── .github/workflows/
-    ├── ci.yml
-    ├── lint.yml
+## 📂 File Structure
+
+AutoVersion/  
+├── .editorconfig  
+├── .gitattributes  
+├── .gitignore  
+├── LICENSE  
+├── README.md  
+├── ROADMAP.md  
+├── CHANGELOG.md  
+├── autoversion.json  
+├── _Infrastructure/  
+│   ├── Directory.Build.props  
+│   ├── build.ps1  
+│   ├── build.sh  
+│   ├── publish.ps1  
+│   ├── commitlint.config.json  
+│   ├── autoversion.schema.json  
+│   └── package.json  
+├── src/  
+│   ├── AutoVersion.Core/  
+│   ├── AutoVersion.Cli/  
+│   ├── AutoVersion.Unity/  
+│   └── AutoVersion.Tests/  
+├── samples/  
+│   ├── Sample.UnityProject/  
+│   └── Sample.CliProject/  
+├── docs/  
+│   ├── QUICKSTART.md  
+│   ├── CONFIG.md  
+│   ├── WORKFLOWS.md  
+│   ├── UNITY.md  
+│   ├── FAQ.md  
+│   └── IMAGES/  
+└── .github/workflows/  
+    ├── ci.yml  
+    ├── lint.yml  
     └── release-on-tag.yml
 
-====================================================================
-CREDITS
-====================================================================
+---
+
+## 🧾 License & Credits
 
 © 2025 Solcogito S.E.N.C.  
-Author: benoit Desrosiers
+Author: Benoit Desrosiers  
 License: MIT (Lite version)  
 Repository: https://github.com/Solcogito/AutoVersion
 
-====================================================================
-BADGES (to add after first successful CI run)
-====================================================================
+---
 
-[![CI](https://github.com/solcogito/AutoVersion/actions/workflows/ci.yml/badge.svg)](https://github.com/solcogito/AutoVersion/actions/workflows/ci.yml)
-[![Lint](https://github.com/solcogito/AutoVersion/actions/workflows/lint.yml/badge.svg)](https://github.com/solcogito/AutoVersion/actions/workflows/lint.yml)
+## 🏷️ Badges
 
-====================================================================
-END OF README
-====================================================================
+[![CI](https://github.com/Solcogito/AutoVersion/actions/workflows/ci.yml/badge.svg)](https://github.com/Solcogito/AutoVersion/actions/workflows/ci.yml)  
+[![Lint](https://github.com/Solcogito/AutoVersion/actions/workflows/lint.yml/badge.svg)](https://github.com/Solcogito/AutoVersion/actions/workflows/lint.yml)
+
+---
+
+**AutoVersion Lite** — because your changelog should write itself.
