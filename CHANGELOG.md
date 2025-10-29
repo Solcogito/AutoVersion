@@ -1,5 +1,13 @@
 # 🧾 CHANGELOG — AutoVersion Lite
 
+## [0.0.1] – 2025-10-29
+### Added
+- Repository scaffolding
+- CI/CD + lint + docs
+- Core folder structure
+
+---
+
 This file lists all notable changes to the AutoVersion Lite project.  
 It is maintained automatically using the `autoversion changelog` command,  
 which parses Conventional Commit messages.
