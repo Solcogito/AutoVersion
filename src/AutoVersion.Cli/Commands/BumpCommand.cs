@@ -1,12 +1,13 @@
 // ============================================================================
 // File:        BumpCommand.cs
 // Project:     AutoVersion Lite
-// Version:     0.1.0
+// Version:     0.4.0
 // Author:      Recursive Architect (Solcogito S.E.N.C.)
 // ----------------------------------------------------------------------------
 // Description:
 //   Implements the 'bump' subcommand. Supports bumping of major, minor,
-//   patch, and prerelease identifiers with optional dry-run mode.
+//   patch, and prerelease identifiers, changelog generation, and artifact
+//   renaming. Fully supports dry-run and force-overwrite modes.
 // ----------------------------------------------------------------------------
 // License:     MIT
 // ============================================================================
@@ -14,6 +15,10 @@
 using System;
 using System.Linq;
 using Solcogito.AutoVersion.Core;
+using Solcogito.AutoVersion.Core.Git;
+using Solcogito.AutoVersion.Core.Config;
+using Solcogito.AutoVersion.Core.Artifacts;
+using Solcogito.AutoVersion.Core.Changelog;
 
 namespace Solcogito.AutoVersion.Cli.Commands
 {
@@ -26,7 +31,7 @@ namespace Solcogito.AutoVersion.Cli.Commands
         {
             if (args.Length < 2)
             {
-                Console.WriteLine("Usage: autoversion bump <major|minor|patch|prerelease> [--pre alpha.1] [--dry-run]");
+                Console.WriteLine("Usage: autoversion bump <major|minor|patch|prerelease> [--pre alpha.1] [--dry-run] [--force]");
                 return;
             }
 
@@ -34,23 +39,91 @@ namespace Solcogito.AutoVersion.Cli.Commands
             var pre = args.FirstOrDefault(a => a == "--pre") != null
                 ? args.SkipWhile(a => a != "--pre").Skip(1).FirstOrDefault()
                 : null;
-            var dryRun = args.Contains("--dry-run");
 
+            var dryRun = args.Contains("--dry-run");
+            var force = args.Contains("--force");
             Logger.DryRun = dryRun;
 
             try
             {
+                // ------------------------------------------------------------
+                // 1. Load configuration
+                // ------------------------------------------------------------
+                var config = ConfigLoader.Load();
+                Logger.Info("Loaded configuration.");
+
+                // ------------------------------------------------------------
+                // 2. Load current version and compute new one
+                // ------------------------------------------------------------
                 var oldVersion = VersionFile.Load();
                 var newVersion = oldVersion.Bump(type, pre);
+                Logger.Action("Version bump: " + oldVersion + " -> " + newVersion);
 
-                Logger.Action($"{oldVersion} → {newVersion}");
-
+                // ------------------------------------------------------------
+                // 3. Save version changes (unless dry-run)
+                // ------------------------------------------------------------
                 if (!dryRun)
                     VersionFile.Save(newVersion);
+
+                // ------------------------------------------------------------
+                // 4. Update changelog
+                // ------------------------------------------------------------
+                try
+                {
+                    Logger.Info("Updating changelog...");
+                    var commits = GitLogReader.ReadCommits(config.Git?.TagPrefix + oldVersion);
+                    var parsed = ConventionalCommitParser.Parse(commits);
+                    var builder = new ChangelogBuilder(config);
+					var markdown = builder.Build(parsed, newVersion.ToString(), DateTime.UtcNow.ToString("yyyy-MM-dd"));
+                    if (!dryRun)
+                        System.IO.File.WriteAllText(config.Changelog?.Path ?? "CHANGELOG.md", markdown);
+                    else
+                        Logger.Info("Dry-run: changelog preview generated only.");
+                }
+                catch (Exception ex)
+                {
+                    Logger.Warn("Changelog skipped or failed: " + ex.Message);
+                }
+
+                // ------------------------------------------------------------
+                // 5. Process artifacts (v0.4.0 feature)
+                // ------------------------------------------------------------
+                if (config.Artifacts != null && config.Artifacts.Any())
+                {
+                    Logger.Info("Processing artifacts...");
+                    try
+                    {
+                        var artifactRules = config.Artifacts.Select(a => new ArtifactRule
+						{
+							Path = a.Path,
+							Rename = a.Rename,
+							Overwrite = a.Overwrite
+						});
+
+						ArtifactManager.ProcessArtifacts(
+							artifactRules,
+							newVersion.ToString(),
+							dryRun: dryRun,
+							force: force
+						);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Warn("Artifact processing failed: " + ex.Message);
+                    }
+                }
+
+                // ------------------------------------------------------------
+                // 6. Final output
+                // ------------------------------------------------------------
+                if (dryRun)
+                    Logger.Info("Dry-run completed. No files were modified.");
+                else
+                    Logger.Success("Version bump complete: " + newVersion);
             }
             catch (Exception ex)
             {
-                Logger.Error(ex.Message);
+                Logger.Error("Bump failed: " + ex.Message);
             }
         }
     }

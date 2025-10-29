@@ -30,7 +30,8 @@ namespace Solcogito.AutoVersion.Cli.Commands
 
             var version = sinceTag is null ? "Unreleased" : sinceTag.TrimStart('v');
             var date = DateTime.UtcNow.ToString("yyyy-MM-dd");
-            var markdown = ChangelogBuilder.Build(parsed, version, date);
+            var builder = new ChangelogBuilder(new Core.Config.ConfigModel());
+			var markdown = builder.Build(parsed, version, date);
 
             if (dryRun)
             {

@@ -32,12 +32,12 @@
   "artifacts": [
     {
       "path": "Builds/AutoVersionLite.unitypackage",
-      "rename": "AutoVersionLite_{version}.unitypackage",
+      "rename": "Builds/AutoVersionLite_{version}.unitypackage",
       "overwrite": true
     },
     {
       "path": "Builds/autoversion.exe",
-      "rename": "autoversion_v{version}.exe",
+      "rename": "Builds/autoversion_v{version}.exe",
       "overwrite": true
     }
   ],
@@ -55,6 +55,7 @@
     "sections": {
       "feat": "Added",
       "fix": "Fixed",
+      "perf": "Performance",
       "docs": "Documentation",
       "refactor": "Changed",
       "chore": "Maintenance"

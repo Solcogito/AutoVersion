@@ -1,12 +1,12 @@
 // ============================================================================
 // File:        Logger.cs
 // Project:     AutoVersion Lite
-// Version:     0.1.0
+// Version:     0.4.0
 // Author:      Recursive Architect (Solcogito S.E.N.C.)
 // ----------------------------------------------------------------------------
 // Description:
 //   Lightweight console logger with dry-run awareness and consistent
-//   message formatting for CLI feedback.
+//   message formatting for CLI feedback. All ASCII safe.
 // ----------------------------------------------------------------------------
 // License:     MIT
 // ============================================================================
@@ -23,34 +23,46 @@ namespace Solcogito.AutoVersion.Core
         /// <summary>Global flag indicating whether actions are simulated only.</summary>
         public static bool DryRun { get; set; }
 
-        /// <summary>
-        /// Writes an informational message.
-        /// </summary>
+        /// <summary>Writes an informational message.</summary>
         public static void Info(string message)
         {
             Console.ForegroundColor = ConsoleColor.Gray;
-            Console.WriteLine($"[INFO] {message}");
+            Console.WriteLine("[INFO] " + message);
             Console.ResetColor();
         }
 
-        /// <summary>
-        /// Writes an action message (e.g., version bump).
-        /// </summary>
+        /// <summary>Writes an action message (e.g., version bump).</summary>
         public static void Action(string message)
         {
             var prefix = DryRun ? "[DRY-RUN]" : "[ACTION]";
             Console.ForegroundColor = DryRun ? ConsoleColor.Yellow : ConsoleColor.Green;
-            Console.WriteLine($"{prefix} {message}");
+            Console.WriteLine(prefix + " " + message);
             Console.ResetColor();
         }
 
-        /// <summary>
-        /// Writes an error message in red.
-        /// </summary>
+        /// <summary>Writes a warning message in yellow.</summary>
+        public static void Warn(string message)
+        {
+            var prev = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("[WARN] " + message);
+            Console.ForegroundColor = prev;
+        }
+
+        /// <summary>Writes a success message in green.</summary>
+        public static void Success(string message)
+        {
+            var prev = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("[SUCCESS] " + message);
+            Console.ForegroundColor = prev;
+        }
+
+        /// <summary>Writes an error message in red.</summary>
         public static void Error(string message)
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"[ERROR] {message}");
+            Console.WriteLine("[ERROR] " + message);
             Console.ResetColor();
         }
     }
