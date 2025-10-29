@@ -1,14 +1,23 @@
 using Xunit;
-using AutoVersion.Core;
+using Solcogito.AutoVersion.Core;
 
-namespace AutoVersion.Tests
+namespace Solcogito.AutoVersion.Tests
 {
     public class BasicTests
     {
         [Fact]
-        public void Version_IsDefined()
+        public void VersionModel_Parses_And_Bumps_Correctly()
         {
-            Assert.Equal("0.0.0", VersionInfo.GetVersion());
+            var v = VersionModel.Parse("1.2.3");
+            var next = v.Bump("patch");
+            Assert.Equal("1.2.4", next.ToString());
+        }
+
+        [Fact]
+        public void VersionModel_PreRelease_Works()
+        {
+            var v = new VersionModel(1, 0, 0, "alpha.1");
+            Assert.Equal("1.0.0-alpha.1", v.ToString());
         }
     }
 }
