@@ -1,4 +1,26 @@
-﻿## [Unreleased] – 2025-10-29
+﻿## [0.3.0] – 2025-10-29
+### Documentation
+- **impl**: add v0.1.0 SemVer Core implementation plan (a141441)
+- finalize bootstrap phase and changelog setup (2013459)
+- **impl**: add v0.1.0 SemVer Core implementation plan (cd819eb)
+- **design**: add tech overview, architecture, and component guides (ab8f666)
+- add CONFIG, FAQ, UNITY, and TEMPLATES documentation (2b0da4d)
+
+### Maintenance
+- **release**: v0.2.0 – Config & File Ops (35d0d1e)
+- **release**: v0.1.0 – SemVer Core (e8eb35e)
+- **release**: stabilize core + tests, fully passing build pipeline (v0.0.3) (1c7bd81)
+- **scripts**: update publish.ps1 (bde7d67)
+- **build**: add AutoVersion.sln and update scripts (a414789)
+- **init**: bootstrap AutoVersion v0.0.0 (39518d7)
+
+---
+
+AutoVersion 0.3.0 introduces the **Changelog Engine**,  
+enabling automatic markdown generation from Conventional Commits.  
+This version completes the foundation of the AutoVersion Lite core.
+
+## [Unreleased] – 2025-10-29
 
 ### Docs
 - **impl**: add v0.1.0 SemVer Core implementation plan (a141441)

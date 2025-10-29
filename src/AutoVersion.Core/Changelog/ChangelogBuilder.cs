@@ -5,11 +5,12 @@
 // Author:      Recursive Architect (Solcogito S.E.N.C.)
 // ----------------------------------------------------------------------------
 // Description:
-//   Groups parsed commits into markdown-formatted changelog sections.
+//   Builds a markdown changelog from parsed Conventional Commits.
 // ----------------------------------------------------------------------------
 // License:     MIT
 // ============================================================================
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,32 +20,48 @@ namespace Solcogito.AutoVersion.Core.Changelog
 {
     public static class ChangelogBuilder
     {
-        private static readonly string[] Order = { "feat", "fix", "perf", "docs", "chore" };
+        private static readonly Dictionary<string, string> SectionMap = new(StringComparer.OrdinalIgnoreCase)
+        {
+            ["feat"] = "Added",
+            ["fix"] = "Fixed",
+            ["docs"] = "Documentation",
+            ["refactor"] = "Changed",
+            ["chore"] = "Maintenance",
+            ["perf"] = "Performance"
+        };
 
+        /// <summary>
+        /// Builds the formatted markdown changelog.
+        /// </summary>
         public static string Build(IEnumerable<ParsedCommit> commits, string version, string date)
         {
-            var grouped = commits
-                .GroupBy(c => c.Type)
-                .OrderBy(g => System.Array.IndexOf(Order, g.Key));
-
+            var list = commits.ToList();
             var sb = new StringBuilder();
-            sb.AppendLine($"## [{version}] – {date}");
+
+            sb.AppendLine($"## [{version}] - {date}");
+
+            if (list.Count == 0)
+                return sb.ToString();
+
+            // Group commits by section (Added, Fixed, etc.)
+            var grouped = list
+                .GroupBy(c => SectionMap.ContainsKey(c.Type) ? SectionMap[c.Type] : "Other")
+                .OrderBy(g => g.Key);
 
             foreach (var group in grouped)
             {
-                sb.AppendLine($"### {Capitalize(group.Key)}");
-                foreach (var c in group)
+                sb.AppendLine($"### {group.Key}");
+                foreach (var commit in group)
                 {
-                    var scope = c.Scope != null ? $"**{c.Scope}**: " : "";
-                    sb.AppendLine($"- {scope}{c.Description} ({c.Hash[..7]})");
+                    var scope = string.IsNullOrWhiteSpace(commit.Scope) ? "" : $"**{commit.Scope}**: ";
+                    var desc = commit.Description?.Trim() ?? "(no description)";
+                    var hash = string.IsNullOrEmpty(commit.Hash) ? "" : $" ({commit.Hash[..Math.Min(commit.Hash.Length, 7)]})";
+                    sb.AppendLine($"- {scope}{desc}{hash}");
                 }
                 sb.AppendLine();
             }
 
-            return sb.ToString().Trim();
+            return sb.ToString().TrimEnd();
         }
-
-        private static string Capitalize(string input)
-            => string.IsNullOrEmpty(input) ? input : char.ToUpper(input[0]) + input[1..];
     }
 }
