@@ -5,8 +5,8 @@
 // Author:      Recursive Architect (Solcogito S.E.N.C.)
 // ----------------------------------------------------------------------------
 // Description:
-//   Entry point for the AutoVersion CLI.
-//   Delegates argument handling to CommandRouter.
+//   Entry point for the AutoVersion CLI. Delegates argument handling to
+//   CommandRouter. Handles fatal exceptions gracefully and ensures clean exit.
 // ----------------------------------------------------------------------------
 // License:     MIT
 // ============================================================================
