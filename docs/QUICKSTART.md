@@ -1,45 +1,38 @@
 # 🚀 QUICKSTART — AutoVersion Lite
 
-====================================================================
-PURPOSE
-====================================================================
+This guide walks you through installing, configuring, and running AutoVersion Lite in under five minutes.  
+AutoVersion Lite automates version management, changelog generation, and Git tagging for Unity and .NET projects.
 
-This guide walks you through installing, configuring, and running
-AutoVersion Lite in under five minutes.
+---
 
-AutoVersion Lite automates version management, changelog generation,
-and Git tagging for Unity and .NET projects.
+## 🧩 Requirements
 
-====================================================================
-REQUIREMENTS
-====================================================================
-
-- .NET 8 SDK or later
-- Git 2.40+
+- .NET 8 SDK or later  
+- Git 2.40+  
 - (Optional) Unity 2022.3 LTS
 
-====================================================================
-STEP 1 — CLONE THE REPOSITORY
-====================================================================
+---
 
-    git clone https://github.com/solcogito/AutoVersion.git
+## 🧱 Step 1 — Clone the Repository
+
+    git clone https://github.com/Solcogito/AutoVersion.git
     cd AutoVersion
 
-====================================================================
-STEP 2 — BUILD AND TEST
-====================================================================
+---
 
-Windows (PowerShell):
-    pwsh _Infrastructure/build.ps1 -Release
+## ⚙️ Step 2 — Build and Test
 
-Linux/macOS (bash):
-    bash _Infrastructure/build.sh --release
+Windows (PowerShell):  
+    pwsh _Infrastructure/build.ps1 -Release  
 
-This restores dependencies, builds all projects, and runs the test suite.
+Linux/macOS (bash):  
+    bash _Infrastructure/build.sh --release  
 
-====================================================================
-STEP 3 — CONFIGURE AUTOVERSION.JSON
-====================================================================
+This restores dependencies, builds all projects, and runs tests.
+
+---
+
+## ⚙️ Step 3 — Configure autoversion.json
 
 Example configuration file:
 
@@ -55,51 +48,49 @@ Example configuration file:
   }
 }
 
-Place it in the project root or any working directory.
+Place it in the project root.
 
-====================================================================
-STEP 4 — RUN THE CLI
-====================================================================
+---
 
-Show current version:
-    dotnet run --project src/AutoVersion.Cli -- current
+## 💻 Step 4 — Run the CLI
 
-Bump patch version:
-    dotnet run --project src/AutoVersion.Cli -- bump patch
+Show current version:  
+    dotnet run --project src/AutoVersion.Cli -- current  
 
-Simulate (dry run):
-    dotnet run --project src/AutoVersion.Cli -- bump minor --dry-run
+Bump patch version:  
+    dotnet run --project src/AutoVersion.Cli -- bump patch  
 
-====================================================================
-STEP 5 — GENERATE CHANGELOG
-====================================================================
+Simulate (dry run):  
+    dotnet run --project src/AutoVersion.Cli -- bump minor --dry-run  
+
+---
+
+## 🧾 Step 5 — Generate Changelog
 
     dotnet run --project src/AutoVersion.Cli -- changelog
 
-AutoVersion will parse your Git commits and regenerate CHANGELOG.md
-using Conventional Commit rules.
+AutoVersion parses Git commits and updates CHANGELOG.md automatically.
 
-====================================================================
-STEP 6 — UNITY INTEGRATION (OPTIONAL)
-====================================================================
+---
 
-1. Open the sample project: samples/Sample.UnityProject/
-2. In Unity, open the menu:
-       Tools → AutoVersion → Bump Patch
+## 🎮 Step 6 — Unity Integration (Optional)
+
+1. Open the sample project: samples/Sample.UnityProject/  
+2. In Unity, open menu: Tools → AutoVersion → Bump Patch  
 3. Watch version updates propagate automatically.
 
-====================================================================
-STEP 7 — PUBLISH YOUR RELEASE
-====================================================================
+---
+
+## 🚀 Step 7 — Publish Your Release
 
     pwsh _Infrastructure/publish.ps1 -Bump minor
 
 This will:
-- Run tests
-- Bump version
-- Generate changelog
-- Commit and tag (vX.Y.Z)
-- Push to remote
+- Run tests  
+- Bump version  
+- Generate changelog  
+- Commit and tag (vX.Y.Z)  
+- Push to remote  
 
 Example output:
 
@@ -107,23 +98,23 @@ Example output:
     📝 Generating changelog
     🚀 Release v1.3.0 pushed to origin
 
-====================================================================
-TROUBLESHOOTING
-====================================================================
+---
 
-• "dotnet not found" → Install .NET 8 SDK
-• "dirty working directory" → Commit or stash before publishing
-• "autoversion.json invalid" → Validate with AJV or --validate option
-• "no tag prefix" → Add "git.tagPrefix" in autoversion.json
+## 🧠 Troubleshooting
 
-====================================================================
-NEXT STEPS
-====================================================================
+• "dotnet not found" → Install .NET 8 SDK  
+• "dirty working directory" → Commit or stash before publishing  
+• "autoversion.json invalid" → Validate with AJV or --validate option  
+• "no tag prefix" → Add "git.tagPrefix" in autoversion.json  
 
-• Check out ROADMAP.md for planned features.
-• Contribute via pull requests on GitHub.
-• Share feedback and ideas on the Solcogito Discord.
+---
 
-====================================================================
-END OF QUICKSTART
-====================================================================
+## 🔗 Next Steps
+
+• Check out ROADMAP.md for planned features.  
+• Contribute via pull requests on GitHub.  
+• Share feedback and ideas on the Solcogito Discord.  
+
+---
+
+**End of Quickstart**
