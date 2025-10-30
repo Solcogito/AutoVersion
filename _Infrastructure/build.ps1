@@ -28,17 +28,37 @@ if (-not $dotnet) {
 }
 
 # Restore
-Write-Host "`n[1/3] Restoring dependencies..." -ForegroundColor Yellow
+Write-Host "`n[1/4] Restoring dependencies..." -ForegroundColor Yellow
 dotnet restore AutoVersion.sln | Out-Host
 
 # Build
-Write-Host "`n[2/3] Building ($Configuration)..." -ForegroundColor Yellow
+Write-Host "`n[2/4] Building ($Configuration)..." -ForegroundColor Yellow
 dotnet build AutoVersion.sln --configuration $Configuration --no-restore | Out-Host
 
 # Tests
 if (-not $NoTests) {
-    Write-Host "`n[3/3] Running tests..." -ForegroundColor Yellow
+    Write-Host "`n[3/4] Running tests..." -ForegroundColor Yellow
     dotnet test src/AutoVersion.Tests --configuration $Configuration --no-build --logger "trx;LogFileName=test_results.trx" | Out-Host
+}
+
+Write-Host "`n[4/4] Packaging CLI..." -ForegroundColor Yellow
+$cliProject = "$PSScriptRoot\..\src\AutoVersion.Cli\AutoVersion.Cli.csproj"
+$buildDir   = "$PSScriptRoot\..\Builds"
+
+dotnet publish $cliProject `
+    -c Release `
+    -r win-x64 `
+    --self-contained true `
+    /p:PublishSingleFile=true `
+    /p:IncludeAllContentForSelfExtract=true `
+    /p:PublishTrimmed=false `
+    -o $buildDir
+
+if (Test-Path "$buildDir\AutoVersion.Cli.exe") {
+    Rename-Item "$buildDir\AutoVersion.Cli.exe" "autoversion.exe" -Force
+    Write-Host "✅ CLI packaged to: $buildDir\autoversion.exe" -ForegroundColor Green
+} else {
+    Write-Host "⚠️  CLI build did not produce an EXE!" -ForegroundColor Yellow
 }
 
 # Output path

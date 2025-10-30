@@ -1,0 +1,12 @@
+{
+  "git": {
+    "tagPrefix": "v",
+    "push": false
+  },
+  "changelog": {
+    "path": "Assets/AutoVersionDemo/CHANGELOG.md"
+  },
+  "artifacts": [
+    { "path": "Builds/Product.unitypackage", "rename": "Product_{version}.unitypackage" }
+  ]
+}
