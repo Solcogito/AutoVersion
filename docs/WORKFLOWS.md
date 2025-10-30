@@ -1,72 +1,136 @@
-# ⚙️ WORKFLOWS — AutoVersion Lite CI/CD Integration
+# ⚙️ WORKFLOWS — AutoVersion Lite v0.8.0 CI & Quality Gates
 
-This guide explains how to integrate **AutoVersion Lite** with GitHub Actions, enabling fully automated versioning, changelog generation, and tagging on every merge or release.
+This guide details how to integrate **AutoVersion Lite** into continuous-integration pipelines for building, testing, linting, and automatically releasing your projects.
 
 ---
 
 ## 🧩 Overview
 
-AutoVersion Lite can be run as part of your CI pipeline to:
+**Goal:** Guarantee cross-platform consistency and commit quality.
 
-- Bump versions automatically on merge  
-- Generate and commit changelogs  
-- Tag and push releases  
-- Publish artifacts or packages
+Your CI/CD stack now includes:
 
-All workflows assume a valid `autoversion.json` in your project root and a configured Git remote (e.g., `origin`).
+| Workflow | Purpose | Location |
+|-----------|----------|-----------|
+| 🧱 **ci.yml** | Builds, tests, and validates config on Windows / macOS / Linux | `.github/workflows/ci.yml` |
+| 🧹 **lint.yml** | Validates commits, docs, and configuration files | `.github/workflows/lint.yml` |
+| 🚀 **release-on-tag.yml** | Publishes GitHub Releases automatically on tag push | `.github/workflows/release-on-tag.yml` |
+
+All workflows rely on a single `.commitlintrc.json` file in the repo root.
 
 ---
 
-## 🚀 Example — AutoVersion CI Workflow
+## 🧱 CI Matrix – `ci.yml`
 
-This workflow automatically bumps versions and updates changelogs whenever a change is pushed to `main`.
+Runs builds and tests across all supported operating systems.
 
 ```yaml
-name: AutoVersion CI
+name: CI – Build & Test Matrix
+
 on:
   push:
-    branches: [ main ]
+    branches: [ main, develop ]
+  pull_request:
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+  build-test:
+    name: Build & Test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
 
       - name: Restore dependencies
         run: dotnet restore
 
-      - name: Build project
-        run: dotnet build --configuration Release
+      - name: Build solution
+        run: dotnet build --configuration Release --no-restore
 
-      - name: Run AutoVersion
-        run: autoversion bump patch
+      - name: Run tests
+        run: dotnet test --configuration Release --no-build --verbosity normal
 
-      - name: Generate changelog
-        run: autoversion changelog
+      - name: Validate configuration
+        run: autoversion config --validate
 
-      - name: Commit & tag changes
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add .
-          git commit -m "ci: bump version [skip ci]" || echo "No changes to commit"
-          git push origin HEAD:main
+      - name: Preview changelog
+        run: autoversion changelog --dry-run
+
+      - name: Lint commit messages (Linux only)
+        if: runner.os == 'Linux'
+        run: npx commitlint --from=HEAD~10 --to=HEAD
 ```
 
-## 🧾 Example — Release-on-Tag Workflow
+✅ **Deliverables**
+- Green CI on all OSes  
+- Verified config & changelog syntax  
+- Enforced Conventional Commits
 
-Automatically publishes a GitHub Release when a new version tag is pushed.
+---
+
+## 🧹 Lint & Docs Validation – `lint.yml`
+
+Ensures consistent commits, valid JSON, and clean Markdown.
 
 ```yaml
-Copy code
+name: Lint – Schema, Docs & Commits
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install commitlint
+        run: npm install --no-save @commitlint/{config-conventional,cli}
+
+      - name: Lint commit messages
+        run: npx commitlint --from=HEAD~10 --to=HEAD
+
+      - name: Validate JSON files
+        run: |
+          npm install -g jsonlint
+          jsonlint -q autoversion.json
+
+      - name: Markdown lint
+        run: |
+          npm install -g markdownlint-cli
+          markdownlint "**/*.md" --ignore node_modules
+
+      - name: PowerShell syntax check
+        run: pwsh -Command "Get-ChildItem -Recurse -Filter *.ps1 | ForEach-Object { Write-Host Checking $_; pwsh -NoLogo -NoProfile -Command \"[System.Management.Automation.PSParser]::Tokenize((Get-Content $_ -Raw), [ref]$null)\" }"
+```
+
+✅ **Checks**
+- Conventional Commit titles  
+- Valid `autoversion.json` schema  
+- Markdown formatting  
+- PowerShell syntax
+
+---
+
+## 🚀 Automated Releases – `release-on-tag.yml`
+
+Triggers when a semantic tag (e.g., `v1.0.0`) is pushed.
+
+```yaml
 name: Release on Tag
+
 on:
   push:
     tags:
@@ -82,6 +146,9 @@ jobs:
         id: vars
         run: echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
 
+      - name: Generate changelog preview
+        run: autoversion changelog --dry-run
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
@@ -92,48 +159,54 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-## 🧪 Optional — Validate Config and Changelog
+✅ **Outcome**
+- Reads version from Git tag  
+- Generates changelog preview  
+- Publishes GitHub Release automatically
 
-Add a job to verify configuration and ensure changelog syntax is valid before committing.
+---
 
-```yaml
-Copy code
-jobs:
-  validate:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 8.0.x
-      - name: Validate autoversion.json
-        run: autoversion config --validate
-      - name: Preview changelog
-        run: autoversion changelog --dry-run
+## 🔧 Commit Lint Configuration – `.commitlintrc.json`
+
+```json
+{
+  "extends": ["@commitlint/config-conventional"],
+  "rules": {
+    "type-enum": [
+      2,
+      "always",
+      [
+        "feat", "fix", "docs", "style",
+        "refactor", "perf", "test",
+        "build", "ci", "chore", "revert"
+      ]
+    ],
+    "header-max-length": [2, "always", 100]
+  }
+}
 ```
 
-## 🧠 Tips & Best Practices
+Place this file at the repository root.  
+Every push or PR will be validated automatically by the Lint workflow.
 
-- Use --dry-run in PR builds to preview results without modifying files.
+---
 
-- Always commit changelogs in the same push to maintain version consistency.
+## 🧠 Best Practices
 
-- Tag releases using the git.tagPrefix defined in your config (v1.0.0, etc.).
+- Use **feature branches** → PR → merge → tag for release.  
+- Keep changelogs human-readable; use `autoversion changelog --dry-run` before committing.  
+- Include `[skip ci]` when AutoVersion commits bump versions to avoid recursive runs.  
+- Always test your `release-on-tag.yml` with a dummy tag before production.
 
-- Add [skip ci] to commit messages generated by AutoVersion to prevent loops.
-
-- Combine WORKFLOWS.md and /docs/CONFIG.md for complete automation setups.
+---
 
 ## 📁 Related Files
 
-/docs/CONFIG.md – Configuration schema reference
+- `/docs/CONFIG.md` – Config schema  
+- `/docs/FAQ.md` – Troubleshooting  
+- `/docs/TEMPLATES.md` – Release templates  
+- `/docs/README.md` – Documentation hub  
 
-/docs/FAQ.md – Common troubleshooting
+---
 
-/docs/QUICKSTART.md – Basic setup
-
-/docs/UNITY.md – Editor integration
-
-/docs/TEMPLATES.md – Release & promo templates
-
-**End of CI/CD Workflow Guide**
+**End of Workflows Guide (v0.8.0 – Automated Trust)**

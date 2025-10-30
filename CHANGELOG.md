@@ -1,4 +1,71 @@
+## [0.9.1] - 2025-10-30
+
+## [0.9.0] - 2025-10-30
+
+## [0.8.0] - 2025-10-30
+
+## [0.7.3] - 2025-10-30
+
+## [0.9.1] – 2025-11-06
+
+### 🧩 Structured Output & Rollback Safety
+
+#### Added
+- Full JSON output architecture (`--json`) for CLI and CI pipelines  
+- `VersionResult` model for structured version bump results  
+- `ChangelogCommand.RunJson()` for CI changelog export  
+- Automatic rollback and `.bak` file backup on version write  
+- UTF-8 BOM and EOL preservation in `version.txt`  
+- Color suppression when output is redirected (CI-safe)
+
+#### Changed
+- `VersionManager.Bump()` now returns `VersionResult`  
+- `CommandRouter` supports `--json` across `current`, `bump`, and `changelog`  
+- CLI fully compatible with `jq` and GitHub Actions
+
+#### Fixed
+- Compilation issues from older signatures resolved  
+- Improved resilience under file lock or encoding mismatch
+
+---
+
+**Codename:** *Structured Horizon*  
+**Status:** ✅ JSON-ready for CI integration and v1.0.0 release prep
+
+## [0.9.0] – 2025-11-05
+
+### 🧪 Polish & Release Prep
+
+#### Added
+- Colorized CLI output for success, warning, and error messages  
+- Automatic schema validation during `bump` and `changelog` commands  
+- `--json` output mode for CI/CD pipelines  
+- Auto-discovery of nearest `autoversion.json` (monorepo-friendly)  
+- Backup system for versioned files before modification  
+- Automatic rollback on failure  
+- Enhanced `autoversion help` with grouped command categories
+
+#### Changed
+- Improved dry-run output formatting and color emphasis  
+- Detected and preserved original file encodings (UTF8, BOM, CRLF/LF)  
+- More verbose validation messages for malformed configs  
+- Clearer success/failure log flow (now shows `[OK]`, `[WARN]`, `[ERROR]`)
+
+#### Fixed
+- Resolved partial-write issue when multiple targets failed  
+- Fixed rare case where empty changelog caused tag skip  
+- Fixed inconsistent `--allow-dirty` flag handling across commands  
+
+---
+
+**Goal:**  
+Deliver a *bulletproof*, production-ready CLI and Unity integration, stable under all workflows.
+
+**Codename:** *“Mirror Finish”*  
+**Status:** ✅ Feature Complete – Ready for v1.0.0 Release Prep
+
 ## [0.8.0] – 2025-11-01
+
 ### ⚙️ CI + Quality Gates
 
 #### Added
@@ -255,9 +322,13 @@ which parses Conventional Commit messages.
 Each release entry follows this structure:
 
 ## [X.Y.Z] – YYYY-MM-DD
+
 ### Added
+
 ### Changed
+
 ### Fixed
+
 ### Removed
 
 AutoVersion automatically inserts new entries at the top of this file  

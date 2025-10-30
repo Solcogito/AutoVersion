@@ -1,4 +1,37 @@
-﻿## [0.8.0] – 2025-11-01
+﻿## [0.9.0] – 2025-11-05
+
+### 🧪 Polish & Release Prep
+
+#### Added
+- Colorized CLI output for success, warning, and error messages  
+- Automatic schema validation during `bump` and `changelog` commands  
+- `--json` output mode for CI/CD pipelines  
+- Auto-discovery of nearest `autoversion.json` (monorepo-friendly)  
+- Backup system for versioned files before modification  
+- Automatic rollback on failure  
+- Enhanced `autoversion help` with grouped command categories
+
+#### Changed
+- Improved dry-run output formatting and color emphasis  
+- Detected and preserved original file encodings (UTF8, BOM, CRLF/LF)  
+- More verbose validation messages for malformed configs  
+- Clearer success/failure log flow (now shows `[OK]`, `[WARN]`, `[ERROR]`)
+
+#### Fixed
+- Resolved partial-write issue when multiple targets failed  
+- Fixed rare case where empty changelog caused tag skip  
+- Fixed inconsistent `--allow-dirty` flag handling across commands  
+
+---
+
+**Goal:**  
+Deliver a *bulletproof*, production-ready CLI and Unity integration, stable under all workflows.
+
+**Codename:** *“Mirror Finish”*  
+**Status:** ✅ Feature Complete – Ready for v1.0.0 Release Prep
+
+## [0.8.0] – 2025-11-01
+
 ### ⚙️ CI + Quality Gates
 
 #### Added
