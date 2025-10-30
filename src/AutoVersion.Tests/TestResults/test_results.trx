@@ -1,74 +1,98 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TestRun id="d5368103-4876-4d92-81c9-a94d99a325c0" name="desro@PALMACEDE 2025-10-29 18:20:04" runUser="PALMACEDE\desro" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
-  <Times creation="2025-10-29T18:20:04.6441033-04:00" queuing="2025-10-29T18:20:04.6441035-04:00" start="2025-10-29T18:20:03.9142722-04:00" finish="2025-10-29T18:20:04.6487741-04:00" />
-  <TestSettings name="default" id="c3787c55-8d39-4c5e-b4d8-4e1d48a77bcc">
-    <Deployment runDeploymentRoot="desro_PALMACEDE_2025-10-29_18_20_04" />
+<TestRun id="e6213bec-c04b-40a0-b27b-3aab368abb1f" name="desro@PALMACEDE 2025-10-30 05:33:41" runUser="PALMACEDE\desro" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2025-10-30T05:33:41.7071635-04:00" queuing="2025-10-30T05:33:41.7071639-04:00" start="2025-10-30T05:33:40.5731376-04:00" finish="2025-10-30T05:33:42.7896046-04:00" />
+  <TestSettings name="default" id="c3af642c-033e-40ab-9d5f-b4b7ec24a69f">
+    <Deployment runDeploymentRoot="desro_PALMACEDE_2025-10-30_05_33_41" />
   </TestSettings>
   <Results>
-    <UnitTestResult executionId="f1f71119-da30-49ae-bfd4-d99c637c3f2f" testId="585195bf-7183-a388-c292-5e1b1de27d5a" testName="Solcogito.AutoVersion.Tests.ArtifactTests.ProcessArtifacts_DryRunDoesNotModify" computerName="PALMACEDE" duration="00:00:00.0016214" startTime="2025-10-29T18:20:04.4903378-04:00" endTime="2025-10-29T18:20:04.4903379-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f1f71119-da30-49ae-bfd4-d99c637c3f2f" />
-    <UnitTestResult executionId="9760c897-a6d8-4cf4-ada1-cf157b06ad8b" testId="d28dce23-310e-35c1-0321-f32d74dfd35d" testName="Solcogito.AutoVersion.Tests.SemVerTests.Compare_OrdersProperly" computerName="PALMACEDE" duration="00:00:00.0001563" startTime="2025-10-29T18:20:04.4971088-04:00" endTime="2025-10-29T18:20:04.4971089-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="9760c897-a6d8-4cf4-ada1-cf157b06ad8b" />
-    <UnitTestResult executionId="3d6c53da-856d-42e7-b6a7-30cb19d263c0" testId="74431f3d-2536-730f-061e-94f4a75cbd4c" testName="Solcogito.AutoVersion.Tests.ArtifactTests.ProcessArtifacts_RenamesFile" computerName="PALMACEDE" duration="00:00:00.0729190" startTime="2025-10-29T18:20:04.4865738-04:00" endTime="2025-10-29T18:20:04.4866158-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3d6c53da-856d-42e7-b6a7-30cb19d263c0" />
-    <UnitTestResult executionId="e153fe04-0db7-4db1-a24e-fc5a81388a93" testId="327f296f-fe9c-b1b8-c90e-08c1d380d51f" testName="Solcogito.AutoVersion.Tests.ChangelogTests.Build_GeneratesMarkdown" computerName="PALMACEDE" duration="00:00:00.0812749" startTime="2025-10-29T18:20:04.4903770-04:00" endTime="2025-10-29T18:20:04.4903771-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e153fe04-0db7-4db1-a24e-fc5a81388a93" />
-    <UnitTestResult executionId="581f0ec2-1eaf-4597-a351-b1db2426c1d6" testId="b1095812-c58d-7717-da7d-ffe2aa01f39b" testName="Solcogito.AutoVersion.Tests.SemVerTests.Bump_IncrementsCorrectly" computerName="PALMACEDE" duration="00:00:00.0003287" startTime="2025-10-29T18:20:04.4969150-04:00" endTime="2025-10-29T18:20:04.4969151-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="581f0ec2-1eaf-4597-a351-b1db2426c1d6" />
-    <UnitTestResult executionId="94ecc3df-7829-417a-9715-1b871e679c1d" testId="c7afe9dc-037a-245a-c791-17da0afc0cf5" testName="Solcogito.AutoVersion.Tests.SemVerTests.Parse_ValidStrings" computerName="PALMACEDE" duration="00:00:00.0844853" startTime="2025-10-29T18:20:04.4965375-04:00" endTime="2025-10-29T18:20:04.4965396-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="94ecc3df-7829-417a-9715-1b871e679c1d" />
-    <UnitTestResult executionId="9f840d17-f6d8-4c8b-8eb3-08bfb516d772" testId="42a9d30b-4acc-e256-d53c-dda3afa8d09e" testName="Solcogito.AutoVersion.Tests.ChangelogTests.Update_WritesToFile" computerName="PALMACEDE" duration="00:00:00.0626059" startTime="2025-10-29T18:20:04.5527651-04:00" endTime="2025-10-29T18:20:04.5527654-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="9f840d17-f6d8-4c8b-8eb3-08bfb516d772" />
-    <UnitTestResult executionId="6bf364d9-ee3c-4ecf-8580-2125027d0e40" testId="1137be5b-f829-dc3e-941f-b843be6ec27e" testName="Solcogito.AutoVersion.Tests.PipelineIntegrationTests.FullPipeline_CreatesChangelogAndArtifact" computerName="PALMACEDE" duration="00:00:00.0725533" startTime="2025-10-29T18:20:04.4891598-04:00" endTime="2025-10-29T18:20:04.4891599-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6bf364d9-ee3c-4ecf-8580-2125027d0e40" />
+    <UnitTestResult executionId="d913b5cc-8442-48ff-b2cd-8b51b4425610" testId="42a9d30b-4acc-e256-d53c-dda3afa8d09e" testName="Solcogito.AutoVersion.Tests.ChangelogTests.Update_WritesToFile" computerName="PALMACEDE" duration="00:00:00.0496843" startTime="2025-10-30T05:33:41.0896200-04:00" endTime="2025-10-30T05:33:41.0896202-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d913b5cc-8442-48ff-b2cd-8b51b4425610" />
+    <UnitTestResult executionId="c39994cd-7720-4856-9b50-385c47c62598" testId="1137be5b-f829-dc3e-941f-b843be6ec27e" testName="Solcogito.AutoVersion.Tests.PipelineIntegrationTests.FullPipeline_CreatesChangelogAndArtifact" computerName="PALMACEDE" duration="00:00:00.0055661" startTime="2025-10-30T05:33:41.0355886-04:00" endTime="2025-10-30T05:33:41.0356059-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c39994cd-7720-4856-9b50-385c47c62598" />
+    <UnitTestResult executionId="0fc9dded-5e30-42f5-b55e-59506b69e8b0" testId="8f12d98c-ac8a-8b43-40a1-22d0fc0e8c82" testName="Solcogito.AutoVersion.Tests.PipelineIntegrationTests+GitIntegrationTests.GitService_CreatesTagSuccessfully" computerName="PALMACEDE" duration="00:00:00.4145546" startTime="2025-10-30T05:33:42.5079975-04:00" endTime="2025-10-30T05:33:42.5079978-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="0fc9dded-5e30-42f5-b55e-59506b69e8b0" />
+    <UnitTestResult executionId="7f7cad55-0eaa-4b30-a1fa-7f7e8c1ead24" testId="327f296f-fe9c-b1b8-c90e-08c1d380d51f" testName="Solcogito.AutoVersion.Tests.ChangelogTests.Build_GeneratesMarkdown" computerName="PALMACEDE" duration="00:00:00.0126170" startTime="2025-10-30T05:33:41.0398495-04:00" endTime="2025-10-30T05:33:41.0398496-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7f7cad55-0eaa-4b30-a1fa-7f7e8c1ead24" />
+    <UnitTestResult executionId="16e5f6fb-662d-45d3-bcf6-55a4b6f50e32" testId="d28dce23-310e-35c1-0321-f32d74dfd35d" testName="Solcogito.AutoVersion.Tests.SemVerTests.Compare_OrdersProperly" computerName="PALMACEDE" duration="00:00:00.0001412" startTime="2025-10-30T05:33:41.0455263-04:00" endTime="2025-10-30T05:33:41.0455263-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="16e5f6fb-662d-45d3-bcf6-55a4b6f50e32" />
+    <UnitTestResult executionId="415ac8de-4654-4b1b-aec8-78d73fec3676" testId="9909caa4-cd59-e0dd-3a0b-6a327565c2e1" testName="Solcogito.AutoVersion.Tests.PipelineIntegrationTests+GitIntegrationTests.GitService_DetectsDirtyRepo" computerName="PALMACEDE" duration="00:00:00.6380505" startTime="2025-10-30T05:33:41.6639358-04:00" endTime="2025-10-30T05:33:41.6639360-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="415ac8de-4654-4b1b-aec8-78d73fec3676" />
+    <UnitTestResult executionId="460024a6-e7f0-4171-be0c-e43711ead675" testId="85f24c92-0aa0-64f7-1882-a063f428ec4c" testName="Solcogito.AutoVersion.Tests.PipelineIntegrationTests+GitIntegrationTests.GitService_HasRemoteFalseByDefault" computerName="PALMACEDE" duration="00:00:00.2333038" startTime="2025-10-30T05:33:42.7414061-04:00" endTime="2025-10-30T05:33:42.7414065-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="460024a6-e7f0-4171-be0c-e43711ead675" />
+    <UnitTestResult executionId="96cc4598-c5e1-438f-9686-b5f2423d1f57" testId="585195bf-7183-a388-c292-5e1b1de27d5a" testName="Solcogito.AutoVersion.Tests.ArtifactTests.ProcessArtifacts_DryRunDoesNotModify" computerName="PALMACEDE" duration="00:00:00.0009608" startTime="2025-10-30T05:33:41.0382164-04:00" endTime="2025-10-30T05:33:41.0382164-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="96cc4598-c5e1-438f-9686-b5f2423d1f57" />
+    <UnitTestResult executionId="ceace7be-f1fd-407a-a5d5-031542cb6e72" testId="a6d7ed5b-6b4a-184d-f8d1-0fe0661476a6" testName="Solcogito.AutoVersion.Tests.PipelineIntegrationTests+GitIntegrationTests.GitService_PreventsDuplicateTag" computerName="PALMACEDE" duration="00:00:00.4291739" startTime="2025-10-30T05:33:42.0932706-04:00" endTime="2025-10-30T05:33:42.0932709-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ceace7be-f1fd-407a-a5d5-031542cb6e72" />
+    <UnitTestResult executionId="126bf3ad-0e11-4b43-833a-b5bd2fb0f96f" testId="b1095812-c58d-7717-da7d-ffe2aa01f39b" testName="Solcogito.AutoVersion.Tests.SemVerTests.Bump_IncrementsCorrectly" computerName="PALMACEDE" duration="00:00:00.0002797" startTime="2025-10-30T05:33:41.0453579-04:00" endTime="2025-10-30T05:33:41.0453581-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="126bf3ad-0e11-4b43-833a-b5bd2fb0f96f" />
+    <UnitTestResult executionId="2668297b-51ac-4eb6-814e-faeff1f6968a" testId="74431f3d-2536-730f-061e-94f4a75cbd4c" testName="Solcogito.AutoVersion.Tests.ArtifactTests.ProcessArtifacts_RenamesFile" computerName="PALMACEDE" duration="00:00:00.0057652" startTime="2025-10-30T05:33:41.0372799-04:00" endTime="2025-10-30T05:33:41.0372799-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="2668297b-51ac-4eb6-814e-faeff1f6968a" />
+    <UnitTestResult executionId="7462302d-80dd-4152-b9f8-0f09d6dd254c" testId="c7afe9dc-037a-245a-c791-17da0afc0cf5" testName="Solcogito.AutoVersion.Tests.SemVerTests.Parse_ValidStrings" computerName="PALMACEDE" duration="00:00:00.0170874" startTime="2025-10-30T05:33:41.0450364-04:00" endTime="2025-10-30T05:33:41.0450366-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7462302d-80dd-4152-b9f8-0f09d6dd254c" />
   </Results>
   <TestDefinitions>
     <UnitTest name="Solcogito.AutoVersion.Tests.ArtifactTests.ProcessArtifacts_RenamesFile" storage="f:\ultiwork\money\autoversion\src\autoversion.tests\bin\release\net8.0\autoversion.tests.dll" id="74431f3d-2536-730f-061e-94f4a75cbd4c">
-      <Execution id="3d6c53da-856d-42e7-b6a7-30cb19d263c0" />
+      <Execution id="2668297b-51ac-4eb6-814e-faeff1f6968a" />
       <TestMethod codeBase="F:\UltiWork\money\AutoVersion\src\AutoVersion.Tests\bin\Release\net8.0\AutoVersion.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Solcogito.AutoVersion.Tests.ArtifactTests" name="ProcessArtifacts_RenamesFile" />
     </UnitTest>
     <UnitTest name="Solcogito.AutoVersion.Tests.SemVerTests.Bump_IncrementsCorrectly" storage="f:\ultiwork\money\autoversion\src\autoversion.tests\bin\release\net8.0\autoversion.tests.dll" id="b1095812-c58d-7717-da7d-ffe2aa01f39b">
-      <Execution id="581f0ec2-1eaf-4597-a351-b1db2426c1d6" />
+      <Execution id="126bf3ad-0e11-4b43-833a-b5bd2fb0f96f" />
       <TestMethod codeBase="F:\UltiWork\money\AutoVersion\src\AutoVersion.Tests\bin\Release\net8.0\AutoVersion.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Solcogito.AutoVersion.Tests.SemVerTests" name="Bump_IncrementsCorrectly" />
     </UnitTest>
     <UnitTest name="Solcogito.AutoVersion.Tests.ArtifactTests.ProcessArtifacts_DryRunDoesNotModify" storage="f:\ultiwork\money\autoversion\src\autoversion.tests\bin\release\net8.0\autoversion.tests.dll" id="585195bf-7183-a388-c292-5e1b1de27d5a">
-      <Execution id="f1f71119-da30-49ae-bfd4-d99c637c3f2f" />
+      <Execution id="96cc4598-c5e1-438f-9686-b5f2423d1f57" />
       <TestMethod codeBase="F:\UltiWork\money\AutoVersion\src\AutoVersion.Tests\bin\Release\net8.0\AutoVersion.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Solcogito.AutoVersion.Tests.ArtifactTests" name="ProcessArtifacts_DryRunDoesNotModify" />
     </UnitTest>
+    <UnitTest name="Solcogito.AutoVersion.Tests.PipelineIntegrationTests+GitIntegrationTests.GitService_HasRemoteFalseByDefault" storage="f:\ultiwork\money\autoversion\src\autoversion.tests\bin\release\net8.0\autoversion.tests.dll" id="85f24c92-0aa0-64f7-1882-a063f428ec4c">
+      <Execution id="460024a6-e7f0-4171-be0c-e43711ead675" />
+      <TestMethod codeBase="F:\UltiWork\money\AutoVersion\src\AutoVersion.Tests\bin\Release\net8.0\AutoVersion.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Solcogito.AutoVersion.Tests.PipelineIntegrationTests+GitIntegrationTests" name="GitService_HasRemoteFalseByDefault" />
+    </UnitTest>
     <UnitTest name="Solcogito.AutoVersion.Tests.ChangelogTests.Update_WritesToFile" storage="f:\ultiwork\money\autoversion\src\autoversion.tests\bin\release\net8.0\autoversion.tests.dll" id="42a9d30b-4acc-e256-d53c-dda3afa8d09e">
-      <Execution id="9f840d17-f6d8-4c8b-8eb3-08bfb516d772" />
+      <Execution id="d913b5cc-8442-48ff-b2cd-8b51b4425610" />
       <TestMethod codeBase="F:\UltiWork\money\AutoVersion\src\AutoVersion.Tests\bin\Release\net8.0\AutoVersion.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Solcogito.AutoVersion.Tests.ChangelogTests" name="Update_WritesToFile" />
     </UnitTest>
+    <UnitTest name="Solcogito.AutoVersion.Tests.PipelineIntegrationTests+GitIntegrationTests.GitService_DetectsDirtyRepo" storage="f:\ultiwork\money\autoversion\src\autoversion.tests\bin\release\net8.0\autoversion.tests.dll" id="9909caa4-cd59-e0dd-3a0b-6a327565c2e1">
+      <Execution id="415ac8de-4654-4b1b-aec8-78d73fec3676" />
+      <TestMethod codeBase="F:\UltiWork\money\AutoVersion\src\AutoVersion.Tests\bin\Release\net8.0\AutoVersion.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Solcogito.AutoVersion.Tests.PipelineIntegrationTests+GitIntegrationTests" name="GitService_DetectsDirtyRepo" />
+    </UnitTest>
     <UnitTest name="Solcogito.AutoVersion.Tests.SemVerTests.Compare_OrdersProperly" storage="f:\ultiwork\money\autoversion\src\autoversion.tests\bin\release\net8.0\autoversion.tests.dll" id="d28dce23-310e-35c1-0321-f32d74dfd35d">
-      <Execution id="9760c897-a6d8-4cf4-ada1-cf157b06ad8b" />
+      <Execution id="16e5f6fb-662d-45d3-bcf6-55a4b6f50e32" />
       <TestMethod codeBase="F:\UltiWork\money\AutoVersion\src\AutoVersion.Tests\bin\Release\net8.0\AutoVersion.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Solcogito.AutoVersion.Tests.SemVerTests" name="Compare_OrdersProperly" />
     </UnitTest>
     <UnitTest name="Solcogito.AutoVersion.Tests.ChangelogTests.Build_GeneratesMarkdown" storage="f:\ultiwork\money\autoversion\src\autoversion.tests\bin\release\net8.0\autoversion.tests.dll" id="327f296f-fe9c-b1b8-c90e-08c1d380d51f">
-      <Execution id="e153fe04-0db7-4db1-a24e-fc5a81388a93" />
+      <Execution id="7f7cad55-0eaa-4b30-a1fa-7f7e8c1ead24" />
       <TestMethod codeBase="F:\UltiWork\money\AutoVersion\src\AutoVersion.Tests\bin\Release\net8.0\AutoVersion.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Solcogito.AutoVersion.Tests.ChangelogTests" name="Build_GeneratesMarkdown" />
     </UnitTest>
+    <UnitTest name="Solcogito.AutoVersion.Tests.PipelineIntegrationTests+GitIntegrationTests.GitService_CreatesTagSuccessfully" storage="f:\ultiwork\money\autoversion\src\autoversion.tests\bin\release\net8.0\autoversion.tests.dll" id="8f12d98c-ac8a-8b43-40a1-22d0fc0e8c82">
+      <Execution id="0fc9dded-5e30-42f5-b55e-59506b69e8b0" />
+      <TestMethod codeBase="F:\UltiWork\money\AutoVersion\src\AutoVersion.Tests\bin\Release\net8.0\AutoVersion.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Solcogito.AutoVersion.Tests.PipelineIntegrationTests+GitIntegrationTests" name="GitService_CreatesTagSuccessfully" />
+    </UnitTest>
+    <UnitTest name="Solcogito.AutoVersion.Tests.PipelineIntegrationTests+GitIntegrationTests.GitService_PreventsDuplicateTag" storage="f:\ultiwork\money\autoversion\src\autoversion.tests\bin\release\net8.0\autoversion.tests.dll" id="a6d7ed5b-6b4a-184d-f8d1-0fe0661476a6">
+      <Execution id="ceace7be-f1fd-407a-a5d5-031542cb6e72" />
+      <TestMethod codeBase="F:\UltiWork\money\AutoVersion\src\AutoVersion.Tests\bin\Release\net8.0\AutoVersion.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Solcogito.AutoVersion.Tests.PipelineIntegrationTests+GitIntegrationTests" name="GitService_PreventsDuplicateTag" />
+    </UnitTest>
     <UnitTest name="Solcogito.AutoVersion.Tests.PipelineIntegrationTests.FullPipeline_CreatesChangelogAndArtifact" storage="f:\ultiwork\money\autoversion\src\autoversion.tests\bin\release\net8.0\autoversion.tests.dll" id="1137be5b-f829-dc3e-941f-b843be6ec27e">
-      <Execution id="6bf364d9-ee3c-4ecf-8580-2125027d0e40" />
+      <Execution id="c39994cd-7720-4856-9b50-385c47c62598" />
       <TestMethod codeBase="F:\UltiWork\money\AutoVersion\src\AutoVersion.Tests\bin\Release\net8.0\AutoVersion.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Solcogito.AutoVersion.Tests.PipelineIntegrationTests" name="FullPipeline_CreatesChangelogAndArtifact" />
     </UnitTest>
     <UnitTest name="Solcogito.AutoVersion.Tests.SemVerTests.Parse_ValidStrings" storage="f:\ultiwork\money\autoversion\src\autoversion.tests\bin\release\net8.0\autoversion.tests.dll" id="c7afe9dc-037a-245a-c791-17da0afc0cf5">
-      <Execution id="94ecc3df-7829-417a-9715-1b871e679c1d" />
+      <Execution id="7462302d-80dd-4152-b9f8-0f09d6dd254c" />
       <TestMethod codeBase="F:\UltiWork\money\AutoVersion\src\AutoVersion.Tests\bin\Release\net8.0\AutoVersion.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Solcogito.AutoVersion.Tests.SemVerTests" name="Parse_ValidStrings" />
     </UnitTest>
   </TestDefinitions>
   <TestEntries>
-    <TestEntry testId="585195bf-7183-a388-c292-5e1b1de27d5a" executionId="f1f71119-da30-49ae-bfd4-d99c637c3f2f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
-    <TestEntry testId="d28dce23-310e-35c1-0321-f32d74dfd35d" executionId="9760c897-a6d8-4cf4-ada1-cf157b06ad8b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
-    <TestEntry testId="74431f3d-2536-730f-061e-94f4a75cbd4c" executionId="3d6c53da-856d-42e7-b6a7-30cb19d263c0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
-    <TestEntry testId="327f296f-fe9c-b1b8-c90e-08c1d380d51f" executionId="e153fe04-0db7-4db1-a24e-fc5a81388a93" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
-    <TestEntry testId="b1095812-c58d-7717-da7d-ffe2aa01f39b" executionId="581f0ec2-1eaf-4597-a351-b1db2426c1d6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
-    <TestEntry testId="c7afe9dc-037a-245a-c791-17da0afc0cf5" executionId="94ecc3df-7829-417a-9715-1b871e679c1d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
-    <TestEntry testId="42a9d30b-4acc-e256-d53c-dda3afa8d09e" executionId="9f840d17-f6d8-4c8b-8eb3-08bfb516d772" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
-    <TestEntry testId="1137be5b-f829-dc3e-941f-b843be6ec27e" executionId="6bf364d9-ee3c-4ecf-8580-2125027d0e40" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="42a9d30b-4acc-e256-d53c-dda3afa8d09e" executionId="d913b5cc-8442-48ff-b2cd-8b51b4425610" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="1137be5b-f829-dc3e-941f-b843be6ec27e" executionId="c39994cd-7720-4856-9b50-385c47c62598" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="8f12d98c-ac8a-8b43-40a1-22d0fc0e8c82" executionId="0fc9dded-5e30-42f5-b55e-59506b69e8b0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="327f296f-fe9c-b1b8-c90e-08c1d380d51f" executionId="7f7cad55-0eaa-4b30-a1fa-7f7e8c1ead24" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d28dce23-310e-35c1-0321-f32d74dfd35d" executionId="16e5f6fb-662d-45d3-bcf6-55a4b6f50e32" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9909caa4-cd59-e0dd-3a0b-6a327565c2e1" executionId="415ac8de-4654-4b1b-aec8-78d73fec3676" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="85f24c92-0aa0-64f7-1882-a063f428ec4c" executionId="460024a6-e7f0-4171-be0c-e43711ead675" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="585195bf-7183-a388-c292-5e1b1de27d5a" executionId="96cc4598-c5e1-438f-9686-b5f2423d1f57" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a6d7ed5b-6b4a-184d-f8d1-0fe0661476a6" executionId="ceace7be-f1fd-407a-a5d5-031542cb6e72" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b1095812-c58d-7717-da7d-ffe2aa01f39b" executionId="126bf3ad-0e11-4b43-833a-b5bd2fb0f96f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="74431f3d-2536-730f-061e-94f4a75cbd4c" executionId="2668297b-51ac-4eb6-814e-faeff1f6968a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c7afe9dc-037a-245a-c791-17da0afc0cf5" executionId="7462302d-80dd-4152-b9f8-0f09d6dd254c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
   </TestEntries>
   <TestLists>
     <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
     <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
   </TestLists>
   <ResultSummary outcome="Completed">
-    <Counters total="8" executed="8" passed="8" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Counters total="12" executed="12" passed="12" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
     <Output>
       <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.1+ce9211e970 (64-bit .NET 8.0.21)&#xD;
-[xUnit.net 00:00:00.07]   Discovering: AutoVersion.Tests&#xD;
-[xUnit.net 00:00:00.10]   Discovered:  AutoVersion.Tests&#xD;
-[xUnit.net 00:00:00.10]   Starting:    AutoVersion.Tests&#xD;
+[xUnit.net 00:00:00.06]   Discovering: AutoVersion.Tests&#xD;
+[xUnit.net 00:00:00.09]   Discovered:  AutoVersion.Tests&#xD;
+[xUnit.net 00:00:00.09]   Starting:    AutoVersion.Tests&#xD;
 [RENAMED] sample.txt -&gt; sample_1.2.3.txt&#xD;
 [RENAMED] demo.txt -&gt; demo_1.0.0.txt&#xD;
 [DRY-RUN] sample.txt -&gt; sample_9.9.9.txt&#xD;
@@ -76,7 +100,10 @@ fatal: ambiguous argument 'v1.0.0..HEAD': unknown revision or path not in the wo
 Use '--' to separate paths from revisions, like this:&#xD;
 'git &lt;command&gt; [&lt;revision&gt;...] -- [&lt;file&gt;...]'&#xD;
 ??  Changelog updated \u001a CHANGELOG_TEST.md&#xD;
-[xUnit.net 00:00:00.28]   Finished:    AutoVersion.Tests&#xD;
+??  Creating tag v0.5.1-test&#xD;
+??  Tag 'v0.5.1-test' already exists, skipping creation.&#xD;
+??  Creating tag v0.5.0-test&#xD;
+[xUnit.net 00:00:01.84]   Finished:    AutoVersion.Tests&#xD;
 </StdOut>
     </Output>
   </ResultSummary>

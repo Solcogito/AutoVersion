@@ -114,7 +114,26 @@ namespace Solcogito.AutoVersion.Cli.Commands
                 }
 
                 // ------------------------------------------------------------
-                // 6. Final output
+				// 6. Git Tag Integration (v0.5.0)
+				// ------------------------------------------------------------
+				if (config.Git != null && !string.IsNullOrEmpty(config.Git.TagPrefix))
+				{
+					var tagName = config.Git.TagPrefix + newVersion;
+
+					if (!GitService.IsClean() && !config.Git.AllowDirty)
+					{
+						Logger.Warn("Repository is not clean. Use --allow-dirty to override.");
+					}
+					else
+					{
+						GitService.CreateTag(tagName, $"AutoVersion {newVersion} release");
+						if (config.Git.Push)
+							GitService.PushTag(tagName);
+					}
+				}
+
+				// ------------------------------------------------------------
+                // 7. Final output
                 // ------------------------------------------------------------
                 if (dryRun)
                     Logger.Info("Dry-run completed. No files were modified.");

@@ -216,5 +216,83 @@ namespace Solcogito.AutoVersion.Tests
             Assert.True(File.Exists(config.Changelog.Path!));
             Assert.True(File.Exists(Path.Combine(Sandbox, "demo_1.0.0.txt")));
         }
+		
+		// ------------------------------------------------------------------------
+		// 5. Git Integration Tests (v0.5.0)
+		// ------------------------------------------------------------------------
+		public class GitIntegrationTests
+		{
+			private readonly string RepoDir = "GitSandbox";
+
+			public GitIntegrationTests()
+			{
+				if (Directory.Exists(RepoDir))
+					Directory.Delete(RepoDir, true);
+				Directory.CreateDirectory(RepoDir);
+				Directory.SetCurrentDirectory(RepoDir);
+
+				// Initialize a fake git repo
+				RunGit("init");
+				File.WriteAllText("README.md", "test");
+				RunGit("add .");
+				RunGit("commit -m \"initial commit\"");
+			}
+
+			private static string RunGit(string args)
+			{
+				var psi = new System.Diagnostics.ProcessStartInfo("git", args)
+				{
+					RedirectStandardOutput = true,
+					RedirectStandardError = true,
+					UseShellExecute = false,
+					CreateNoWindow = true
+				};
+				using var proc = System.Diagnostics.Process.Start(psi)!;
+				var output = proc.StandardOutput.ReadToEnd();
+				proc.WaitForExit();
+				return output;
+			}
+
+			[Fact]
+			public void GitService_CreatesTagSuccessfully()
+			{
+				Assert.True(GitService.IsClean());
+
+				var tag = "v0.5.0-test";
+				GitService.CreateTag(tag, "Test tag creation");
+
+				var output = RunGit("tag --list v0.5.0-test");
+				Assert.Contains("v0.5.0-test", output);
+			}
+
+			[Fact]
+			public void GitService_DetectsDirtyRepo()
+			{
+				File.WriteAllText("dirty.txt", "dirty");
+				var isClean = GitService.IsClean();
+				Assert.False(isClean);
+			}
+
+			[Fact]
+			public void GitService_PreventsDuplicateTag()
+			{
+				GitService.CreateTag("v0.5.1-test", "First tag");
+				var before = RunGit("tag --list v0.5.1-test").Trim();
+
+				// Try again — should not throw
+				GitService.CreateTag("v0.5.1-test", "Duplicate tag");
+				var after = RunGit("tag --list v0.5.1-test").Trim();
+
+				Assert.Equal(before, after);
+			}
+
+			[Fact]
+			public void GitService_HasRemoteFalseByDefault()
+			{
+				var result = GitService.HasRemote();
+				Assert.False(result);
+			}
+		}
+
     }
 }

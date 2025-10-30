@@ -1,3 +1,21 @@
+## [0.5.0] - 2025-10-30
+### Added
+- **git**: implemented automatic tag creation and push integration
+- **bump**: added repo clean check with `--allow-dirty` override
+- **core**: introduced `GitService` utility (createTag, pushTag, isClean)
+- **pipeline**: integrated tagging after changelog + artifact steps
+
+### Fixed
+- **bump**: corrected `AllowDirty` boolean handling (removed null-coalescing misuse)
+
+### Documentation
+- **readme**: added Git config examples and dry-run usage notes
+- **changelog**: verified formatting and section ordering
+
+### Maintenance
+- **tests**: added full coverage for Git tagging and pipeline integration
+- **ci**: validated on Windows/macOS/Linux matrix build
+
 ## [0.4.0] - 2025-10-29
 ### Added
 - **artifacts**: implement artifact handling and rename logic for v0.4.0 (415f833)
