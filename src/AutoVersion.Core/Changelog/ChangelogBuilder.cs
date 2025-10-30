@@ -1,12 +1,12 @@
 // ============================================================================
 // File:        ChangelogBuilder.cs
 // Project:     AutoVersion Lite
-// Version:     0.4.0
+// Version:     0.5.2
 // Author:      Recursive Architect (Solcogito S.E.N.C.)
 // ----------------------------------------------------------------------------
 // Description:
-//   Builds and updates the markdown changelog from parsed Conventional Commits.
-//   Integrates with Git commit history and config-defined section mapping.
+//   Builds and safely updates the markdown changelog from parsed Conventional
+//   Commits. Prepends new entries at the top of the file, never overwriting.
 // ----------------------------------------------------------------------------
 // License:     MIT
 // ============================================================================
@@ -51,7 +51,7 @@ namespace Solcogito.AutoVersion.Core.Changelog
         // --------------------------------------------------------------------
 
         /// <summary>
-        /// Builds and optionally writes the changelog for a version.
+        /// Builds and safely writes the changelog for a given version.
         /// </summary>
         public void Update(string version, bool dryRun = false)
         {
@@ -70,12 +70,12 @@ namespace Solcogito.AutoVersion.Core.Changelog
                 return;
             }
 
-            if (!File.Exists(path))
-                File.WriteAllText(path, markdown + Environment.NewLine);
-            else
-                File.AppendAllText(path, Environment.NewLine + markdown + Environment.NewLine);
+            // Safe prepend logic (preserves all prior entries)
+            var existing = File.Exists(path) ? File.ReadAllText(path) : string.Empty;
+            var combined = markdown.TrimEnd() + Environment.NewLine + Environment.NewLine + existing.TrimStart();
 
-            Console.WriteLine($"🪶  Changelog updated → {path}");
+            File.WriteAllText(path, combined);
+            Console.WriteLine($"[INFO] Changelog updated: {path}");
         }
 
         /// <summary>
