@@ -2,7 +2,7 @@
 // File:        AutoVersionMenuTests.cs
 // Project:     AutoVersion Unity Menu
 // Version:     0.6.1
-// Author:      Recursive Architect (Solcogito S.E.N.C.)
+// Author:      Benoit Desrosiers (Solcogito S.E.N.C.)
 // ----------------------------------------------------------------------------
 // Description:
 //   Safe Editor tests ensuring AutoVersion menu items exist and

@@ -1,4 +1,52 @@
-﻿## [0.9.0] – 2025-11-05
+﻿## [1.0.0] – 2025-10-30
+
+### 🚀 Public Lite Release (Codename: Emergent Horizon)
+- Public GitHub and Gumroad release
+- Added showcase video and documentation polish
+- All core features stable and verified:
+  - Structured JSON output for CI/CD
+  - Rollback safety
+  - Dry-run and EOL preservation
+- Verified UTF-8/BOM consistency across platforms
+- Ready for public distribution under MIT License
+
+## [0.9.2] - 2025-10-30
+
+### 🎉 JSON Verification & Final Stability
+
+- JSON output validated via jq (UTF-8 encoding confirmed)
+- Aliases corrected and CLI verified across Windows PowerShell 5.x
+- Build + rollback system fully stable
+
+**Status:** ✅ Ready for 1.0.0 documentation & release polish
+
+## [0.9.1] – 2025-11-06
+
+### 🧩 Structured Output & Rollback Safety
+
+#### Added
+- Full JSON output architecture (`--json`) for CLI and CI pipelines  
+- `VersionResult` model for structured version bump results  
+- `ChangelogCommand.RunJson()` for CI changelog export  
+- Automatic rollback and `.bak` file backup on version write  
+- UTF-8 BOM and EOL preservation in `version.txt`  
+- Color suppression when output is redirected (CI-safe)
+
+#### Changed
+- `VersionManager.Bump()` now returns `VersionResult`  
+- `CommandRouter` supports `--json` across `current`, `bump`, and `changelog`  
+- CLI fully compatible with `jq` and GitHub Actions
+
+#### Fixed
+- Compilation issues from older signatures resolved  
+- Improved resilience under file lock or encoding mismatch
+
+---
+
+**Codename:** *Structured Horizon*  
+**Status:** ✅ JSON-ready for CI integration and v1.0.0 release prep
+
+## [0.9.0] – 2025-11-05
 
 ### 🧪 Polish & Release Prep
 
@@ -288,9 +336,13 @@ which parses Conventional Commit messages.
 Each release entry follows this structure:
 
 ## [X.Y.Z] – YYYY-MM-DD
+
 ### Added
+
 ### Changed
+
 ### Fixed
+
 ### Removed
 
 AutoVersion automatically inserts new entries at the top of this file  

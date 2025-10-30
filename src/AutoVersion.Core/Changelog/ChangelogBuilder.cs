@@ -2,7 +2,7 @@
 // File:        ChangelogBuilder.cs
 // Project:     AutoVersion Lite
 // Version:     0.5.2
-// Author:      Recursive Architect (Solcogito S.E.N.C.)
+// Author:      Benoit Desrosiers (Solcogito S.E.N.C.)
 // ----------------------------------------------------------------------------
 // Description:
 //   Builds and safely updates the markdown changelog from parsed Conventional

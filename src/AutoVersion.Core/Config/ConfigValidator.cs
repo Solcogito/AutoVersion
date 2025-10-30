@@ -2,7 +2,7 @@
 // File:        ConfigValidator.cs
 // Project:     AutoVersion Lite
 // Version:     0.2.0
-// Author:      Recursive Architect (Solcogito S.E.N.C.)
+// Author:      Benoit Desrosiers (Solcogito S.E.N.C.)
 // ----------------------------------------------------------------------------
 // Description:
 //   Validates autoversion.json against the provided JSON schema.

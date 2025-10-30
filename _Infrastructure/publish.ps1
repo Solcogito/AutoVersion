@@ -1,7 +1,7 @@
 # ============================================================================
 # File:        publish.ps1
 # Project:     AutoVersion Lite
-# Author:      Recursive Architect (Solcogito S.E.N.C.)
+# Author:      Benoit Desrosiers (Solcogito S.E.N.C.)
 # ----------------------------------------------------------------------------
 # Description:
 #   Automates the full release workflow:

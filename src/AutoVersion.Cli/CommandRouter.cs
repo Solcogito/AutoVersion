@@ -2,7 +2,7 @@
 // File:        CommandRouter.cs
 // Project:     AutoVersion Lite
 // Version:     0.9.0
-// Author:      Recursive Architect (Solcogito S.E.N.C.)
+// Author:      Benoit Desrosiers (Solcogito S.E.N.C.)
 // ----------------------------------------------------------------------------
 // Description:
 //   CLI router that interprets arguments and dispatches to subcommands.

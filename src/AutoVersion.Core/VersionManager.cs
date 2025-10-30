@@ -2,7 +2,7 @@
 // File:        VersionManager.cs
 // Project:     AutoVersion Lite
 // Version:     0.9.1
-// Author:      Recursive Architect (Solcogito S.E.N.C.)
+// Author:      Benoit Desrosiers (Solcogito S.E.N.C.)
 // ----------------------------------------------------------------------------
 // Description:
 //   Provides high-level helpers to read, bump, and persist versions on disk.

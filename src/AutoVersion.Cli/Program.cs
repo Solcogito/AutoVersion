@@ -2,7 +2,7 @@
 // File:        Program.cs
 // Project:     AutoVersion Lite
 // Version:     0.9.0
-// Author:      Recursive Architect (Solcogito S.E.N.C.)
+// Author:      Benoit Desrosiers (Solcogito S.E.N.C.)
 // ----------------------------------------------------------------------------
 // Description:
 //   Entry point for the AutoVersion CLI.

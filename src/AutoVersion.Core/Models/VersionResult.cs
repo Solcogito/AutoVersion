@@ -2,7 +2,7 @@
 // File:        VersionResult.cs
 // Project:     AutoVersion.Core
 // Version:     0.9.0
-// Author:      Recursive Architect (Solcogito S.E.N.C.)
+// Author:      Benoit Desrosiers (Solcogito S.E.N.C.)
 // ----------------------------------------------------------------------------
 // Description:
 //   Structured result model for version bump operations.

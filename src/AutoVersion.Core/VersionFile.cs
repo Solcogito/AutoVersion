@@ -2,7 +2,7 @@
 // File:        VersionFile.cs
 // Project:     AutoVersion Lite
 // Version:     0.1.0
-// Author:      Recursive Architect (Solcogito S.E.N.C.)
+// Author:      Benoit Desrosiers (Solcogito S.E.N.C.)
 // ----------------------------------------------------------------------------
 // Description:
 //   Handles persistent storage of the current project version. Provides

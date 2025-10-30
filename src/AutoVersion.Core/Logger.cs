@@ -2,7 +2,7 @@
 // File:        Logger.cs
 // Project:     AutoVersion Lite
 // Version:     0.4.0
-// Author:      Recursive Architect (Solcogito S.E.N.C.)
+// Author:      Benoit Desrosiers (Solcogito S.E.N.C.)
 // ----------------------------------------------------------------------------
 // Description:
 //   Lightweight console logger with dry-run awareness and consistent

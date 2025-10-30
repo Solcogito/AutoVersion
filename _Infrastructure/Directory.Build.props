@@ -1,7 +1,7 @@
 <!-- =========================================================================
 File:        Directory.Build.props
 Project:     AutoVersion Lite
-Author:      Recursive Architect (Solcogito S.E.N.C.)
+Author:      Benoit Desrosiers (Solcogito S.E.N.C.)
 -------------------------------------------------------------------------------
 Description:
   Shared MSBuild configuration applied to all projects.
@@ -22,7 +22,7 @@ Description:
     <Configurations>Debug;Release</Configurations>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <OutputType>Library</OutputType>
-    <Authors>Soleria / Recursive Architect</Authors>
+    <Authors>Soleria / Benoit Desrosiers</Authors>
     <Company>Soleria S.E.N.C.</Company>
     <Product>AutoVersion Lite</Product>
     <RepositoryUrl>https://github.com/solcogito/AutoVersion</RepositoryUrl>

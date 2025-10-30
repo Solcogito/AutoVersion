@@ -2,7 +2,7 @@
 # ============================================================================
 # File:        build.sh
 # Project:     AutoVersion Lite
-# Author:      Recursive Architect (Solcogito S.E.N.C.)
+# Author:      Benoit Desrosiers (Solcogito S.E.N.C.)
 # ----------------------------------------------------------------------------
 # Description:
 #   Cross-platform build script for Linux/macOS developers and CI runners.

@@ -2,7 +2,7 @@
 // File:        ConventionalCommitParser.cs
 // Project:     AutoVersion Lite
 // Version:     0.3.0
-// Author:      Recursive Architect (Solcogito S.E.N.C.)
+// Author:      Benoit Desrosiers (Solcogito S.E.N.C.)
 // ----------------------------------------------------------------------------
 // Description:
 //   Parses Conventional Commit messages into structured commit data.

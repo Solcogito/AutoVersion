@@ -2,7 +2,7 @@
 // File:        ConfigModel.cs
 // Project:     AutoVersion Lite
 // Version:     0.2.0
-// Author:      Recursive Architect (Solcogito S.E.N.C.)
+// Author:      Benoit Desrosiers (Solcogito S.E.N.C.)
 // ----------------------------------------------------------------------------
 // Description:
 //   Defines the primary configuration model used by AutoVersion to drive

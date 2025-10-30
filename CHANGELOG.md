@@ -1,10 +1,24 @@
-## [0.9.1] - 2025-10-30
+## [1.0.0] – 2025-10-30
 
-## [0.9.0] - 2025-10-30
+### 🚀 Public Lite Release (Codename: Emergent Horizon)
+- Public GitHub and Gumroad release
+- Added showcase video and documentation polish
+- All core features stable and verified:
+  - Structured JSON output for CI/CD
+  - Rollback safety
+  - Dry-run and EOL preservation
+- Verified UTF-8/BOM consistency across platforms
+- Ready for public distribution under MIT License
 
-## [0.8.0] - 2025-10-30
+## [0.9.2] - 2025-10-30
 
-## [0.7.3] - 2025-10-30
+### 🎉 JSON Verification & Final Stability
+
+- JSON output validated via jq (UTF-8 encoding confirmed)
+- Aliases corrected and CLI verified across Windows PowerShell 5.x
+- Build + rollback system fully stable
+
+**Status:** ✅ Ready for 1.0.0 documentation & release polish
 
 ## [0.9.1] – 2025-11-06
 

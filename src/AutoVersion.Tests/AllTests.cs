@@ -2,7 +2,7 @@
 // File:        AllTests.cs
 // Project:     AutoVersion Lite (Unified Test Suite)
 // Version:     0.4.0
-// Author:      Recursive Architect (Solcogito S.E.N.C.)
+// Author:      Benoit Desrosiers (Solcogito S.E.N.C.)
 // ----------------------------------------------------------------------------
 // Description:
 //   Unified and cleaned test suite covering core AutoVersion functionality.
