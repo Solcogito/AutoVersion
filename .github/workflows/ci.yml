@@ -1,29 +1,15 @@
-# ============================================================================
-# File:        .github/workflows/ci.yml
-# Project:     AutoVersion Lite
-# Author:      Recursive Architect (Solcogito S.E.N.C.)
-# ----------------------------------------------------------------------------
-# Description:
-#   Continuous Integration workflow
-#   Builds and tests on Windows, macOS, and Linux
-#   Enforces formatting, linting, and unit test success.
-# ============================================================================
-
-name: CI
+name: CI – Build & Test Matrix
 
 on:
   push:
-    branches: [ main, dev ]
+    branches: [ main, develop ]
   pull_request:
-    branches: [ main, dev ]
-  workflow_dispatch:
 
 jobs:
-  build-and-test:
+  build-test:
     name: Build & Test (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
-      fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
 
@@ -31,35 +17,26 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup .NET 8 SDK
+      - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: "8.0.x"
+          dotnet-version: 8.0.x
 
       - name: Restore dependencies
-        run: dotnet restore AutoVersion.sln || dotnet restore
+        run: dotnet restore
 
-      - name: Build
+      - name: Build solution
         run: dotnet build --configuration Release --no-restore
 
-      - name: Run unit tests
-        run: dotnet test --configuration Release --no-build --logger "trx;LogFileName=test_results.trx"
+      - name: Run tests
+        run: dotnet test --configuration Release --no-build --verbosity normal
 
-      - name: Upload test results (always)
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-results-${{ runner.os }}
-          path: '**/*.trx'
+      - name: Validate autoversion.json
+        run: autoversion config --validate
 
-  # Optional lint job for commit message convention
-  lint-commits:
-    name: Commit Message Lint
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Validate commit messages
-        uses: wagoid/commitlint-github-action@v6
-        with:
-          configFile: _Infrastructure/commitlint.config.json
+      - name: Validate changelog syntax
+        run: autoversion changelog --dry-run
+
+      - name: Commitlint check (Linux only)
+        if: runner.os == 'Linux'
+        run: npx commitlint --from=HEAD~10 --to=HEAD

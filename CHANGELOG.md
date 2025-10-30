@@ -1,3 +1,29 @@
+## [0.8.0] – 2025-11-01
+### ⚙️ CI + Quality Gates
+
+#### Added
+- Cross-platform GitHub Actions matrix:
+  - ✅ Windows, macOS, Ubuntu
+- `lint.yml` workflow for schema + docs validation
+- `commitlint` integration enforcing Conventional Commits
+- `release-on-tag.yml` for automated publishing
+- CI job caching + artifact upload optimization
+- Extended `/docs/WORKFLOWS.md` with new CI examples
+
+#### Changed
+- Build scripts now trigger tests automatically on CI
+- Updated README badges for CI, Lint, and Release
+- Synchronized `.editorconfig`, `.gitattributes`, and `.gitignore` for platform parity
+
+#### Fixed
+- Minor formatting inconsistencies in docs and schema
+- Unified line endings and encoding across all `.ps1` and `.sh` scripts
+
+---
+
+**Goal:** Guarantee consistent builds and enforce clean commit discipline across all operating systems.  
+**Codename:** *“Automated Trust”*
+
 ## [0.7.0] – 2025-10-30
 
 ### 📚 Documentation & Samples
