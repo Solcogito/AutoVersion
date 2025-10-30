@@ -1,80 +1,36 @@
-# ============================================================================
-# File:        .github/workflows/lint.yml
-# Project:     AutoVersion Lite
-# Author:      Recursive Architect (Solcogito S.E.N.C.)
-# ----------------------------------------------------------------------------
-# Description:
-#   Lint & Validation Workflow
-#   Runs on all pushes and pull requests.
-#   - Validates Conventional Commits
-#   - Checks code formatting
-#   - Validates JSON schemas
-#   - Validates Markdown links
-# ============================================================================
-
-name: Lint & Validation
+name: Lint – Schema, Docs & Commits
 
 on:
   push:
-    branches: [ main, dev ]
+    branches: [ main, develop ]
   pull_request:
-    branches: [ main, dev ]
-  workflow_dispatch:
 
 jobs:
-  commitlint:
-    name: Conventional Commits
+  lint:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Validate commit messages
-        uses: wagoid/commitlint-github-action@v6
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          configFile: _Infrastructure/commitlint.config.json
+          node-version: 20
 
-  format-check:
-    name: Code Style Check
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Install commitlint
+        run: npm install --no-save @commitlint/{config-conventional,cli}
 
-      - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: "8.0.x"
+      - name: Lint commit messages
+        run: npx commitlint --from=HEAD~10 --to=HEAD
 
-      - name: Restore solution
-        run: dotnet restore AutoVersion.sln || dotnet restore
+      - name: Validate JSON files
+        run: |
+          npm install -g jsonlint
+          jsonlint -q autoversion.json
 
-      - name: Verify code format (dotnet format dry-run)
-        run: dotnet format --verify-no-changes --severity error || echo "⚠️ Formatting issues detected."
+      - name: Markdown lint
+        run: |
+          npm install -g markdownlint-cli
+          markdownlint "**/*.md" --ignore node_modules
 
-  json-schema-validation:
-    name: JSON Schema Validation
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Validate JSON structure (autoversion.json + schema)
-        uses: docker://ghcr.io/ajv-validator/ajv-cli:latest
-        with:
-          args: >
-            validate -s autoversion.schema.json -d autoversion.json --strict=false
-
-  markdown-link-check:
-    name: Markdown Link Validation
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Validate internal markdown links
-        uses: gaurav-nelson/github-action-markdown-link-check@v1
-        with:
-          use-quiet-mode: yes
-          folder-path: ./docs
-          check-modified-files-only: no
+      - name: PowerShell syntax check
+        run: pwsh -Command "Get-ChildItem -Recurse -Filter *.ps1 | ForEach-Object { Write-Host Checking $_; pwsh -NoLogo -NoProfile -Command \"[System.Management.Automation.PSParser]::Tokenize((Get-Content $_ -Raw), [ref]$null)\" }"

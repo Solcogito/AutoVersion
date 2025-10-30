@@ -2,7 +2,7 @@
 // File:        ChangelogCommand.cs
 // Project:     AutoVersion Lite
 // Version:     0.3.0
-// Author:      Recursive Architect (Solcogito S.E.N.C.)
+// Author:      Benoit Desrosiers (Solcogito S.E.N.C.)
 // ----------------------------------------------------------------------------
 // Description:
 //   CLI command for generating and previewing changelog entries.
@@ -42,6 +42,37 @@ namespace Solcogito.AutoVersion.Cli.Commands
 
             MarkdownWriter.Append("CHANGELOG.md", markdown);
             Console.WriteLine($"Changelog updated for {version} ({date})");
+        }
+		
+		public static List<object> RunJson(string? sinceTag, bool dryRun)
+        {
+            var entries = GenerateEntries(sinceTag);
+            var structured = entries.Select(e => new
+            {
+                e.Type,
+                e.Scope,
+                e.Message,
+                e.Hash
+            }).Cast<object>().ToList();
+
+            if (!dryRun)
+                Console.WriteLine($"[INFO] Generated {structured.Count} changelog entries.");
+
+            return structured;
+        }
+
+        // --------------------------------------------------------------------
+        // Helper: Simulated changelog data source (replace with real git parser)
+        // --------------------------------------------------------------------
+        private static List<(string Type, string Scope, string Message, string Hash)> GenerateEntries(string? sinceTag)
+        {
+            // This is placeholder logic; your real implementation may parse Git commits.
+            return new List<(string, string, string, string)>
+            {
+                ("feat", "cli", "Add JSON output mode", "abc123"),
+                ("fix", "core", "Preserve UTF8/BOM encoding", "def456"),
+                ("chore", "", "Polish help messages", "ghi789")
+            };
         }
     }
 }

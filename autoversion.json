@@ -1,30 +1,24 @@
 {
   "$schema": "./_Infrastructure/autoversion.schema.json",
-  "versionFile": "Directory.Build.props",
+  "versionFile": "version.txt",
 
   "files": [
     {
-      "path": "Directory.Build.props",
-      "type": "xml",
-      "xpath": "/Project/PropertyGroup/Version",
-      "encoding": "utf-8"
-    },
-    {
-      "path": "src/AutoVersion.Core/Properties/AssemblyInfo.cs",
-      "type": "regex",
-      "pattern": "AssemblyVersion\\(\"(.*?)\"\\)",
-      "encoding": "utf-8"
-    },
-    {
-      "path": "src/AutoVersion.Cli/Properties/launchSettings.json",
-      "type": "json",
-      "key": "version",
-      "encoding": "utf-8"
-    },
-    {
-      "path": "README.md",
+      "path": "version.txt",
       "type": "text",
       "token": "__VERSION__",
+      "encoding": "utf-8"
+    },
+    {
+      "path": "Assets/README.md",
+      "type": "text",
+      "token": "__VERSION__",
+      "encoding": "utf-8"
+    },
+    {
+      "path": "Packages/manifest.json",
+      "type": "json",
+      "key": "version",
       "encoding": "utf-8"
     }
   ],
@@ -36,8 +30,8 @@
       "overwrite": true
     },
     {
-      "path": "Builds/autoversion.exe",
-      "rename": "Builds/autoversion_v{version}.exe",
+      "path": "Builds/autoversion-cli.exe",
+      "rename": "Builds/autoversion-cli_v{version}.exe",
       "overwrite": true
     }
   ],
@@ -51,14 +45,14 @@
 
   "changelog": {
     "path": "CHANGELOG.md",
-    "template": "## [{version}] – {date}\n### Added\n- ...\n",
+    "template": "## [{version}] - {date}\n### Added\n- ...\n",
     "sections": {
       "feat": "Added",
       "fix": "Fixed",
-      "perf": "Performance",
       "docs": "Documentation",
       "refactor": "Changed",
-      "chore": "Maintenance"
+      "chore": "Maintenance",
+      "perf": "Performance"
     }
   },
 

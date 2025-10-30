@@ -2,7 +2,7 @@
 // File:        GitService.cs
 // Project:     AutoVersion Lite
 // Version:     0.5.0
-// Author:      Recursive Architect (Solcogito S.E.N.C.)
+// Author:      Benoit Desrosiers (Solcogito S.E.N.C.)
 // ----------------------------------------------------------------------------
 // Description:
 //   Provides Git utility functions for tag creation, push, and repo safety

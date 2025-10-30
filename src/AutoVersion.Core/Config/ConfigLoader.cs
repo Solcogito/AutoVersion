@@ -2,7 +2,7 @@
 // File:        ConfigLoader.cs
 // Project:     AutoVersion Lite
 // Version:     0.2.0
-// Author:      Recursive Architect (Solcogito S.E.N.C.)
+// Author:      Benoit Desrosiers (Solcogito S.E.N.C.)
 // ----------------------------------------------------------------------------
 // Description:
 //   Handles loading and parsing of autoversion.json configuration files.

@@ -1,0 +1,9 @@
+﻿{
+  "command": "bump",
+  "oldVersion": "0.7.2",
+  "newVersion": "0.7.3",
+  "dryRun": true,
+  "filesUpdated": 0,
+  "tagCreated": false,
+  "status": "success"
+}

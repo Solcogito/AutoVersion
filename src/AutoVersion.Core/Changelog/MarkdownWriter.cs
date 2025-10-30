@@ -2,7 +2,7 @@
 // File:        MarkdownWriter.cs
 // Project:     AutoVersion Lite
 // Version:     0.3.0
-// Author:      Recursive Architect (Solcogito S.E.N.C.)
+// Author:      Benoit Desrosiers (Solcogito S.E.N.C.)
 // ----------------------------------------------------------------------------
 // Description:
 //   Writes changelog markdown entries to disk, preserving prior entries.

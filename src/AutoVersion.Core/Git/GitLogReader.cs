@@ -2,7 +2,7 @@
 // File:        GitLogReader.cs
 // Project:     AutoVersion Lite
 // Version:     0.3.0
-// Author:      Recursive Architect (Solcogito S.E.N.C.)
+// Author:      Benoit Desrosiers (Solcogito S.E.N.C.)
 // ----------------------------------------------------------------------------
 // Description:
 //   Reads commit history from Git and returns structured commit records.

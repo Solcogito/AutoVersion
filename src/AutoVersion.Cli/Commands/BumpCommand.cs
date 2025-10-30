@@ -2,7 +2,7 @@
 // File:        BumpCommand.cs
 // Project:     AutoVersion Lite
 // Version:     0.5.2
-// Author:      Recursive Architect (Solcogito S.E.N.C.)
+// Author:      Benoit Desrosiers (Solcogito S.E.N.C.)
 // ----------------------------------------------------------------------------
 // Description:
 //   Implements the 'bump' subcommand. Supports bumping of major, minor,
