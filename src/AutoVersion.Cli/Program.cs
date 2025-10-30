@@ -1,18 +1,34 @@
-using AutoVersion.Core;
+// ============================================================================
+// File:        Program.cs
+// Project:     AutoVersion Lite
+// Version:     0.1.0
+// Author:      Recursive Architect (Solcogito S.E.N.C.)
+// ----------------------------------------------------------------------------
+// Description:
+//   Entry point for the AutoVersion CLI. Delegates argument handling to
+//   CommandRouter. Handles fatal exceptions gracefully and ensures clean exit.
+// ----------------------------------------------------------------------------
+// License:     MIT
+// ============================================================================
 
-namespace AutoVersion.Cli
+using System;
+
+namespace Solcogito.AutoVersion.Cli
 {
-    internal class Program
+    internal static class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            Console.WriteLine("=== AutoVersion CLI ===");
-            Console.WriteLine($"Current Version: {VersionInfo.GetVersion()}");
-            Console.WriteLine("Usage: bump [major|minor|patch]");
-
-            if (args.Length > 0 && args[0] == "bump")
+            try
             {
-                Console.WriteLine("Bumping version (stub)...");
+                CommandRouter.Run(args);
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Error.WriteLine($"Fatal error: {ex.Message}");
+                Console.ResetColor();
+                Environment.Exit(1);
             }
         }
     }

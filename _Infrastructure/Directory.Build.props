@@ -48,6 +48,11 @@ Description:
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+    <WarningsAsErrors>false</WarningsAsErrors>
+  </PropertyGroup>
+
   <!-- Exclude build metadata files -->
   <ItemGroup>
     <None Remove="*.md" />
