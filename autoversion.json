@@ -30,8 +30,8 @@
       "overwrite": true
     },
     {
-      "path": "Builds/autoversion-cli.exe",
-      "rename": "Builds/autoversion-cli_v{version}.exe",
+      "path": "Builds/AutoVersion.Cli.exe",
+      "rename": "Builds/AutoVersion.Cli_v{version}.exe",
       "overwrite": true
     }
   ],
@@ -53,7 +53,9 @@
       "refactor": "Changed",
       "chore": "Maintenance",
       "perf": "Performance"
-    }
+    },
+    "autoLinkTags": true,
+    "insertAtTop": true
   },
 
   "logging": {
