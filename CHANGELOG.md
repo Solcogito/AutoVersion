@@ -1,3 +1,67 @@
+## [1.1.0] - 2025-11-01
+### Documentation
+- reorganize documentation and update style/config files (098f9dd)
+- Added core versioning logic (`VersionModel`, `VersionManager`)
+- Added CLI entry point (`autoversion bump`, `autoversion current`)
+- Added .NET + Unity integration foundation
+- Added docs, style, and contributor guides
+- Cleaned repository and finalized GitHub structure
+
+### Maintenance
+- Update docs and ignore rules; cleaned Media and GumroadPackage (d09afb7)
+
+### Other
+- add GitHub Actions workflow (818b08f)
+
+## [1.0.0] - 2025-11-01
+### Added
+- **git**: implement automatic tag creation and push integration for v0.5.0 (d5e562f)
+- **artifacts**: implement artifact handling and rename logic for v0.4.0 (415f833)
+
+### Documentation
+- reorganize documentation and update style/config files (098f9dd)
+- **release**: add full v0.7.0 documentation and samples (9f2cc38)
+- **changelog**: update for v0.3.0 ΓÇô Changelog Engine (df01d67)
+
+### Maintenance
+- Update docs and ignore rules; cleaned Media and GumroadPackage (d09afb7)
+- **release**: prepare v1.0.0 public lite release (58522e9)
+- **release**: bump version to 0.9.1 (7e829b3)
+- **release**: bump to v0.6.1 ΓÇö Unity Editor Menu integration (5bfeb43)
+- **release**: bump version to 0.5.1 (051e826)
+- **release**: Changelog.md (bf0472f)
+- **release**: v0.3.0 ΓÇô Changelog Engine (cb3ae2f)
+
+### Other
+- add GitHub Actions workflow (818b08f)
+- implement v0.8.0 cross-platform workflows and commitlint (f3223ff)
+- **git**: stabilize GitService_CreatesTagSuccessfully on Windows (3971836)
+
+## [0.2.0] - 2025-11-01
+### Added
+- **git**: implement automatic tag creation and push integration for v0.5.0 (d5e562f)
+- **artifacts**: implement artifact handling and rename logic for v0.4.0 (415f833)
+
+### Documentation
+- reorganize documentation and update style/config files (098f9dd)
+- **release**: add full v0.7.0 documentation and samples (9f2cc38)
+- **changelog**: update for v0.3.0 ΓÇô Changelog Engine (df01d67)
+
+### Maintenance
+- Update docs and ignore rules; cleaned Media and GumroadPackage (d09afb7)
+- **release**: prepare v1.0.0 public lite release (58522e9)
+- **release**: bump version to 0.9.1 (7e829b3)
+- **release**: bump to v0.6.1 ΓÇö Unity Editor Menu integration (5bfeb43)
+- **release**: bump version to 0.5.1 (051e826)
+- **release**: Changelog.md (bf0472f)
+- **release**: v0.3.0 ΓÇô Changelog Engine (cb3ae2f)
+- **release**: v0.2.0 ΓÇô Config & File Ops (35d0d1e)
+
+### Other
+- add GitHub Actions workflow (818b08f)
+- implement v0.8.0 cross-platform workflows and commitlint (f3223ff)
+- **git**: stabilize GitService_CreatesTagSuccessfully on Windows (3971836)
+
 ## [1.0.0] – 2025-10-30
 
 ### 🚀 Public Lite Release (Codename: Emergent Horizon)
