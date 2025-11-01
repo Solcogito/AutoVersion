@@ -1,30 +1,133 @@
-# Enforce LF line endings on all text files
+# ==============================================================================
+# AutoVersion Lite .gitattributes
+# Normalizes line endings, diffs, and merge behavior for C#, Unity, and assets
+# ==============================================================================
+
+# ----------------------------------------------------------------------
+# GLOBAL SETTINGS
+# ----------------------------------------------------------------------
+# Auto-detect text files and ensure LF line endings in the repo.
 * text=auto eol=lf
 
-# Normalize line endings for common code/text types
-*.cs text diff=csharp
-*.json text
-*.xml text
-*.yml text
-*.md text
-*.ps1 text
-*.sh text
-*.txt text
+# Treat all text files as UTF-8 by default.
+*.txt      text working-tree-encoding=UTF-8
+*.md       text working-tree-encoding=UTF-8
+*.json     text working-tree-encoding=UTF-8
+*.xml      text working-tree-encoding=UTF-8
+*.yml      text working-tree-encoding=UTF-8
+*.yaml     text working-tree-encoding=UTF-8
+*.csv      text working-tree-encoding=UTF-8
+*.ps1      text working-tree-encoding=UTF-8
+*.sh       text working-tree-encoding=UTF-8
+*.bat      text working-tree-encoding=UTF-8
 
-# Binary files
-*.png binary
-*.jpg binary
-*.gif binary
+# ----------------------------------------------------------------------
+# SOURCE CODE
+# ----------------------------------------------------------------------
+*.cs       text diff=csharp
+*.csproj   text
+*.sln      text
+*.props    text
+*.targets  text
+*.config   text
+*.h        text
+*.cpp      text
+*.hpp      text
+*.inl      text
+*.java     text
+*.py       text
+*.js       text
+*.ts       text
+*.html     text
+*.css      text
+
+# ----------------------------------------------------------------------
+# UNITY-SPECIFIC
+# ----------------------------------------------------------------------
+# Unity serializable text assets (preserve LF endings and allow diffs)
+*.asset    text merge=union
+*.meta     text merge=union
+*.unity    text merge=union
+*.prefab   text merge=union
+*.mat      text merge=union
+*.anim     text merge=union
+*.shader   text merge=union
+
+# Prevent line-ending conversion on binary Unity assets.
+*.unitypackage binary
+*.cubemap      binary
+*.physicmaterial binary
+*.mesh         binary
+*.fbx          binary
+*.blend        binary
+*.tga          binary
+*.psd          binary
+
+# ----------------------------------------------------------------------
+# BINARY FILES (no diff, no merge)
+# ----------------------------------------------------------------------
 *.exe binary
 *.dll binary
-*.unitypackage binary
+*.pdb binary
+*.so  binary
+*.dylib binary
+*.a   binary
 *.zip binary
-*.7z binary
+*.7z  binary
+*.rar binary
+*.tar.gz binary
+*.tgz binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.bmp binary
+*.tiff binary
+*.ico binary
+*.mp3 binary
+*.wav binary
+*.ogg binary
 *.mp4 binary
 *.mov binary
+*.avi binary
+*.webm binary
+*.unitypackage binary
 
-# Unity-specific
-*.asset text
-*.meta text
-*.unity text
-*.prefab text
+# ----------------------------------------------------------------------
+# DOCUMENTATION / SCRIPTS
+# ----------------------------------------------------------------------
+*.md  text diff=markdown
+*.rtf text
+*.pdf binary
+*.docx binary
+*.xlsx binary
+
+# ----------------------------------------------------------------------
+# PROJECT / ENVIRONMENT FILES
+# ----------------------------------------------------------------------
+*.env text
+*.gitignore text
+*.gitattributes text
+*.editorconfig text
+*.yml text
+*.yaml text
+
+# ----------------------------------------------------------------------
+# MISCELLANEOUS
+# ----------------------------------------------------------------------
+# Always mark these as binary so Git LFS or diff tools handle them properly.
+*.psd binary
+*.ai  binary
+*.blend1 binary
+*.ico binary
+*.ttf binary
+*.otf binary
+
+# ----------------------------------------------------------------------
+# END
+# ----------------------------------------------------------------------
+# This configuration:
+#   - Keeps all text files LF-normalized across platforms.
+#   - Allows safe diffs for C#, JSON, YAML, and Unity assets.
+#   - Ensures binaries and media are never diffed or corrupted.
+# ==============================================================================

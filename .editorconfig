@@ -1,32 +1,160 @@
-# EditorConfig helps maintain consistent coding styles across IDEs
-# AutoVersion Project (c) 2025 Solcogito S.E.N.C.
+# ==============================================================================
+# AutoVersion Lite .editorconfig
+# Maintains consistent coding styles and analyzers across IDEs
+# (c) 2025 Solcogito S.E.N.C.
+# ==============================================================================
 
 root = true
 
+# ----------------------------------------------------------------------
+# GLOBAL DEFAULTS
+# ----------------------------------------------------------------------
 [*]
 charset = utf-8
+end_of_line = lf
 indent_style = space
 indent_size = 4
 insert_final_newline = true
-end_of_line = lf
 trim_trailing_whitespace = true
+max_line_length = 120
+tab_width = 4
 
-# C# files
+# ----------------------------------------------------------------------
+# C# CODE STYLE
+# ----------------------------------------------------------------------
 [*.cs]
+# --- Usings / Imports ---
 dotnet_sort_system_directives_first = true
+dotnet_separate_import_directive_groups = true
+
+# --- Qualification ---
 dotnet_style_qualification_for_field = false
 dotnet_style_qualification_for_property = false
 dotnet_style_qualification_for_method = false
 dotnet_style_qualification_for_event = false
+
+# --- Accessibility Modifiers ---
 dotnet_style_require_accessibility_modifiers = always:suggestion
+
+# --- Expression-bodied members ---
 csharp_style_expression_bodied_methods = true:suggestion
 csharp_style_expression_bodied_properties = true:suggestion
+csharp_style_expression_bodied_accessors = true:suggestion
+
+# --- Modifier ordering ---
 csharp_preferred_modifier_order = public, protected, internal, private, static, readonly, override, virtual, abstract, async:suggestion
 
-# Markdown
+# --- Formatting preferences ---
+csharp_new_line_before_open_brace = all
+csharp_indent_case_contents = true
+csharp_indent_labels = flush_left
+csharp_space_after_keywords_in_control_flow_statements = true
+csharp_space_between_method_declaration_parameter_list_parentheses = false
+csharp_space_between_method_call_parameter_list_parentheses = false
+csharp_preserve_single_line_statements = true
+csharp_preserve_single_line_blocks = true
+
+# --- Var usage ---
+dotnet_style_require_var_for_built_in_types = false:suggestion
+dotnet_style_require_var_when_type_is_apparent = true:suggestion
+dotnet_style_require_var_elsewhere = false:suggestion
+
+# --- Naming conventions ---
+dotnet_naming_rule.private_fields_should_be_camel_case.severity = suggestion
+dotnet_naming_rule.private_fields_should_be_camel_case.symbols = private_fields
+dotnet_naming_rule.private_fields_should_be_camel_case.style = camel_case_style
+dotnet_naming_symbols.private_fields.applicable_accessibilities = private
+dotnet_naming_symbols.private_fields.required_modifiers = readonly
+dotnet_naming_style.camel_case_style.capitalization = camel_case
+
+# ----------------------------------------------------------------------
+# POWERHELL / SHELL
+# ----------------------------------------------------------------------
+[*.ps1]
+indent_size = 4
+end_of_line = lf
+trim_trailing_whitespace = true
+
+[*.sh]
+indent_size = 2
+end_of_line = lf
+
+# ----------------------------------------------------------------------
+# JSON / YAML / XML
+# ----------------------------------------------------------------------
+[*.json]
+indent_size = 2
+end_of_line = lf
+insert_final_newline = true
+
+[*.{yml,yaml}]
+indent_size = 2
+end_of_line = lf
+insert_final_newline = true
+
+[*.xml]
+indent_size = 2
+end_of_line = lf
+
+# ----------------------------------------------------------------------
+# MARKDOWN / DOCS
+# ----------------------------------------------------------------------
 [*.md]
 trim_trailing_whitespace = false
-
-# JSON / YAML
-[*.{json,yml,yaml}]
+indent_style = space
 indent_size = 2
+max_line_length = off
+
+# ----------------------------------------------------------------------
+# MISCELLANEOUS
+# ----------------------------------------------------------------------
+[*.{bat,cmd}]
+end_of_line = crlf
+indent_style = tab
+
+[*.txt]
+end_of_line = lf
+
+# ----------------------------------------------------------------------
+# VISUAL STUDIO / ROSLYN ANALYZERS
+# ----------------------------------------------------------------------
+# These guide behavior for analyzers, code fixes, and warnings
+# during CI or in VS / Rider.
+
+# General severity levels
+dotnet_analyzer_diagnostic.severity = warning
+dotnet_analyzer_diagnostic.category-Style.severity = suggestion
+dotnet_analyzer_diagnostic.category-Simplification.severity = suggestion
+dotnet_analyzer_diagnostic.category-Naming.severity = suggestion
+dotnet_analyzer_diagnostic.category-Documentation.severity = suggestion
+dotnet_analyzer_diagnostic.category-Maintainability.severity = warning
+dotnet_analyzer_diagnostic.category-Performance.severity = warning
+dotnet_analyzer_diagnostic.category-Reliability.severity = warning
+
+# StyleCop (if enabled)
+dotnet_diagnostic.SA0001.severity = none
+dotnet_diagnostic.SA1600.severity = suggestion  # Missing XML comments
+dotnet_diagnostic.SA1309.severity = suggestion  # Field naming
+dotnet_diagnostic.SA1402.severity = suggestion  # Multiple classes in file
+dotnet_diagnostic.SA1516.severity = suggestion  # Blank line between members
+dotnet_diagnostic.SA1101.severity = none        # 'this.' prefix required
+
+# IDE analyzers (Visual Studio built-in)
+dotnet_diagnostic.IDE0003.severity = suggestion # Remove qualification
+dotnet_diagnostic.IDE0044.severity = suggestion # Make field readonly
+dotnet_diagnostic.IDE0051.severity = silent     # Remove unused private members
+dotnet_diagnostic.IDE0060.severity = silent     # Remove unused parameters
+dotnet_diagnostic.IDE0090.severity = suggestion # Use 'new()' object creation
+dotnet_diagnostic.IDE1006.severity = suggestion # Naming style
+
+# Nullable reference types
+dotnet_analyzer_diagnostic.category-NullableAnalysis.severity = warning
+dotnet_style_null_propagation = true:suggestion
+dotnet_style_coalesce_expression = true:suggestion
+
+# ----------------------------------------------------------------------
+# END
+# ----------------------------------------------------------------------
+# Enforces cross-platform LF, UTF-8, and consistent code style.
+# Analyzer severities are tuned for clarity without breaking builds.
+# ==============================================================================

@@ -1,88 +1,134 @@
-# ------------------------------------------------------------------------------
-# AutoVersion Lite Project .gitignore
-# Covers .NET, Unity, and common build/temp files
-# ------------------------------------------------------------------------------
+# ==============================================================================
+# AutoVersion Lite .gitignore
+# Covers .NET, Unity, and cross-platform build/temp artifacts
+# ==============================================================================
 
-## Case Specific
+# ----------------------------------------------------------------------
+# CASE-SPECIFIC: Local-only content and large media
+# ----------------------------------------------------------------------
 Media/
 GumroadPackage/
 AutoVersionUnityMenuDemo/
 
-## Build Artifacts
+# ----------------------------------------------------------------------
+# BUILD & OUTPUT ARTIFACTS
+# ----------------------------------------------------------------------
 [Bb]in/
 [Oo]bj/
-[Ll]ogs/
-[Dd]ebug/
-[Rr]elease/
+[Ll]ogs?/
+[Dd]ebug*/
+[Rr]elease*/
 x64/
 x86/
-*.pdb
+[Bb]uild/
+[Bb]uilds/
+[Bb]uildArtifacts/
+dist/
+Artifacts/
+_cache/
+_autoversion_temp/
+_autoversion_backup/
+
+# Compiled binaries
 *.exe
 *.dll
-*.cache
-*.log
+*.pdb
+*.mdb
+*.so
+*.dylib
+*.a
 
-## Unity
+# Intermediate / cache files
+*.cache
+*.tmp
+*.log
+*.bak
+*.old
+*.orig
+*.swp
+
+# Archives
+*.zip
+*.tar.gz
+*.tgz
+*.7z
+*.rar
+
+# ----------------------------------------------------------------------
+# UNITY PROJECT FILES
+# ----------------------------------------------------------------------
 [Ll]ibrary/
 [Tt]emp/
 [Oo]bj/
-[Bb]uild/
-[Bb]uilds/
-[Ll]ogs/
 [Uu]serSettings/
 MemoryCaptures/
-*.csproj
-*.sln
+[Bb]uilds/
+Logs/
+CrashReports/
+*.unitypackage
 *.pidb
-*.user
-*.unityproj
 *.suo
-*.tmp
+*.user
+*.userprefs
 *.booproj
 *.svd
 *.db
 *.opendb
 *.blend1
 *.prefs
-*.vs/
 
-## Visual Studio / Rider
+# Unity auto-generated solution & project files
+*.csproj
+*.sln
+*.unityproj
+
+# ----------------------------------------------------------------------
+# IDE SETTINGS (Visual Studio, Rider, VS Code)
+# ----------------------------------------------------------------------
 .vs/
 .idea/
 .vscode/
 *.DotSettings.user
 
-## System
-.DS_Store
-Thumbs.db
-desktop.ini
-
-## Packages & Dependencies
+# ----------------------------------------------------------------------
+# PACKAGE MANAGERS & DEPENDENCIES
+# ----------------------------------------------------------------------
 node_modules/
 packages/
 *.nuget/
 *.nupkg
 *.lock.json
 
-## Misc
-*.bak
-*.old
-*.orig
-*.tmp
-*.log
-*.swp
-*.zip
-*.unitypackage
-*.tar.gz
+# ----------------------------------------------------------------------
+# ENVIRONMENT / SYSTEM FILES
+# ----------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
+Icon?
 .env
 .env.*
 
-## AutoVersion build artifacts
-Builds/
-Artifacts/
-dist/
-_cache/
-_autoversion_temp/
-_autoversion_backup/
+# ----------------------------------------------------------------------
+# MISCELLANEOUS TEMP
+# ----------------------------------------------------------------------
+*.tmp
+*.bak
+*.old
+*.orig
+*.swp
+*.log
+*.tmp.*
+*.unitypackage
+*.tar.gz
+
+# ----------------------------------------------------------------------
+# NOTES
+# ----------------------------------------------------------------------
+# - Keep documentation, config, and scripts (e.g. autoversion.json, build.ps1)
+# - GitHub Actions / workflow files remain tracked under .github/
+# - If you ever add new exporters (e.g., S3, Itch.io), append their
+#   artifact directories here to avoid large binary commits.
 
 # End of .gitignore
