@@ -1,4 +1,7 @@
-﻿## [1.0.0] – 2025-10-30
+﻿## [Unreleased] - 2025-10-31
+
+
+## [1.0.0] – 2025-10-30
 
 ### 🚀 Public Lite Release (Codename: Emergent Horizon)
 - Public GitHub and Gumroad release

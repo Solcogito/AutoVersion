@@ -1,4 +1,11 @@
 # 🧭 AutoVersion Lite
+
+[![GitHub release](https://img.shields.io/github/v/release/Solcogito/AutoVersion?include_prereleases)](https://github.com/Solcogito/AutoVersion/releases)
+[![Build](https://github.com/Solcogito/AutoVersion/actions/workflows/ci.yml/badge.svg)](https://github.com/Solcogito/AutoVersion/actions)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Platform](https://img.shields.io/badge/Platform-Win%20%7C%20Mac%20%7C%20Linux-lightgrey)](#)
+
+
 ### Semantic Versioning & Changelog Automation for Unity and .NET
 
 AutoVersion Lite automates version bumps, changelog generation, and Git tagging.  

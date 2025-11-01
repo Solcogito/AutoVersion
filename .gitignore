@@ -3,6 +3,11 @@
 # Covers .NET, Unity, and common build/temp files
 # ------------------------------------------------------------------------------
 
+## Case Specific
+Media/
+GumroadPackage/
+AutoVersionUnityMenuDemo/
+
 ## Build Artifacts
 [Bb]in/
 [Oo]bj/

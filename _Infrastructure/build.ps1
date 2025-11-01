@@ -59,7 +59,18 @@ if (-not $NoTests) {
 # 4. Publish CLI
 # --------------------------------------------------------------------------
 Write-Host "`n[4/4] Publishing CLI..." -ForegroundColor Yellow
-if (-not (Test-Path $BuildDir)) { New-Item -ItemType Directory -Path $BuildDir | Out-Null }
+
+# Define build directory (absolute path)
+$RootDir  = Split-Path -Parent $PSScriptRoot
+$BuildDir = Join-Path $RootDir "Builds"
+
+# Ensure it exists
+if (-not (Test-Path $BuildDir)) {
+    New-Item -ItemType Directory -Path $BuildDir | Out-Null
+}
+
+# ✅ Use absolute path to prevent nested Builds/Builds confusion
+$publishOut = (Resolve-Path $BuildDir).Path
 
 dotnet publish $CliProj `
     -c Release `
@@ -68,15 +79,19 @@ dotnet publish $CliProj `
     /p:PublishSingleFile=true `
     /p:IncludeAllContentForSelfExtract=true `
     /p:PublishTrimmed=false `
-    -o $BuildDir | Out-Host
+    -o "$publishOut" | Out-Host
 
-$cliExe = Join-Path $BuildDir "AutoVersion.Cli.exe"
+# Clean rename with overwrite
+$cliExe   = Join-Path $BuildDir "AutoVersion.Cli.exe"
+$finalExe = Join-Path $BuildDir "autoversion.exe"
+
+if (Test-Path $finalExe) { Remove-Item $finalExe -Force }
+
 if (Test-Path $cliExe) {
-    $finalExe = Join-Path $BuildDir "autoversion.exe"
     Rename-Item $cliExe $finalExe -Force
     Write-Host "✅ CLI packaged: $finalExe" -ForegroundColor Green
 } else {
-    Write-Host "⚠️  CLI build did not produce an executable!" -ForegroundColor Yellow
+    Write-Host "⚠️ CLI build did not produce an executable!" -ForegroundColor Yellow
 }
 
 Write-Host "`n✅ Build completed successfully." -ForegroundColor Green

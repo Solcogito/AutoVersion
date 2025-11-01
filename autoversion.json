@@ -30,8 +30,8 @@
       "overwrite": true
     },
     {
-      "path": "Builds/AutoVersion.Cli.exe",
-      "rename": "Builds/AutoVersion.Cli_v{version}.exe",
+      "path": "Builds/autoversion.exe",
+      "rename": "Builds/autoversion_v{version}.exe",
       "overwrite": true
     }
   ],
