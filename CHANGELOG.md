@@ -1,4 +1,19 @@
+## [1.1.2] - 2025-11-03
+
+## [1.1.2] - 2025-11-03
+
+### Documentation
+
+- Official release README adjustment
+
+## [1.1.1] - 2025-11-01
+
+### Other
+
+- Official release setup on GitHub: AutoVersion_Lite_v1.1.1.zip
+
 ## [1.1.0] - 2025-11-01
+
 ### Documentation
 - reorganize documentation and update style/config files (098f9dd)
 - Added core versioning logic (`VersionModel`, `VersionManager`)
