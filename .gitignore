@@ -78,8 +78,6 @@ CrashReports/
 *.prefs
 
 # Unity auto-generated solution & project files
-*.csproj
-*.sln
 *.unityproj
 
 # ----------------------------------------------------------------------

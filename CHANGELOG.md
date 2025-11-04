@@ -1,4 +1,15 @@
+## [1.1.3] - 2025-11-04
+
+## [1.1.2] - 2025-11-04
+
+## [1.1.1] - 2025-11-01
+
+### Maintenance
+
+- GitHub release preparations.
+
 ## [1.1.0] - 2025-11-01
+
 ### Documentation
 - reorganize documentation and update style/config files (098f9dd)
 - Added core versioning logic (`VersionModel`, `VersionManager`)
@@ -14,6 +25,7 @@
 - add GitHub Actions workflow (818b08f)
 
 ## [1.0.0] - 2025-11-01
+
 ### Added
 - **git**: implement automatic tag creation and push integration for v0.5.0 (d5e562f)
 - **artifacts**: implement artifact handling and rename logic for v0.4.0 (415f833)
@@ -38,6 +50,7 @@
 - **git**: stabilize GitService_CreatesTagSuccessfully on Windows (3971836)
 
 ## [0.2.0] - 2025-11-01
+
 ### Added
 - **git**: implement automatic tag creation and push integration for v0.5.0 (d5e562f)
 - **artifacts**: implement artifact handling and rename logic for v0.4.0 (415f833)
