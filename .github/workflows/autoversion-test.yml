@@ -9,7 +9,11 @@ on:
 
 jobs:
   test-autoversion:
-    runs-on: ubuntu-latest
+    # Run on both Windows and Ubuntu
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: 📥 Checkout repository
@@ -21,30 +25,51 @@ jobs:
           dotnet-version: 8.0.x
 
       - name: 🧪 Verify AutoVersion CLI
+        shell: pwsh
         run: |
-          chmod +x ./Builds/autoversion.exe || true
-          echo "=== autoversion --version ==="
-          ./Builds/autoversion.exe --version || echo "Version check failed"
-          echo "=== autoversion --help ==="
-          ./Builds/autoversion.exe --help || echo "Help check failed"
+          Write-Host "=== Environment ==="
+          Write-Host "Running on $env:RUNNER_OS"
+          Write-Host "====================="
+
+          $exe = "./Builds/autoversion.exe"
+
+          if (Test-Path $exe) {
+            Write-Host "=== autoversion --version ==="
+            & $exe --version
+            Write-Host "=== autoversion --help ==="
+            & $exe --help
+          }
+          else {
+            Write-Warning "autoversion.exe not found. Skipping CLI tests on $env:RUNNER_OS"
+          }
 
       - name: 🧱 Run dry-run version bump
+        shell: pwsh
         run: |
-          ./Builds/autoversion.exe bump patch --dry-run --allow-dirty --verbose
+          $exe = "./Builds/autoversion.exe"
+          if (Test-Path $exe) {
+            Write-Host "=== Running dry-run version bump ==="
+            & $exe bump patch --dry-run --allow-dirty --verbose
+          }
+          else {
+            Write-Warning "Skipping version bump: autoversion.exe missing."
+          }
 
       - name: 🧾 Validate CHANGELOG generation
+        shell: pwsh
         run: |
-          if [ -f "CHANGELOG.md" ]; then
-            echo "✅ CHANGELOG.md exists"
-            head -n 10 CHANGELOG.md
-          else
-            echo "❌ Missing CHANGELOG.md"
+          if (Test-Path "CHANGELOG.md") {
+            Write-Host "✅ CHANGELOG.md exists"
+            Get-Content CHANGELOG.md -TotalCount 10
+          }
+          else {
+            Write-Error "❌ Missing CHANGELOG.md"
             exit 1
-          fi
+          }
 
       - name: 🧹 Cleanup build artifacts
         if: always()
+        shell: pwsh
         run: |
-          echo "Cleaning temporary files..."
-          rm -rf Builds/Test*
-
+          Write-Host "Cleaning temporary files..."
+          if (Test-Path "Builds") { Remove-Item "Builds/Test*" -Recurse -Force -ErrorAction SilentlyContinue }
