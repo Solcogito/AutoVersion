@@ -1,7 +1,5 @@
 ## [1.1.2] - 2025-11-03
 
-## [1.1.2] - 2025-11-03
-
 ### Documentation
 
 - Official release README adjustment

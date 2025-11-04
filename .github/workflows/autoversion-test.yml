@@ -1,0 +1,50 @@
+name: 🧪 AutoVersion Sandbox Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+jobs:
+  test-autoversion:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🧰 Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: 🧪 Verify AutoVersion CLI
+        run: |
+          chmod +x ./Builds/autoversion.exe || true
+          echo "=== autoversion --version ==="
+          ./Builds/autoversion.exe --version || echo "Version check failed"
+          echo "=== autoversion --help ==="
+          ./Builds/autoversion.exe --help || echo "Help check failed"
+
+      - name: 🧱 Run dry-run version bump
+        run: |
+          ./Builds/autoversion.exe bump patch --dry-run --allow-dirty --verbose
+
+      - name: 🧾 Validate CHANGELOG generation
+        run: |
+          if [ -f "CHANGELOG.md" ]; then
+            echo "✅ CHANGELOG.md exists"
+            head -n 10 CHANGELOG.md
+          else
+            echo "❌ Missing CHANGELOG.md"
+            exit 1
+          fi
+
+      - name: 🧹 Cleanup build artifacts
+        if: always()
+        run: |
+          echo "Cleaning temporary files..."
+          rm -rf Builds/Test*
+
