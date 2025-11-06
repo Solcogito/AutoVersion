@@ -180,8 +180,9 @@ namespace Solcogito.AutoVersion.Cli
         }
 
         private static void PrintHelp()
-        {
-            Console.WriteLine("AutoVersion Lite 0.9.0");
+        {	
+			var versionNum = VersionFile.Load();
+            Console.WriteLine($"AutoVersion Lite {versionNum}");
             Console.WriteLine("Usage:");
             Console.WriteLine("  autoversion current [--json]");
             Console.WriteLine("  autoversion bump <major|minor|patch|prerelease> [--dry-run] [--json]");
