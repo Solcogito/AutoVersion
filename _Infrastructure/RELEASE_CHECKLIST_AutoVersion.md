@@ -15,11 +15,11 @@ Guarantee that AutoVersion v1.1.2 (Lite) is stable, documented, and synchronized
 ## 2️⃣ CLI Validation
 | Command | Expected Behavior | Status |
 |----------|------------------|--------|
-| autoversion --help | Shows flags and usage | ☐ |
-| autoversion bump patch | Increments build number | ☐ | <!-- TODO: specify to test in sandbox?)  -->
-| --dry-run | No write, prints preview | ☐ |
-| --allow-dirty | Runs with uncommitted files | ☐ |
-| Invalid arg | Exit code = 1 | ☐ |
+| autoversion --help | Shows flags and usage | ✅ |
+| autoversion bump patch | Increments build number | ✅ | <!-- TODO: specify to test in sandbox?)  -->
+| --dry-run | No write, prints preview | ✅ |
+| --allow-dirty | Runs with uncommitted files | ✅ |
+| Invalid arg | Exit code = 1 | ✅ |
 
 ## 3️⃣ Configuration & Environment
 | Task | Expected | Status |
