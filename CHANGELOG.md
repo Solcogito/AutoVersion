@@ -1,3 +1,25 @@
+## [1.1.3] - 2025-11-08
+
+### 🔄 Changes
+- Removed obsolete **AutoChangelog** dependency and namespace references (`Solcogito.AutoVersion.Core.Changelog`)  
+- Refactored **`VersionFile`**:
+  - Added guaranteed return value to `VersionPath()` to resolve `CS0161`
+  - Implemented safe file path detection with fallback to `AutoVersionFilePath`
+  - Introduced proper extension handling:
+    ```csharp
+    private static readonly string[] versionExt = { ".json", ".txt" };
+    private static readonly List<string> defVersionFilePaths =
+        versionExt.Select(ext => "version" + ext).ToList();
+    ```
+  - Improved error handling and JSON parsing stability
+- Fixed `File.WriteAllText(VersionPath, …)` method group error → now correctly calls `VersionPath()`
+- Cleaned up redundant constants and improved naming consistency
+- Verified all previous compilation errors (`CS0161`, `CS1503`, `CS0234`) are resolved
+
+### 🧰 Summary
+This patch removes the legacy **AutoChangelog** module, stabilizes version file resolution logic, and finalizes
+the internal file I/O layer for integration with **CompleteRelease**.
+
 ## [1.1.2] - 2025-11-03
 
 ### Documentation
