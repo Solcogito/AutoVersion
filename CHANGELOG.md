@@ -1,12 +1,14 @@
-## [1.1.3] - 2025-11-04
+## [1.1.2] - 2025-11-03
 
-## [1.1.2] - 2025-11-04
+### Documentation
+
+- Official release README adjustment
 
 ## [1.1.1] - 2025-11-01
 
-### Maintenance
+### Other
 
-- GitHub release preparations.
+- Official release setup on GitHub: AutoVersion_Lite_v1.1.1.zip
 
 ## [1.1.0] - 2025-11-01
 
