@@ -51,13 +51,6 @@ namespace Solcogito.AutoVersion.Cli
                             BumpCommand.Execute(args);
                         break;
 
-                    case "changelog":
-                        if (jsonMode)
-                            RunChangelogJson(args);
-                        else
-                            RunChangelog(args);
-                        break;
-
                     case "--help":
                     case "-h":
                     default:
@@ -126,62 +119,14 @@ namespace Solcogito.AutoVersion.Cli
             Console.WriteLine(JsonSerializer.Serialize(payload, new JsonSerializerOptions { WriteIndented = true }));
         }
 
-        private static void RunChangelogJson(string[] args)
-        {
-            string? sinceTag = null;
-            bool dryRun = args.Contains("--dry-run") || args.Contains("--preview");
-
-            foreach (var arg in args)
-            {
-                if (arg.StartsWith("--since-tag"))
-                {
-                    var parts = arg.Split('=');
-                    if (parts.Length == 2)
-                        sinceTag = parts[1];
-                }
-            }
-
-            var log = ChangelogCommand.RunJson(sinceTag, dryRun);
-            var payload = new
-            {
-                command = "changelog",
-                sinceTag,
-                dryRun,
-                entries = log,
-                status = "success"
-            };
-            Console.WriteLine(JsonSerializer.Serialize(payload, new JsonSerializerOptions { WriteIndented = true }));
-        }
-
         // --------------------------------------------------------------------
         // Text-mode changelog + help
-        // --------------------------------------------------------------------
-
-        private static void RunChangelog(string[] args)
-        {
-            string? sinceTag = null;
-            bool dryRun = false;
-
-            foreach (var arg in args)
-            {
-                if (arg.StartsWith("--since-tag"))
-                {
-                    var parts = arg.Split('=');
-                    if (parts.Length == 2)
-                        sinceTag = parts[1];
-                }
-                else if (arg == "--dry-run" || arg == "--preview")
-                {
-                    dryRun = true;
-                }
-            }
-
-            ChangelogCommand.Run(sinceTag, dryRun);
-        }
+        // -------------------------------------------------------------------- 
 
         private static void PrintHelp()
-        {
-            Console.WriteLine("AutoVersion Lite 0.9.0");
+        {	
+			var versionNum = VersionFile.Load();
+            Console.WriteLine($"AutoVersion Lite {versionNum}");
             Console.WriteLine("Usage:");
             Console.WriteLine("  autoversion current [--json]");
             Console.WriteLine("  autoversion bump <major|minor|patch|prerelease> [--dry-run] [--json]");

@@ -9,6 +9,7 @@
 Media/
 GumroadPackage/
 AutoVersionUnityMenuDemo/
+Releases/
 
 # ----------------------------------------------------------------------
 # BUILD & OUTPUT ARTIFACTS
@@ -78,8 +79,6 @@ CrashReports/
 *.prefs
 
 # Unity auto-generated solution & project files
-*.csproj
-*.sln
 *.unityproj
 
 # ----------------------------------------------------------------------

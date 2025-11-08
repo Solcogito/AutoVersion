@@ -1,4 +1,39 @@
+## [1.1.3] - 2025-11-08
+
+### 🔄 Changes
+- Removed obsolete **AutoChangelog** dependency and namespace references (`Solcogito.AutoVersion.Core.Changelog`)  
+- Refactored **`VersionFile`**:
+  - Added guaranteed return value to `VersionPath()` to resolve `CS0161`
+  - Implemented safe file path detection with fallback to `AutoVersionFilePath`
+  - Introduced proper extension handling:
+    ```csharp
+    private static readonly string[] versionExt = { ".json", ".txt" };
+    private static readonly List<string> defVersionFilePaths =
+        versionExt.Select(ext => "version" + ext).ToList();
+    ```
+  - Improved error handling and JSON parsing stability
+- Fixed `File.WriteAllText(VersionPath, …)` method group error → now correctly calls `VersionPath()`
+- Cleaned up redundant constants and improved naming consistency
+- Verified all previous compilation errors (`CS0161`, `CS1503`, `CS0234`) are resolved
+
+### 🧰 Summary
+This patch removes the legacy **AutoChangelog** module, stabilizes version file resolution logic, and finalizes
+the internal file I/O layer for integration with **CompleteRelease**.
+
+## [1.1.2] - 2025-11-03
+
+### Documentation
+
+- Official release README adjustment
+
+## [1.1.1] - 2025-11-01
+
+### Other
+
+- Official release setup on GitHub: AutoVersion_Lite_v1.1.1.zip
+
 ## [1.1.0] - 2025-11-01
+
 ### Documentation
 - reorganize documentation and update style/config files (098f9dd)
 - Added core versioning logic (`VersionModel`, `VersionManager`)
@@ -14,6 +49,7 @@
 - add GitHub Actions workflow (818b08f)
 
 ## [1.0.0] - 2025-11-01
+
 ### Added
 - **git**: implement automatic tag creation and push integration for v0.5.0 (d5e562f)
 - **artifacts**: implement artifact handling and rename logic for v0.4.0 (415f833)
@@ -38,6 +74,7 @@
 - **git**: stabilize GitService_CreatesTagSuccessfully on Windows (3971836)
 
 ## [0.2.0] - 2025-11-01
+
 ### Added
 - **git**: implement automatic tag creation and push integration for v0.5.0 (d5e562f)
 - **artifacts**: implement artifact handling and rename logic for v0.4.0 (415f833)

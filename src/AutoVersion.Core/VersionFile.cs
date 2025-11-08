@@ -11,6 +11,7 @@
 // License:     MIT
 // ============================================================================
 
+using System.Diagnostics;
 using System.IO;
 
 namespace Solcogito.AutoVersion.Core
@@ -20,18 +21,82 @@ namespace Solcogito.AutoVersion.Core
     /// </summary>
     public static class VersionFile
     {
-        private const string VersionPath = "version.txt";
+        private const string AutoVersionFilePath = "autoversion.json";
+        private static readonly string[] versionExt = { ".json", ".txt" };
+        private static readonly List<string> defVersionFilePaths = versionExt
+            .Select(ext => "version" + ext)
+            .ToList();
+
+        private static string VersionPath()
+        {
+            try
+            {
+                if (File.Exists(AutoVersionFilePath))
+                {
+                    // Load it from "VersionFile" key in autoversion.json
+                    var jsonText = File.ReadAllText(AutoVersionFilePath).Trim();
+                    var jsonDoc = System.Text.Json.JsonDocument.Parse(jsonText);
+
+                    if (jsonDoc.RootElement.TryGetProperty("versionFile", out var versionFileElement))
+                    {
+                        string path = versionFileElement.GetString() ?? AutoVersionFilePath;
+                        return path;
+                    }
+                    else
+                    {
+                        return AutoVersionFilePath;
+                    }
+                }
+
+                foreach (var path in defVersionFilePaths)
+                {
+                    if (File.Exists(path))
+                    {
+                        string ver = File.ReadAllText(path).Trim();
+                        return path;
+                    }
+                }
+            }
+            catch
+            {
+                Debug.WriteLine("Error determining version file path. Using default.");
+            }
+           return AutoVersionFilePath;
+        }
 
         /// <summary>
         /// Loads the version from the file, or returns a default if missing.
         /// </summary>
         public static VersionModel Load()
         {
-            if (!File.Exists(VersionPath))
-                return new VersionModel(0, 1, 0);
+            // TODO: abstracted filename loader, so instead of checking for file,
+            // we check for module presence and get relevant files
+            // (peu importe, whatever file hase to come with it)
+            if (!File.Exists(AutoVersionFilePath))
+            {
+                // Check for both defaults, json first
+                foreach (var path in defVersionFilePaths)
+                {
+                    if (File.Exists(path))
+                    {
+                        string ver = File.ReadAllText(path).Trim();
+                        return VersionModel.Parse(ver);
+                    }
+                }
+            }
+            else
+            {
+                // Load from autoversion.json
+                var jsonText = File.ReadAllText(AutoVersionFilePath).Trim();
+                var jsonDoc = System.Text.Json.JsonDocument.Parse(jsonText);
+                if (jsonDoc.RootElement.TryGetProperty("version", out var versionElement))
+                {
+                    string ver = versionElement.GetString() ?? "0.1.0";
+                    return VersionModel.Parse(ver);
+                }
+            }
 
-            var text = File.ReadAllText(VersionPath).Trim();
-            return VersionModel.Parse(text);
+            return new VersionModel(0, 1, 0);
         }
 
         /// <summary>
@@ -39,7 +104,7 @@ namespace Solcogito.AutoVersion.Core
         /// </summary>
         public static void Save(VersionModel version)
         {
-            File.WriteAllText(VersionPath, version.ToString());
+            File.WriteAllText(VersionPath(), version.ToString());
         }
     }
 }
