@@ -17,6 +17,7 @@ using System.Linq;
 using System.Text.Json;
 using Solcogito.AutoVersion.Core;
 using Solcogito.AutoVersion.Cli.Commands;
+using Solcogito.Common.Versioning;
 
 namespace Solcogito.AutoVersion.Cli
 {
@@ -89,7 +90,7 @@ namespace Solcogito.AutoVersion.Cli
 
         private static void RunCurrentJson()
         {
-            var version = VersionManager.GetCurrentVersion();
+            var version = VersionResolver.ResolveVersion();
             var payload = new
             {
                 command = "current",
@@ -103,16 +104,15 @@ namespace Solcogito.AutoVersion.Cli
         {
             bool dryRun = args.Contains("--dry-run") || args.Contains("--preview");
             string type = args.Length > 1 ? args[1] : "patch";
+            var currentVersion = VersionResolver.ResolveVersion();
 
-            var result = VersionManager.Bump(type, pre: null, dryRun: dryRun);
+            var result = VersionBumper.Bump(currentVersion, type);
             var payload = new
             {
                 command = "bump",
-                oldVersion = result.OldVersion,
-                newVersion = result.NewVersion,
+                oldVersion = currentVersion,
+                newVersion = result,
                 dryRun,
-                filesUpdated = result.FilesUpdated?.Count ?? 0,
-                tagCreated = result.TagCreated,
                 status = "success"
             };
 
@@ -125,7 +125,7 @@ namespace Solcogito.AutoVersion.Cli
 
         private static void PrintHelp()
         {	
-			var versionNum = VersionFile.Load();
+			var versionNum = VersionResolver.ResolveVersion();
             Console.WriteLine($"AutoVersion Lite {versionNum}");
             Console.WriteLine("Usage:");
             Console.WriteLine("  autoversion current [--json]");

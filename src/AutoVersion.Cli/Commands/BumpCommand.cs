@@ -20,6 +20,7 @@ using Solcogito.AutoVersion.Core;
 using Solcogito.AutoVersion.Core.Git;
 using Solcogito.AutoVersion.Core.Config;
 using Solcogito.AutoVersion.Core.Artifacts;
+using Solcogito.Common.Versioning;
 
 namespace Solcogito.AutoVersion.Cli.Commands
 {
@@ -83,8 +84,8 @@ namespace Solcogito.AutoVersion.Cli.Commands
                 // ------------------------------------------------------------
                 // 3. Load current version and compute new one
                 // ------------------------------------------------------------
-                var oldVersion = VersionFile.Load();
-                var newVersion = oldVersion.Bump(type, pre);
+                var oldVersion = VersionResolver.ResolveVersion();
+                var newVersion = Solcogito.AutoVersion.Core.VersionBumper.Bump(oldVersion, args[1]);
 
                 // ------------------------------------------------------------
                 // 4. Git Tag Integration
@@ -110,7 +111,7 @@ namespace Solcogito.AutoVersion.Cli.Commands
                 // 5. Save version changes (unless dry-run)
                 // ------------------------------------------------------------
                 if (!dryRun)
-                    VersionFile.Save(newVersion);
+                    VersionFile.Write(VersionResolver.ResolveVersionFilePath(), newVersion);
 
                 Logger.Action($"Version bump: {oldVersion} -> {newVersion}");
 

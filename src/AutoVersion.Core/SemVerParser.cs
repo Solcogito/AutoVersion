@@ -13,6 +13,7 @@
 // ============================================================================
 
 using System.Text.RegularExpressions;
+using Solcogito.Common.Versioning;
 
 namespace Solcogito.AutoVersion.Core
 {

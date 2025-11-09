@@ -21,6 +21,7 @@ using Solcogito.AutoVersion.Core;
 using Solcogito.AutoVersion.Core.Config;
 using Solcogito.AutoVersion.Core.Artifacts;
 using Solcogito.AutoVersion.Core.Git;
+using Solcogito.Common.Versioning;
 
 namespace Solcogito.AutoVersion.Tests
 {

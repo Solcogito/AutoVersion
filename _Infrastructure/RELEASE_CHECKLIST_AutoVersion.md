@@ -1,13 +1,13 @@
-# ✅ RELEASE_CHECKLIST.md — AutoVersion v1.1.2 Verification
+# ✅ RELEASE_CHECKLIST.md — AutoVersion v1.1.3 Verification
 
 ##### Objective  
-Guarantee that AutoVersion v1.1.2 (Lite) is stable, documented, and synchronized with BuildStamp for public use.
+Guarantee that AutoVersion v1.1.3 (Lite) is stable, documented, and synchronized with BuildStamp for public use.
 
 ## 1️⃣ Project Integrity
 | Task | Check | Status |
 |------|--------|--------|
-| dotnet build succeeds | Core and CLI compile | ✅ |
-| Config and docs exist | autoversion.json present | ✅ | <!-- TODO: confirm if the files itself is really ok (is it done later)  -->
+| dotnet build succeeds | Core and CLI compile | ✅✅ |
+| Config and docs exist | autoversion.json present | ✅✅ | <!-- TODO: confirm if the files itself is really ok (is it done later)  -->
 | MIT License updated | LICENSE| ✅ |
 | CHANGELOG accurate | last entry = v1.1.2 | ✅ |
 | Version tag confirmed | `autoversion current` → v1.1.2 | ✅ |

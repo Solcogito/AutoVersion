@@ -12,7 +12,7 @@
 // ============================================================================
 
 using System;
-using Solcogito.AutoVersion.Core;
+using Solcogito.Common.Versioning;
 
 namespace Solcogito.AutoVersion.Cli.Commands
 {
@@ -23,7 +23,7 @@ namespace Solcogito.AutoVersion.Cli.Commands
         /// </summary>
         public static void Execute()
         {
-            var version = VersionFile.Load();
+            var version = VersionResolver.ResolveVersion();
             Console.WriteLine(version);
         }
     }
