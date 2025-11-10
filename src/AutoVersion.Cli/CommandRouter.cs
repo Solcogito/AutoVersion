@@ -14,6 +14,7 @@
 
 using System;
 using System.Linq;
+using System.Diagnostics;
 using System.Text.Json;
 using Solcogito.AutoVersion.Core;
 using Solcogito.AutoVersion.Cli.Commands;
@@ -49,7 +50,10 @@ namespace Solcogito.AutoVersion.Cli
                         if (jsonMode)
                             RunBumpJson(args);
                         else
+                        {
+                            Debug.WriteLine($"Executing 'bump' command with args: {string.Join(" ", args)}");
                             BumpCommand.Execute(args);
+                        }
                         break;
 
                     case "--help":

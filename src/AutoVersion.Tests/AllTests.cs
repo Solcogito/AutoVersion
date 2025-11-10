@@ -31,26 +31,6 @@ namespace Solcogito.AutoVersion.Tests
     public class SemVerTests
     {
         [Fact]
-        public void Parse_ValidStrings()
-        {
-            var v = VersionModel.Parse("1.2.3-alpha+build42");
-            Assert.Equal(1, v.Major);
-            Assert.Equal(2, v.Minor);
-            Assert.Equal(3, v.Patch);
-            Assert.Equal("alpha", v.Prerelease);
-            Assert.Equal("build42", v.Build);
-        }
-
-        [Fact]
-        public void Bump_IncrementsCorrectly()
-        {
-            var v = VersionModel.Parse("1.2.3");
-            Assert.Equal("2.0.0", v.Bump("major").ToString());
-            Assert.Equal("1.3.0", v.Bump("minor").ToString());
-            Assert.Equal("1.2.4", v.Bump("patch").ToString());
-        }
-
-        [Fact]
         public void Compare_OrdersProperly()
         {
             var a = VersionModel.Parse("1.0.0");

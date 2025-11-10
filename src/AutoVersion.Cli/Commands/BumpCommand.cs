@@ -110,8 +110,31 @@ namespace Solcogito.AutoVersion.Cli.Commands
                 // ------------------------------------------------------------
                 // 5. Save version changes (unless dry-run)
                 // ------------------------------------------------------------
+                var versionFilePath = VersionResolver.ResolveVersionFilePath();
+                Logger.Info($"Resolved version file path: '{versionFilePath}'");
+
+                if (newVersion.Equals(default(VersionModel)))
+                    Logger.Warn("newVersion is default (0.0.0?) before writing version file.");
+                else
+                    Logger.Info($"New version to write: {newVersion}");
+
+                if (string.IsNullOrWhiteSpace(versionFilePath))
+                    throw new InvalidOperationException("Version file path is empty or missing.");
+
                 if (!dryRun)
-                    VersionFile.Write(VersionResolver.ResolveVersionFilePath(), newVersion);
+                {
+                    try
+                    {
+                        Logger.Info("Attempting to write version file...");
+                        VersionFile.Write(versionFilePath, newVersion);
+                        Logger.Info("Version file written successfully.");
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error($"Error inside VersionFile.Write: {ex}");
+                        throw; // Let the outer catch (below) handle the higher-level logging
+                    }
+                }
 
                 Logger.Action($"Version bump: {oldVersion} -> {newVersion}");
 
