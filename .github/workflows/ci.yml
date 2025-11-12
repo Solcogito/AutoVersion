@@ -1,104 +1,63 @@
-# ============================================================================
-# File:        .github/workflows/ci.yml
-# Project:     AutoVersion Lite
-# Author:      Benoit Desrosiers (Solcogito S.E.N.C.)
-# ----------------------------------------------------------------------------
-# Description:
-#   Continuous Integration workflow for AutoVersion
-#   - Restores dependencies
-#   - Builds and tests the solution
-#   - Publishes the CLI artifact
-#   - Bumps version & updates changelog using AutoVersion CLI
-#   - Commits + tags release automatically
-# ============================================================================
-
-name: CI / Release
+name: CI – Build & Test Matrix
 
 on:
   push:
-    branches: [ main ]
-  workflow_dispatch:
+    branches: [ main, develop ]
+  pull_request:
 
 jobs:
-  build:
-    runs-on: windows-latest
+  build-test:
+    name: Build & Test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
-      # ---------------------------------------------------------------
+      # -------------------------------
       # Checkout
-      # ---------------------------------------------------------------
-      - name: 🧾 Checkout repository
-        uses: actions/checkout@v4
+      # -------------------------------
+      - uses: actions/checkout@v4
+
+      # -------------------------------
+      # Install .NET 8
+      # -------------------------------
+      - uses: actions/setup-dotnet@v4
         with:
-          fetch-depth: 0  # required for changelog & tags
+          dotnet-version: 8.0.x
 
-      # ---------------------------------------------------------------
-      # Setup .NET
-      # ---------------------------------------------------------------
-      - name: 🧱 Setup .NET SDK
-        uses: actions/setup-dotnet@v4
+      # -------------------------------
+      # Restore, Build, Test
+      # -------------------------------
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build solution
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Run tests
+        run: dotnet test --configuration Release --no-build --verbosity normal
+
+      # -------------------------------
+      # Validate AutoVersion config
+      # Using dotnet run (no publish)
+      # -------------------------------
+      - name: Validate AutoVersion configuration
+        run: dotnet run --project src/AutoVersion.Cli -- config --validate
+
+      # -------------------------------
+      # Lint commit messages (Linux only)
+      # Requires Node.js + commitlint
+      # -------------------------------
+      - name: Setup Node (Linux only)
+        if: runner.os == 'Linux'
+        uses: actions/setup-node@v4
         with:
-          dotnet-version: '8.0.x'
+          node-version: '20'
 
-      # ---------------------------------------------------------------
-      # Restore & Build
-      # ---------------------------------------------------------------
-      - name: 📦 Restore dependencies
-        run: dotnet restore AutoVersion.sln
-
-      - name: 🧰 Build solution
-        run: dotnet build AutoVersion.sln --configuration Release --no-restore
-
-      # ---------------------------------------------------------------
-      # Run Tests
-      # ---------------------------------------------------------------
-      - name: 🧪 Run unit tests
-        run: dotnet test src/AutoVersion.Tests --configuration Release --no-build --logger "trx;LogFileName=test_results.trx"
-
-      # ---------------------------------------------------------------
-      # Publish CLI
-      # ---------------------------------------------------------------
-      - name: 🚀 Publish CLI executable
+      - name: Lint commit messages (Linux only)
+        if: runner.os == 'Linux'
         run: |
-          dotnet publish src/AutoVersion.Cli/AutoVersion.Cli.csproj `
-            -c Release `
-            -r win-x64 `
-            --self-contained true `
-            /p:PublishSingleFile=true `
-            /p:IncludeAllContentForSelfExtract=true `
-            /p:PublishTrimmed=false `
-            -o Builds
-
-          if (Test-Path "Builds/AutoVersion.Cli.exe") {
-            if (Test-Path "Builds/autoversion.exe") { Remove-Item "Builds/autoversion.exe" -Force }
-            Rename-Item "Builds/AutoVersion.Cli.exe" "Builds/autoversion.exe"
-          }
-
-      # ---------------------------------------------------------------
-      # Run AutoVersion CLI
-      # ---------------------------------------------------------------
-      - name: 🔢 Bump version & update changelog
-        run: |
-          .\Builds\autoversion.exe bump patch
-        shell: pwsh
-
-      # ---------------------------------------------------------------
-      # Commit + Tag (AutoVersion handles tagPrefix = v)
-      # ---------------------------------------------------------------
-      - name: 🏷️ Commit and push version bump
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add .
-          git commit -m "chore(release): automated version bump"
-          git push
-          git push --tags
-
-      # ---------------------------------------------------------------
-      # Upload build artifacts
-      # ---------------------------------------------------------------
-      - name: 📦 Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: AutoVersion_Builds
-          path: Builds/
+          npm install --save-dev @commitlint/{cli,config-conventional}
+          npx commitlint --from=HEAD~10 --to=HEAD
