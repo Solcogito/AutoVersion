@@ -1,7 +1,5 @@
 {
-  "$schema": "./_Infrastructure/autoversion.schema.json",
   "versionFile": "version.txt",
-
   "files": [
     {
       "path": "version.txt",
@@ -10,59 +8,30 @@
       "encoding": "utf-8"
     },
     {
-      "path": "Assets/README.md",
+      "path": "README.md",
       "type": "text",
       "token": "__VERSION__",
       "encoding": "utf-8"
-    },
-    {
-      "path": "Packages/manifest.json",
-      "type": "json",
-      "key": "version",
-      "encoding": "utf-8"
     }
   ],
-
   "artifacts": [
     {
-      "path": "Builds/AutoVersionLite.unitypackage",
-      "rename": "Builds/AutoVersionLite_{version}.unitypackage",
-      "overwrite": true
-    },
-    {
-      "path": "Builds/autoversion.exe",
-      "rename": "Builds/autoversion_v{version}.exe",
+      "path": "Builds/fake-build.txt",
+      "rename": "Builds/fake-build_{version}.txt",
       "overwrite": true
     }
   ],
-
   "git": {
-    "tagPrefix": "v",
+    "tagPrefix": "test-v",
     "push": true,
     "allowDirty": false,
-    "commitMessage": "chore(release): bump version to {version}"
+    "commitMessage": "test(release): bump version to {version}"
   },
-
-  "changelog": {
-    "path": "CHANGELOG.md",
-    "template": "## [{version}] - {date}\n### Added\n- ...\n",
-    "sections": {
-      "feat": "Added",
-      "fix": "Fixed",
-      "docs": "Documentation",
-      "refactor": "Changed",
-      "chore": "Maintenance",
-      "perf": "Performance"
-    },
-    "autoLinkTags": true,
-    "insertAtTop": true
-  },
-
   "logging": {
     "verbose": true,
     "color": true,
     "level": "info"
   },
-
-  "dryRun": false
+  "dryRun": false,
+  "$schema": "./_Infrastructure/autoversion.schema.json"
 }

@@ -6,7 +6,7 @@
 // ----------------------------------------------------------------------------
 // Description:
 //   Defines the primary configuration model used by AutoVersion to drive
-//   version propagation, changelog generation, and artifact operations.
+//   version propagation and artifact operations.
 //   Maps directly to autoversion.json schema and supports nullable reference
 //   types for optional properties.
 // ----------------------------------------------------------------------------
@@ -33,9 +33,6 @@ namespace Solcogito.AutoVersion.Core.Config
 
         /// <summary>Git integration options (tag, push, commit message).</summary>
         public GitOptions Git { get; set; } = new();
-
-        /// <summary>Changelog generation configuration.</summary>
-        public ChangelogOptions Changelog { get; set; } = new();
 
         /// <summary>Simulate without modifying files.</summary>
         public bool DryRun { get; set; } = false;
@@ -78,22 +75,6 @@ namespace Solcogito.AutoVersion.Core.Config
         public bool AllowDirty { get; set; } = false;
         public string CommitMessage { get; set; } =
             "chore(release): bump version to {version}";
-    }
-
-    /// <summary>Options for changelog generation and section mapping.</summary>
-    public class ChangelogOptions
-    {
-        public string Path { get; set; } = "CHANGELOG.md";
-        public string? Template { get; set; }
-        public Dictionary<string, string> Sections { get; set; } =
-            new()
-            {
-                {"feat", "Added"},
-                {"fix", "Fixed"},
-                {"docs", "Documentation"},
-                {"refactor", "Changed"},
-                {"chore", "Maintenance"}
-            };
     }
 
     /// <summary>Controls verbosity and color output for CLI logs.</summary>

@@ -16,7 +16,7 @@ Guarantee that AutoVersion v1.1.3 (Lite) is stable, documented, and synchronized
 | Command | Expected Behavior | Status |
 |----------|------------------|--------|
 | autoversion --help | Shows flags and usage | ✅ |
-| autoversion bump patch | Increments build number | ✅ | <!-- TODO: specify to test in sandbox?)  -->
+| autoversion bump patch | Increments build number | ✅ |
 | --dry-run | No write, prints preview | ✅ |
 | --allow-dirty | Runs with uncommitted files | ✅ |
 | Invalid arg | Exit code = 1 | ✅ |
@@ -24,10 +24,10 @@ Guarantee that AutoVersion v1.1.3 (Lite) is stable, documented, and synchronized
 ## 3️⃣ Configuration & Environment
 | Task | Expected | Status |
 |------|-----------|--------|
-| autoversion.json loads | All fields read | ☐ |
-| Env overrides | AUTOVERSION_VERSION applied | ☐ |
-| CLI overrides config | Flag takes priority | ☐ |
-| Missing config | Graceful error + defaults | ☐ |
+| autoversion.json loads | All fields read | ✅ |
+| Env overrides | AUTOVERSION_VERSION applied | ☐ | <-- Github enhancement -->
+| CLI overrides config | Flag takes priority | ✅ |
+| Missing config | Graceful error + defaults | ✅ |
 
 ## 4️⃣ Cross-Tool Integration
 | Tool | Integration Test | Status |

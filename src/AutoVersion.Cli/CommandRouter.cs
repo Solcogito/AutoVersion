@@ -1,13 +1,13 @@
 // ============================================================================
 // File:        CommandRouter.cs
 // Project:     AutoVersion Lite
-// Version:     0.9.0
+// Version:     0.9.1
 // Author:      Benoit Desrosiers (Solcogito S.E.N.C.)
 // ----------------------------------------------------------------------------
 // Description:
 //   CLI router that interprets arguments and dispatches to subcommands.
-//   Supports 'current', 'bump', and 'changelog' with optional flags.
-//   Adds JSON output mode (--json) for CI integration.
+//   Supports 'current' and 'bump' with optional flags.
+//   Adds JSON output mode (--json) and force mode (--force) for CI integration.
 // ----------------------------------------------------------------------------
 // License:     MIT
 // ============================================================================
@@ -30,6 +30,16 @@ namespace Solcogito.AutoVersion.Cli
             {
                 PrintHelp();
                 return;
+            }
+
+            // ------------------------------------------------------------
+            // Global flag handling (before routing)
+            // ------------------------------------------------------------
+            bool forceMode = args.Contains("--force");
+            if (forceMode)
+            {
+                Environment.SetEnvironmentVariable("AUTOVERSION_FORCE_DEFAULT", "true");
+                Console.WriteLine("[INFO] Force mode enabled (AUTOVERSION_FORCE_DEFAULT=true)");
             }
 
             var command = args[0].ToLowerInvariant();
@@ -124,21 +134,25 @@ namespace Solcogito.AutoVersion.Cli
         }
 
         // --------------------------------------------------------------------
-        // Text-mode changelog + help
+        // Text-mode help
         // -------------------------------------------------------------------- 
 
         private static void PrintHelp()
-        {	
-			var versionNum = VersionResolver.ResolveVersion();
+        {
+            var versionNum = VersionResolver.ResolveVersion();
             Console.WriteLine($"AutoVersion Lite {versionNum}");
             Console.WriteLine("Usage:");
-            Console.WriteLine("  autoversion current [--json]");
-            Console.WriteLine("  autoversion bump <major|minor|patch|prerelease> [--dry-run] [--json]");
-            Console.WriteLine("  autoversion changelog [--since-tag <tag>] [--dry-run|--preview] [--json]");
+            Console.WriteLine("  autoversion current [--json] [--force]");
+            Console.WriteLine("  autoversion bump <major|minor|patch|prerelease> [--dry-run] [--json] [--force]");
+            Console.WriteLine();
+            Console.WriteLine("Flags:");
+            Console.WriteLine("  --json     Output in JSON format for CI integration");
+            Console.WriteLine("  --dry-run  Simulate operation without modifying files");
+            Console.WriteLine("  --force    Skip prompts and recreate default config automatically if invalid");
             Console.WriteLine();
             Console.WriteLine("Examples:");
             Console.WriteLine("  autoversion bump minor --dry-run --json");
-            Console.WriteLine("  autoversion changelog --since-tag v0.8.0");
+            Console.WriteLine("  autoversion bump patch --force");
         }
     }
 }

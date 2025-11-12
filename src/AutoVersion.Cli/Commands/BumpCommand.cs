@@ -6,8 +6,8 @@
 // ----------------------------------------------------------------------------
 // Description:
 //   Implements the 'bump' subcommand. Supports bumping of major, minor,
-//   patch, and prerelease identifiers, changelog generation, artifact
-//   renaming, and Git tag integration. Ensures changelog never overwrites.
+//   patch, and prerelease identifiers, artifact renaming, and Git tag
+//   integration. 
 // ----------------------------------------------------------------------------
 // License:     MIT
 // ============================================================================
@@ -78,6 +78,7 @@ namespace Solcogito.AutoVersion.Cli.Commands
                 // ------------------------------------------------------------
                 // 2. Load configuration
                 // ------------------------------------------------------------
+
                 var config = ConfigLoader.Load();
                 Logger.Info("Loaded configuration.");
 

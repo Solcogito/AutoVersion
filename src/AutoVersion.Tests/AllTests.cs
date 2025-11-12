@@ -7,7 +7,7 @@
 // Description:
 //   Unified and cleaned test suite covering core AutoVersion functionality.
 //   Includes tests for semantic versioning, configuration handling,
-//   changelog generation, artifact renaming, and CLI bump integration.
+//   artifact renaming, and CLI bump integration.
 // ----------------------------------------------------------------------------
 // License:     MIT
 // ============================================================================
