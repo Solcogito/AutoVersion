@@ -1,13 +1,13 @@
 // ============================================================================
 // File:        BumpCommand.cs
 // Project:     AutoVersion Lite
-// Version:     0.5.3
+// Version:     0.5.4
 // Author:      Benoit Desrosiers (Solcogito S.E.N.C.)
 // ----------------------------------------------------------------------------
 // Description:
 //   Implements the 'bump' subcommand. Supports bumping of major, minor,
 //   patch, and prerelease identifiers, artifact renaming, and Git tag
-//   integration. 
+//   integration, including the --no-git flag.
 // ----------------------------------------------------------------------------
 // License:     MIT
 // ============================================================================
@@ -33,7 +33,7 @@ namespace Solcogito.AutoVersion.Cli.Commands
         {
             if (args.Length < 2)
             {
-                Console.WriteLine("Usage: autoversion bump <major|minor|patch|prerelease> [--pre alpha.1] [--dry-run] [--force] [--allow-dirty]");
+                Console.WriteLine("Usage: autoversion bump <major|minor|patch|prerelease> [--pre alpha.1] [--dry-run] [--force] [--allow-dirty] [--no-git]");
                 return 1;
             }
 
@@ -47,7 +47,8 @@ namespace Solcogito.AutoVersion.Cli.Commands
                 "--pre",
                 "--dry-run",
                 "--force",
-                "--allow-dirty"
+                "--allow-dirty",
+                "--no-git"
             };
 
             var unknownFlags = args
@@ -57,7 +58,7 @@ namespace Solcogito.AutoVersion.Cli.Commands
             if (unknownFlags.Any())
             {
                 Logger.Error("Unknown option(s): " + string.Join(", ", unknownFlags));
-                Console.WriteLine("Usage: autoversion bump <major|minor|patch|prerelease> [--pre alpha.1] [--dry-run] [--force] [--allow-dirty]");
+                Console.WriteLine("Usage: autoversion bump <major|minor|patch|prerelease> [--pre alpha.1] [--dry-run] [--force] [--allow-dirty] [--no-git]");
                 return 1;
             }
 
@@ -71,6 +72,8 @@ namespace Solcogito.AutoVersion.Cli.Commands
             var dryRun = args.Contains("--dry-run");
             var force = args.Contains("--force");
             var allowDirty = args.Contains("--allow-dirty");
+            var noGit = args.Contains("--no-git");
+
             Logger.DryRun = dryRun;
 
             try
@@ -78,7 +81,6 @@ namespace Solcogito.AutoVersion.Cli.Commands
                 // ------------------------------------------------------------
                 // 2. Load configuration
                 // ------------------------------------------------------------
-
                 var config = ConfigLoader.Load();
                 Logger.Info("Loaded configuration.");
 
@@ -89,9 +91,13 @@ namespace Solcogito.AutoVersion.Cli.Commands
                 var newVersion = Solcogito.AutoVersion.Core.VersionBumper.Bump(oldVersion, args[1]);
 
                 // ------------------------------------------------------------
-                // 4. Git Tag Integration
+                // 4. Git Tag Integration (skippable with --no-git)
                 // ------------------------------------------------------------
-                if (config.Git != null && !string.IsNullOrEmpty(config.Git.TagPrefix))
+                if (noGit)
+                {
+                    Logger.Info("Skipping all Git operations (--no-git).");
+                }
+                else if (config.Git != null && !string.IsNullOrEmpty(config.Git.TagPrefix))
                 {
                     var tagName = config.Git.TagPrefix + newVersion;
 
@@ -100,12 +106,11 @@ namespace Solcogito.AutoVersion.Cli.Commands
                         Logger.Warn("Repository is not clean. Use --allow-dirty to override.");
                         return 2;
                     }
-                    else
-                    {
-                        GitService.CreateTag(tagName, $"AutoVersion {newVersion} release");
-                        if (config.Git.Push)
-                            GitService.PushTag(tagName);
-                    }
+
+                    GitService.CreateTag(tagName, $"AutoVersion {newVersion} release");
+
+                    if (config.Git.Push)
+                        GitService.PushTag(tagName);
                 }
 
                 // ------------------------------------------------------------
@@ -179,6 +184,7 @@ namespace Solcogito.AutoVersion.Cli.Commands
             {
                 Logger.Error("Bump failed: " + ex.Message);
             }
+
             return 0;
         }
     }

@@ -148,6 +148,7 @@ namespace Solcogito.AutoVersion.Cli
             Console.WriteLine("  --json     Output in JSON format for CI integration");
             Console.WriteLine("  --dry-run  Simulate operation without modifying files");
             Console.WriteLine("  --force    Skip prompts and recreate default config automatically if invalid");
+            Console.WriteLine("  --no-git   Skip git related operations");
             Console.WriteLine();
             Console.WriteLine("Examples:");
             Console.WriteLine("  autoversion bump minor --dry-run --json");
