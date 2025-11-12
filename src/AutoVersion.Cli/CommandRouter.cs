@@ -24,12 +24,12 @@ namespace Solcogito.AutoVersion.Cli
 {
     internal static class CommandRouter
     {
-        public static void Run(string[] args)
+        public static int Run(string[] args)
         {
             if (args == null || args.Length == 0)
             {
                 PrintHelp();
-                return;
+                return 1;
             }
 
             // ------------------------------------------------------------
@@ -72,8 +72,6 @@ namespace Solcogito.AutoVersion.Cli
                         PrintHelp();
                         break;
                 }
-
-                Environment.ExitCode = 0;
             }
             catch (Exception ex)
             {
@@ -94,8 +92,9 @@ namespace Solcogito.AutoVersion.Cli
                     Console.ResetColor();
                 }
 
-                Environment.ExitCode = 1;
+                return 1;
             }
+            return 0;
         }
 
         // --------------------------------------------------------------------

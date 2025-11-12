@@ -59,7 +59,7 @@ namespace Solcogito.AutoVersion.Core
                 if (config == null)
                     throw new InvalidOperationException("Configuration deserialization returned null.");
 
-                // ✅ Validate structure
+                // Validate structure
                 try
                 {
                     ConfigValidator.Validate(config);

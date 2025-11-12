@@ -21,15 +21,15 @@ namespace Solcogito.AutoVersion.Cli
         {
             try
             {
-                CommandRouter.Run(args);
-                return Environment.ExitCode;
+                var exitCode = CommandRouter.Run(args);
+                return exitCode;
             }
             catch (Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.Error.WriteLine($"Fatal error: {ex.Message}");
                 Console.ResetColor();
-                return 1;
+                return 5;
             }
         }
     }

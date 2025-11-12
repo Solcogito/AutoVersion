@@ -58,7 +58,7 @@ namespace Solcogito.AutoVersion.Cli.Commands
             {
                 Logger.Error("Unknown option(s): " + string.Join(", ", unknownFlags));
                 Console.WriteLine("Usage: autoversion bump <major|minor|patch|prerelease> [--pre alpha.1] [--dry-run] [--force] [--allow-dirty]");
-                return 2;
+                return 1;
             }
 
             // ------------------------------------------------------------
@@ -98,7 +98,7 @@ namespace Solcogito.AutoVersion.Cli.Commands
                     if (!GitService.IsClean() && !config.Git.AllowDirty && !allowDirty)
                     {
                         Logger.Warn("Repository is not clean. Use --allow-dirty to override.");
-                        return 3;
+                        return 2;
                     }
                     else
                     {
@@ -120,7 +120,7 @@ namespace Solcogito.AutoVersion.Cli.Commands
                     Logger.Info($"New version to write: {newVersion}");
 
                 if (string.IsNullOrWhiteSpace(versionFilePath))
-                    throw new InvalidOperationException("Version file path is empty or missing.");
+                    return 2;
 
                 if (!dryRun)
                 {
@@ -133,7 +133,7 @@ namespace Solcogito.AutoVersion.Cli.Commands
                     catch (Exception ex)
                     {
                         Logger.Error($"Error inside VersionFile.Write: {ex}");
-                        throw; // Let the outer catch (below) handle the higher-level logging
+                        return 2;
                     }
                 }
 

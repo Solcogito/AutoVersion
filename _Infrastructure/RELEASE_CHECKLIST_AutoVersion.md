@@ -47,7 +47,7 @@ Guarantee that AutoVersion v1.1.3 (Lite) is stable, documented, and synchronized
 ## 6️⃣ Documentation Review
 | File | Verified | Status |
 |------|-----------|--------|
-| README.md | Overview + usage | ☐ |
+| README.md | Overview + usage | ✅ |
 | AUTOVERSION.md | Full CLI reference | ☐ |
 | CHANGELOG.md | Matches version history | ☐ |
 | WORKFLOWS.md | CI examples accurate | ☐ |
