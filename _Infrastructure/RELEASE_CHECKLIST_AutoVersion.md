@@ -32,17 +32,17 @@ Guarantee that AutoVersion v1.1.3 (Lite) is stable, documented, and synchronized
 ## 4️⃣ Cross-Tool Integration
 | Tool | Integration Test | Status |
 |------|------------------|--------|
-| BuildStamp | buildstamp uses new version | ☐ |
-| ZipRelease | archive includes CHANGELOG + metadata | ☐ |
-| CompleteRelease | AutoVersion → BuildStamp → ZipRelease chain | ☐ |
+| BuildStamp | buildstamp uses new version | ☐ | <-- no available yet -->
+| ZipRelease | archive includes CHANGELOG + metadata | ☐ | <-- no available yet -->
+| CompleteRelease | AutoVersion → BuildStamp → ZipRelease chain | ☐ | <-- no available yet -->
 
 ## 5️⃣ Cross-Platform QA
 | OS | Shell | Result | Status |
 |----|--------|--------|--------|
-| Windows 11 | PowerShell 7 | CLI runs OK | ☐ |
-| Ubuntu 22.04 | bash | CLI runs OK | ☐ |
-| macOS Sonoma | zsh | CLI runs OK | ☐ |
-| GitHub Actions | Ubuntu-latest | Workflow passes | ☐ |
+| Windows 11 | PowerShell 7 | CLI runs OK | ✅ |
+| Ubuntu 22.04 | bash | CLI runs OK | ☐ | <-- no available yet -->
+| macOS Sonoma | zsh | CLI runs OK | ☐ | <-- no available yet -->
+| GitHub Actions | Ubuntu-latest | Workflow passes | ☐ | <-- no available yet -->
 
 ## 6️⃣ Documentation Review
 | File | Verified | Status |
