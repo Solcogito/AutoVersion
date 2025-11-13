@@ -66,18 +66,18 @@ Guarantee that AutoVersion v1.1.3 (Lite) is stable, documented, and synchronized
 ## 8️⃣ Tagging & Deployment
 | Task | Check | Status |
 |------|--------|--------|
-| Commit all changes | `git add . && git commit -m "Release v1.1.2"` | ☐ |
-| Tag release | `git tag v1.1.2` | ☐ |
-| Push tags | `git push origin main --tags` | ☐ |
-| Workflow build | ✅ on GitHub Actions | ☐ |
+| Commit all changes | `git add . && git commit -m "Release v1.1.2"` | ✅ |
+| Tag release | `git tag v1.1.2` | ✅ |
+| Push tags | `git push origin main --tags` | ✅ |
+| Workflow build | ✅ on GitHub Actions | ☐ | <-- pending -->
 
 ## 9️⃣ Post-Release Validation
 | Task | Expected | Status |
 |------|-----------|--------|
-| dotnet tool install --global Solcogito.AutoVersion | Works globally | ☐ |
-| Run CLI after install | autoversion --help outputs | ☐ |
-| Cross-tool chain retest | Full pipeline green | ☐ |
-| Add badge to README | ![v1.1.2] | ☐ |
+| dotnet tool install --global Solcogito.AutoVersion | Works globally | ✅ |
+| Run CLI after install | autoversion --help outputs |✅ |
+| Cross-tool chain retest | Full pipeline green | ☐ | <-- not available yet (lack of tools) -->
+| Add badge to README | ![v1.1.2] | ✅ |
 
 ## 🔟 Final Verification
 
