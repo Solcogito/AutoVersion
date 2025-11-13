@@ -11,7 +11,6 @@ If something doesn’t work as expected, check here before opening an issue.
 
 AutoVersion Lite is a free open-source tool that automates:
 - Semantic versioning (SemVer 2.0.0)
-- CHANGELOG.md generation from commits
 - Git tagging and artifact renaming
 - Unity Editor integration for version management
 
@@ -23,8 +22,8 @@ It’s designed to save time and ensure consistent version control across your p
 
 AutoVersion Lite supports:
 - Windows 10/11  
-- macOS 13+  
-- Linux (Ubuntu 22+, Fedora 38+)  
+- macOS 13+ (To be implemented)
+- Linux (Ubuntu 22+, Fedora 38+) (To be implemented)
 - Unity 2022.3 LTS and newer  
 - .NET 8 SDK  
 
@@ -45,14 +44,12 @@ or include the `AutoVersion.Unity` folder manually under `Assets/Editor/`.
 | Feature | Lite (Free) | Pro (Paid) |
 |----------|-------------|-------------|
 | SemVer bump | ✅ | ✅ |
-| Changelog generation | ✅ | ✅ |
 | Git tagging | ✅ | ✅ |
 | Unity Editor menu | ✅ | ✅ |
 | Artifact renaming | ✅ | ✅ |
-| Custom changelog templates | ❌ | ✅ |
 | Multi-project configs | ❌ | ✅ |
-| Gumroad API / webhooks | ❌ | ✅ |
 | GUI “Release Window” | ❌ | ✅ |
+| Reversal mechanisms | ❌ | ✅ |
 
 ---
 
@@ -86,28 +83,16 @@ AutoVersion automatically detects the nearest `autoversion.json` when run from a
 ### 🟨 Can I use comments or trailing commas in `autoversion.json`?
 
 No — it must be **valid JSON** according to the JSON spec (RFC 8259).  
-Use tools like [JSONLint](https://jsonlint.com/) or run:
-```
-autoversion config --validate
-```
+
+`autoversion config --validate` will be added as a feature of AutoVersion Lite in  an upcoming build.
+
 
 ---
-
-### 🟨 Can I have multiple configs in one repo?
-
-Yes. You can run AutoVersion with the `--config` flag:
-```
-autoversion bump minor --config ./modules/core/autoversion.json
-```
-Each config acts independently — useful for multi-package repositories or large Unity solutions.
-
----
-
 ## 🧾 Usage
 
 ### 🟩 How do I check the current version?
 
-```
+```bash
 autoversion current
 ```
 
@@ -118,19 +103,10 @@ It will read from `autoversion.json` or from the first detected version file (`p
 ### 🟩 How do I simulate a version bump?
 
 Use `--dry-run`:
-```
+```bash
 autoversion bump patch --dry-run
 ```
 No files are modified; it simply prints what would change.
-
----
-
-### 🟩 How do I generate a changelog?
-
-```
-autoversion changelog
-```
-AutoVersion scans all commits since the last Git tag and updates `CHANGELOG.md`.
 
 ---
 
@@ -151,12 +127,12 @@ For details, see `/docs/UNITY.md`.
 
 Git has uncommitted changes.  
 Either commit or stash your files:
-```
+```bash
 git add .
 git commit -m "chore: save work"
 ```
 Then retry:
-```
+```bash
 pwsh _Infrastructure/publish.ps1
 ```
 
@@ -165,30 +141,12 @@ pwsh _Infrastructure/publish.ps1
 ### 🔴 Error: “Could not execute because the specified command or file was not found.”
 
 The CLI wasn’t built. Run:
-```
+```bash
 pwsh _Infrastructure/build.ps1 -Release
 ```
 Then retry the publish script.
 
 ---
-
-### 🔴 Error: “autoversion.json not found.”
-
-Ensure the config file exists at the root.  
-You can specify a custom path:
-```
-autoversion bump patch --config ./path/to/autoversion.json
-```
-
----
-
-### 🔴 CHANGELOG.md not updating
-
-Check that your commit messages follow **Conventional Commits**, for example:
-```
-feat(ui): added dark mode toggle
-fix: corrected null reference in VersionManager
-```
 
 AutoVersion groups commits based on their type (`feat`, `fix`, etc.).  
 Non-conventional messages are ignored.
@@ -252,10 +210,10 @@ If using source files, check namespaces:
 
 ## 📁 Related Files
 
-- `/docs/CONFIG.md` – Configuration reference  
+- `/docs/USAGE/CONFIG.md` – Configuration reference  
 - `/docs/WORKFLOWS.md` – CI/CD automation  
 - `/docs/UNITY.md` – Unity Editor integration  
-- `/docs/QUICKSTART.md` – CLI + setup guide  
+- `/docs/USAGE/QUICKSTART.md` – CLI + setup guide  
 
 ---
 
