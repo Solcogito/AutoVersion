@@ -52,16 +52,16 @@ Guarantee that AutoVersion v1.1.3 (Lite) is stable, documented, and synchronized
 | CHANGELOG.md | Matches version history | ✅ |
 | WORKFLOWS.md | CI examples accurate | ✅ |
 | FAQ.md | Top issues covered | ✅ |
-| ROADMAP.md | Up to v1.2.0 outline | ☐ |
+| ROADMAP.md | Up to v1.2.0 outline | ✅ |
 
 ## 7️⃣ Packaging & Artifacts
 | Task | Check | Status |
 |------|--------|--------|
-| Builds/ clean | Before packaging | ☐ |
-| CLI binary produced | autoversion.exe | ☐ |
-| ziprelease includes binaries | ✅ | ☐ |
-| SHA256 hash recorded | Integrity verified | ☐ |
-| Archive opens cleanly | Manual test | ☐ |
+| Builds/ clean | Before packaging | ✅ |
+| CLI binary produced | autoversion.exe | ✅ |
+| ziprelease includes binaries | ✅ |
+| SHA256 hash recorded | Integrity verified | ☐ | <-- not available yet -->
+| Archive opens cleanly | Manual test | ✅ |
 
 ## 8️⃣ Tagging & Deployment
 | Task | Check | Status |
