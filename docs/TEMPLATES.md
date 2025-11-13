@@ -10,64 +10,7 @@ They are designed for both **manual use** and **automated generation** via futur
 
 ---
 
-## 🧱 1. CHANGELOG Templates
-
-### 🟦 Default (Lite)
-Used by default for all releases generated through the CLI.
-
-```
-## [${version}] – ${date}
-
-### Added
-- New features or functionality.
-
-### Changed
-- Updated or improved existing systems.
-
-### Fixed
-- Bug fixes and stability improvements.
-
-### Removed
-- Deprecated or removed features.
-```
-
----
-
-### 🟩 Extended (Pro)
-A more expressive template, used when richer formatting is enabled.
-
-```
-## 🚀 Release ${version} — ${codename}
-**Date:** ${date}
-
-### ✨ Highlights
-- ${summary}
-
-### 🔧 Technical
-${changes_list}
-
-### 🧩 Integration Notes
-${integration_notes}
-
-### 🧠 Contributors
-${contributors}
-
----
-**Release checksum:** ${commit_hash}
-```
-
----
-
-### 🟨 Compact (CI Logs)
-Minimal format for console or CI output.
-
-```
-[v${version}] ${date} — ${summary}
-```
-
----
-
-## 📦 2. GitHub Release Notes Templates
+## 📦 1. GitHub Release Notes Templates
 
 These are used for `release-on-tag.yml` automation.
 
@@ -119,7 +62,7 @@ ${summary}
 
 ---
 
-## 🪄 3. Gumroad Product Update Templates
+## 🪄 2. Gumroad Product Update Templates
 
 Used when publishing a new version on Gumroad.  
 You can copy these directly into the product’s “Update” tab.
@@ -176,7 +119,7 @@ Stay tuned for updates!
 
 ---
 
-## 📣 4. Social Media Templates
+## 📣 3. Social Media Templates
 
 ### 🟦 Twitter / X
 ```
@@ -223,7 +166,7 @@ Let me know what you think — feedback welcome!
 
 ---
 
-## 🔄 5. Email Update Template (Optional)
+## 🔄 4. Email Update Template (Optional)
 
 ```
 Subject: [Update] AutoVersion Lite v${version} Released
@@ -244,7 +187,7 @@ Thanks for your continued support,
 
 ---
 
-## 🧰 6. Variables Reference
+## 🧰 5. Variables Reference
 
 | Variable | Description |
 |-----------|--------------|
@@ -262,7 +205,7 @@ Thanks for your continued support,
 
 ---
 
-## 🧠 7. Best Practices
+## 🧠 6. Best Practices
 
 - Keep summaries under **10 lines** for quick readability.  
 - Always include one emoji in social posts — boosts engagement.  
@@ -274,7 +217,6 @@ Thanks for your continued support,
 
 ## 📁 Related Files
 
-- `/docs/CHANGELOG.md` — actual generated log  
 - `/docs/WORKFLOWS.md` — release automation details  
 - `/docs/QUICKSTART.md` — setup & build instructions  
 - `/docs/UNITY.md` — Unity Editor integration guide  

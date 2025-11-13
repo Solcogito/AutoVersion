@@ -211,7 +211,7 @@ If using source files, check namespaces:
 ## 📁 Related Files
 
 - `/docs/USAGE/CONFIG.md` – Configuration reference  
-- `/docs/WORKFLOWS.md` – CI/CD automation  
+- `/docs/USAGE/WORKFLOWS.md` – CI/CD automation  
 - `/docs/UNITY.md` – Unity Editor integration  
 - `/docs/USAGE/QUICKSTART.md` – CLI + setup guide  
 

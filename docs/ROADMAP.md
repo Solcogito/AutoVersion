@@ -36,7 +36,6 @@ Lay the groundwork for clean, modular, cross-platform development and CI/CD.
     AutoVersion.Cli/
     AutoVersion.Unity/Editor/
   /docs/
-  /samples/
   /.github/workflows/
   ```
 - Add LICENSE (MIT)  
@@ -173,9 +172,7 @@ Enable artifact renaming with version suffixes.
 
 **Tasks**
 - Implement rename logic  
-- Add `--force` flag  
-- Integrate with changelog bump flow  
-- Add tests for Windows/Mac/Linux paths  
+- Add tests for Windows(Mac/Linux later)
 
 **Deliverables**
 - Files renamed on bump  
@@ -229,9 +226,7 @@ Expose AutoVersion Lite features inside Unity Editor.
 - Menu entries under `Tools/AutoVersion/`
   - Current Version  
   - Bump Major/Minor/Patch/Prerelease  
-  - Generate Changelog  
-- Progress bar + log feedback  
-- Reads `autoversion.json` from project root  
+- Reads `autoversion.json` from project root (To be done)
 
 **Tasks**
 - Create `Editor/AutoVersionMenu.cs`  
@@ -262,16 +257,15 @@ Deliver all docs & learning assets.
 - `WORKFLOWS.md`: GitHub Actions examples  
 - `UNITY.md`: Editor usage  
 - `GUMROAD.md`: Pro preview  
-- `TEMPLATES.md`: changelog/social templates  
+- `TEMPLATES.md`: social templates  
 - `FAQ.md`: 10+ common issues  
 - `CHANGELOG.md`: auto-managed  
 - `LICENSE`: MIT  
 
 **Tasks**
-- Write all docs  
-- Create `/samples/Sample.UnityProject`  
+- Write all docs   
 - Add schema validation example  
-- Record short demo GIF  
+- Record short demo GIF  (GPT: What for?)  
 
 **Acceptance**
 - Docs cover install → use → CI  
@@ -287,9 +281,8 @@ Guarantee cross-platform consistency and code quality.
 
 **Features**
 - CI Matrix: Windows, macOS, Ubuntu  
-- Lint, build, and test jobs  
+- Lint, build, and test jobs  (GPT:Does CI check linting automaticly? Otherwise, we dont)
 - commitlint integration  
-- release-on-tag workflow example  
 - Optional dry-run job for PRs  
 
 **Tasks**
@@ -297,8 +290,7 @@ Guarantee cross-platform consistency and code quality.
 - Add `.commitlintrc.json`  
 - Create workflows:
   - `ci.yml`
-  - `release-on-tag.yml`
-- Document CI in `/docs/WORKFLOWS.md`  
+  - Document CI in `/docs/USAGE/WORKFLOWS.md`  
 
 **Deliverables**
 - Green CI on all OSes  

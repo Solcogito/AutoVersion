@@ -199,27 +199,34 @@ AutoVersion/
 │   ├── build.sh  
 │   ├── publish.ps1  
 │   ├── commitlint.config.json  
-│   ├── autoversion.schema.json  
-│   └── package.json  
+│   ├── autoversion.schema.json   
 ├── src/  
 │   ├── AutoVersion.Core/  
 │   ├── AutoVersion.Cli/  
 │   ├── AutoVersion.Unity/  
 │   └── AutoVersion.Tests/  
-├── samples/  
-│   ├── Sample.UnityProject/  
-│   └── Sample.CliProject/  
 ├── docs/  
-│   ├── QUICKSTART.md  
-│   ├── CONFIG.md  
-│   ├── WORKFLOWS.md  
-│   ├── UNITY.md  
+│   ├── AUTOVERSION.md  
 │   ├── FAQ.md  
-│   └── IMAGES/  
+│   ├── GUMROAD.md  
+│   ├── README.md  
+│   ├── RELEASE.md  
+│   ├── ROADMAP.md  
+│   ├── TEMPLATES.md  
+│   ├── UNITY.md  
+│	├── DESIGN/
+│	│	├── ARCHITECTURE.md
+│	│	├── COMPONENT_GUIDE.md
+│	│	└── TECH_OVERVIEW.md
+│	├── STYLE/ 
+│	│	└──	CCONTRIBUTING.md
+│	└── USAGE/ 
+│		├──	CONFIG.md
+│		├──	QUICKSTART.md
+│		└──	WORKFLOWS.md
 └── .github/workflows/  
-    ├── ci.yml  
-    ├── lint.yml  
-    └── release-on-tag.yml
+    ├── autoversion-test.yml
+    └── ci.yml
 
 ---
 
