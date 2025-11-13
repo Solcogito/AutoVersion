@@ -13,8 +13,6 @@ Your CI/CD stack now includes:
 | Workflow | Purpose | Location |
 |-----------|----------|-----------|
 | 🧱 **ci.yml** | Builds, tests, and validates config on Windows / macOS / Linux | `.github/workflows/ci.yml` |
-| 🧹 **lint.yml** | Validates commits, docs, and configuration files | `.github/workflows/lint.yml` |
-| 🚀 **release-on-tag.yml** | Publishes GitHub Releases automatically on tag push | `.github/workflows/release-on-tag.yml` |
 
 All workflows rely on a single `.commitlintrc.json` file in the repo root.
 
