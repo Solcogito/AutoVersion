@@ -68,9 +68,17 @@ namespace Solcogito.AutoVersion.Cli
 
                     case "--help":
                     case "-h":
-                    default:
+                    case "help":
                         PrintHelp();
-                        break;
+                        return 0;
+
+                    default:
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Error.WriteLine($"Unknown command or option: '{command}'");
+                        Console.ResetColor();
+                        Console.WriteLine();
+                        PrintHelp();
+                        return 1;
                 }
             }
             catch (Exception ex)

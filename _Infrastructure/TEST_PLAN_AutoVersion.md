@@ -1,27 +1,33 @@
-# 🧪 TEST_PLAN.md — AutoVersion v1.1.2
+# 🧪 TEST_PLAN.md — AutoVersion Lite v1.1.2
 
-Project: AutoVersion (Lite)
-Maintainer: Solcogito S.E.N.C.
-Target Version: 1.1.2 (Stable Release)
-Test Environments: Windows 11, Ubuntu 22.04, macOS Sonoma
+Project: **AutoVersion Lite**  
+Maintainer: **Solcogito S.E.N.C.**  
+Target Version: **1.1.2 (Stable Release)**  
+Test Environments: Windows 11, Ubuntu 22.04, macOS Sonoma  
 Tools: .NET 8, PowerShell 7, GitHub Actions, BuildStamp, ZipRelease
 
+---
+
 ## 🧱 1. Objectives
-- Validate all `bump`, `current`, and `changelog` commands.  
-- Ensure CHANGELOG entries and version fields update correctly.  
-- Confirm configuration and schema parsing works with autoversion.json.  
-- Verify integration with BuildStamp and ZipRelease.  
-- Certify CLI stability across platforms and shells.
+- Validate all `bump` and `current` commands.
+- Confirm configuration loading, default creation, and merging behavior.
+- Ensure stable version increments across OS and shells.
+- Verify integration with BuildStamp and ZipRelease.
+- Certify CLI stability for professional pipelines.
+
+---
 
 ## 🧩 2. Test Categories
 
 | Category | Description |
 |-----------|-------------|
-| 🧪 Unit Tests | Function-level tests for bump logic, semantic versioning, and I/O parsing |
-| 🔗 Integration Tests | Git integration, CHANGELOG updates, and cross-tool chaining |
-| 🧠 Regression Tests | Ensure old configs and pre-1.1.0 formats still work |
-| 🧰 Manual QA | CLI usability and text output readability |
-| ☁️ CI/CD Tests | GitHub Actions execution and artifact generation |
+| 🧪 Unit Tests | CLI parsing, version model behavior, I/O operations |
+| 🔗 Integration Tests | Git operations, file updates, BuildStamp/ZipRelease |
+| 🧠 Regression Tests | Compatibility with older configs and workflows |
+| 🧰 Manual QA | CLI usability, readability, error clarity |
+| ☁️ CI/CD Tests | GitHub Actions execution, matrix builds |
+
+---
 
 ## 🧪 3. Unit Tests
 
@@ -29,98 +35,113 @@ Tools: .NET 8, PowerShell 7, GitHub Actions, BuildStamp, ZipRelease
 | Case | Command | Expected Output | Status |
 |------|----------|----------------|--------|
 | Help screen | `autoversion --help` | Lists commands and flags | ☐ |
-| Show version | `autoversion --version` | Prints v1.1.2 | ☐ |
+| Show version | `autoversion --version` | Prints version number | ☐ |
 | Invalid flag | `autoversion --bogus` | Error + exit code 1 | ☐ |
 | Dry-run flag | `autoversion bump patch --dry-run` | Displays preview only | ☐ |
+| Force flag | `autoversion bump patch --force` | Overrides safety checks | ☐ |
 
-### 3.2 Bump Operations
+---
+
+### 3.2 Version Bump Operations
 | Type | Command | Expected Result | Status |
 |------|----------|----------------|--------|
 | Patch | `autoversion bump patch` | 0.0.5 → 0.0.6 | ☐ |
 | Minor | `autoversion bump minor` | 0.0.5 → 0.1.0 | ☐ |
 | Major | `autoversion bump major` | 0.0.5 → 1.0.0 | ☐ |
 | Prerelease | `autoversion bump prerelease` | Appends `-alpha.N` suffix | ☐ |
-| Custom identifier | `--tag beta` | Adds metadata field | ☐ |
+| Custom tag | `--tag beta` | Applies metadata field | ☐ |
 
-### 3.3 CHANGELOG Generation
-| Case | Command | Expected Output | Status |
-|------|----------|----------------|--------|
-| Default | `autoversion changelog` | Updates CHANGELOG.md | ☐ |
-| Append entry | Run twice | New entry added, old kept | ☐ |
-| Invalid file | Missing CHANGELOG | Error with clear message | ☐ |
+---
+
+### 3.3 Config & File Handling
+| Case | Setup | Expected Output | Status |
+|------|--------|----------------|--------|
+| Default file creation | Delete autoversion.json | Program generates default config | ☐ |
+| Load valid config | Normal file present | CLI reads config correctly | ☐ |
+| Corrupt config | Remove a required field | Clear error message | ☐ |
+| Env override | `AUTOVERSION_VERSION=1.2.3` | Value overrides config | ☐ |
+
+---
 
 ## 🔗 4. Integration Tests
 
-### 4.1 Git and BuildStamp Integration
+### 4.1 Git Integration
 | Step | Action | Expected |
 |------|---------|----------|
-| 1 | Run `autoversion bump patch` | Version incremented |
-| 2 | Run `buildstamp` | Version matches AutoVersion output | ☐ |
-| 3 | Verify artifact | buildinfo.json contains updated version | ☐ |
+| 1 | Initialize repo | Git recognizes version files |
+| 2 | Run bump | Commit-ready modified version file | ☐ |
+| 3 | Tag manually | `git tag v1.1.2` works | ☐ |
+| 4 | Push | No conflicts | ☐ |
 
-### 4.2 ZipRelease Integration
+---
+
+### 4.2 BuildStamp Integration
 | Step | Action | Expected |
 |------|---------|----------|
-| 1 | Run AutoVersion then ZipRelease | Version propagated into archive | ☐ |
-| 2 | Unzip artifact | Version matches CHANGELOG.md | ☐ |
+| 1 | Run `autoversion bump patch` | Version increments | ☐ |
+| 2 | Run `buildstamp` | buildinfo.json matches version | ☐ |
 
-### 4.3 Config & Environment
-| Test | Setup | Expected |
-|------|--------|----------|
-| Load config | autoversion.json present | CLI reads defaults | ☐ |
-| Env override | `AUTOVERSION_BUILD=999` | Field updated | ☐ |
-| Merge logic | CLI flag beats config | ☐ |
+---
+
+### 4.3 ZipRelease Integration
+| Step | Action | Expected |
+|------|---------|----------|
+| 1 | Version bump → ZipRelease | Version propagated into archive | ☐ |
+| 2 | Extract archive | Version consistent in metadata | ☐ |
+
+---
 
 ## 🧠 5. Regression Tests
+
 | Case | Description | Expected |
 |------|--------------|----------|
-| v1.0 configs | Old format compatible | ✅ parses |
-| Multi-branch | Switch branch between bumps | Version tracks each branch |
-| Double bump guard | Prevents multiple runs in same commit | Error shown |
+| v1.0 configs | Older format still loads | ☐ |
+| Branch switching | Bumps remain correct per branch | ☐ |
+| Double bump prevention | Back-to-back runs block unless `--force` | ☐ |
+
+---
 
 ## ☁️ 6. CI/CD Pipeline Tests
 | Step | Command | Expected Result |
 |------|----------|----------------|
-| Push to main | triggers autoversion-test.yml | Workflow passes |
-| Step AutoVersion | bump + commit | ✅ |
-| Step BuildStamp | build metadata | ✅ |
-| Step ZipRelease | zipped output | ✅ |
-| Total duration | < 1 min per OS | ✅ |
+| Push to main | triggers CI | Workflow succeeds | ☐ |
+| Matrix build | Windows/macOS/Linux | All green | ☐ |
+| AutoVersion step | Executes bump logic | ☐ |
+| Artifacts | Created and zipped | ☐ |
+
+---
 
 ## 🧰 7. Manual QA Checklist
 | Test | Verification | Status |
 |------|---------------|--------|
-| Help text clarity | Sections and examples readable | ☐ |
-| Output color formatting | Readable in PowerShell and bash | ☐ |
-| Changelog preview | No placeholder tokens | ☐ |
-| Build chain | AutoVersion → BuildStamp → ZipRelease | ☐ |
+| Help text readability | Clear, minimal, accurate | ☐ |
+| Error messages | Informative and actionable | ☐ |
+| Output formatting | Works in PowerShell and bash | ☐ |
+| Dry-run clarity | Shows exactly what will happen | ☐ |
+
+---
 
 ## 🧾 8. Coverage Summary
-| Layer | Coverage Goal | Status |
-|-------|---------------|--------|
+| Layer | Goal | Status |
+|-------|--------|--------|
 | Unit | 90% CLI logic coverage | ☐ |
-| Integration | 100% pipeline tools covered | ☐ |
-| Regression | Old versions consistent | ☐ |
-| Manual | All critical paths tested | ☐ |
-| CI/CD | Matrix builds green | ☐ |
+| Integration | All pipeline tools covered | ☐ |
+| Regression | Backward compatibility ensured | ☐ |
+| Manual | Critical UX paths validated | ☐ |
+| CI/CD | All OS builds green | ☐ |
 
-## 🧠 9. Known Limitations (Lite)
-- No interactive prompt mode.  
-- No signed CHANGELOG hashes.  
-- Config schema fixed (static).  
+---
 
-## 🧭 10. Acceptance Criteria (v1.1.2)
+## 🧭 9. Acceptance Criteria (v1.1.2)
+
 - [ ] CLI works end-to-end  
-- [ ] CHANGELOG accurate  
-- [ ] Config and env merge validated  
-- [ ] Cross-tool integration green  
-- [ ] CI/CD passes on all OS  
-- [ ] Docs examples verified  
+- [ ] Config creation + loading validated  
+- [ ] Version bumping stable across OS  
+- [ ] Environment variable overrides work  
+- [ ] BuildStamp integration verified  
+- [ ] ZipRelease integration verified  
+- [ ] All CI pipelines green  
 
-Once complete:  
-```
-git tag v1.1.2  
-git push origin main --tags
-```
+---
 
 MIT © 2025 Solcogito S.E.N.C.
