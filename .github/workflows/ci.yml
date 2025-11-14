@@ -2,7 +2,9 @@ name: CI – Build & Test Matrix
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main, alta-dev ]
+    tags:
+      - 'v*' # version tag releases
   pull_request:
 
 jobs:
