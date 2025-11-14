@@ -68,7 +68,6 @@ namespace Solcogito.AutoVersion.Cli.Commands
             var pre = args.FirstOrDefault(a => a == "--pre") != null
                 ? args.SkipWhile(a => a != "--pre").Skip(1).FirstOrDefault()
                 : null;
-
             var dryRun = args.Contains("--dry-run");
             var force = args.Contains("--force");
             var allowDirty = args.Contains("--allow-dirty");
@@ -88,7 +87,8 @@ namespace Solcogito.AutoVersion.Cli.Commands
                 // 3. Load current version and compute new one
                 // ------------------------------------------------------------
                 var oldVersion = VersionResolver.ResolveVersion();
-                var newVersion = Solcogito.AutoVersion.Core.VersionBumper.Bump(oldVersion, args[1]);
+                var newVersion = VersionBumper.Bump(oldVersion, args[1], pre);
+
 
                 // ------------------------------------------------------------
                 // 4. Git Tag Integration (skippable with --no-git)

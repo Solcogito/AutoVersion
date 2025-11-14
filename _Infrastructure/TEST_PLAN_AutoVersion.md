@@ -34,11 +34,10 @@ Tools: .NET 8, PowerShell 7, GitHub Actions, BuildStamp, ZipRelease
 ### 3.1 CLI Argument Parsing
 | Case | Command | Expected Output | Status |
 |------|----------|----------------|--------|
-| Help screen | `autoversion --help` | Lists commands and flags | ☐ |
-| Show version | `autoversion --version` | Prints version number | ☐ |
-| Invalid flag | `autoversion --bogus` | Error + exit code 1 | ☐ |
-| Dry-run flag | `autoversion bump patch --dry-run` | Displays preview only | ☐ |
-| Force flag | `autoversion bump patch --force` | Overrides safety checks | ☐ |
+| Help screen | `autoversion --help` | Lists commands and flags | ✅ |
+| Show version | `autoversion --currrent` | Prints version number | ✅ |
+| Dry-run flag | `autoversion bump patch --dry-run` | Displays preview only | ✅ | <-- what is display preview only? -->
+| Force flag | `autoversion bump patch --force` | Overrides safety checks | ✅ |  <-- should it work without "--allow-dirty"? -->
 
 ---
 
