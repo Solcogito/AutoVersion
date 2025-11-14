@@ -1,6 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Common.Versioning\src\Solcogito.Common.Versioning\Solcogito.Common.Versioning.csproj" />
+    <Reference Include="Solcogito.Common.Versioning">
+	  <HintPath>..\..\libs\Solcogito.Common.Versioning.dll</HintPath>
+	  <Private>true</Private>
+	</Reference>
   </ItemGroup>
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
