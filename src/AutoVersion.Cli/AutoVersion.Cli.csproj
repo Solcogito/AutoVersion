@@ -1,4 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- CLI Output Configuration -->
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
@@ -8,19 +10,22 @@
     <RootNamespace>Solcogito.AutoVersion.Cli</RootNamespace>
   </PropertyGroup>
 
+  <!-- NuGet dependencies -->
   <ItemGroup>
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
   </ItemGroup>
 
+  <!-- Reference the Core library (contains VersionBumper, ArtifactManager, ConfigLoader, etc.) -->
   <ItemGroup>
     <ProjectReference Include="..\AutoVersion.Core\AutoVersion.Core.csproj" />
   </ItemGroup>
-  
+
+  <!-- External shared API reference -->
   <ItemGroup>
     <Reference Include="Solcogito.Common.Versioning">
-	  <HintPath>..\..\libs\Solcogito.Common.Versioning.dll</HintPath>
-	  <Private>true</Private>
-	</Reference>
+      <HintPath>..\..\libs\Solcogito.Common.Versioning.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
   </ItemGroup>
-  
+
 </Project>

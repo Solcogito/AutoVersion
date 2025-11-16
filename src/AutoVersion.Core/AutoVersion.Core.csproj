@@ -1,10 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- External dependencies -->
   <ItemGroup>
     <Reference Include="Solcogito.Common.Versioning">
-	  <HintPath>..\..\libs\Solcogito.Common.Versioning.dll</HintPath>
-	  <Private>true</Private>
-	</Reference>
+      <HintPath>..\..\libs\Solcogito.Common.Versioning.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
   </ItemGroup>
+
+  <!-- Project settings -->
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
@@ -12,4 +16,7 @@
     <AssemblyName>AutoVersion.Core</AssemblyName>
     <RootNamespace>Solcogito.AutoVersion.Core</RootNamespace>
   </PropertyGroup>
+
 </Project>
+
+

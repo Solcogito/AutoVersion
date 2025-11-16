@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using Xunit;
 using Solcogito.AutoVersion.Core;
 using Solcogito.AutoVersion.Core.Config;
-using Solcogito.AutoVersion.Core.Artifacts;
+using Solcogito.AutoVersion.Core.ArtifactsPipeline;
 using Solcogito.AutoVersion.Core.Git;
 using Solcogito.Common.Versioning;
 
