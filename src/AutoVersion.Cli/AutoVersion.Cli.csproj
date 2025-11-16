@@ -15,4 +15,12 @@
   <ItemGroup>
     <ProjectReference Include="..\AutoVersion.Core\AutoVersion.Core.csproj" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <Reference Include="Solcogito.Common.Versioning">
+	  <HintPath>..\..\libs\Solcogito.Common.Versioning.dll</HintPath>
+	  <Private>true</Private>
+	</Reference>
+  </ItemGroup>
+  
 </Project>
