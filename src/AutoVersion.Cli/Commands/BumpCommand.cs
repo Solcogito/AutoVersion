@@ -31,12 +31,6 @@ namespace Solcogito.AutoVersion.Cli.Commands
         /// </summary>
         public static int Execute(string[] args)
         {
-            if (args.Length < 2)
-            {
-                Console.WriteLine("Usage: autoversion bump <major|minor|patch|prerelease> [--pre alpha.1] [--dry-run] [--force] [--allow-dirty] [--no-git]");
-                return 1;
-            }
-
             var type = args[1].ToLowerInvariant();
 
             // ------------------------------------------------------------

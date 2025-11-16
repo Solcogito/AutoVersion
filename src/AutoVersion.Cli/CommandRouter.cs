@@ -19,6 +19,7 @@ using System.Text.Json;
 using Solcogito.AutoVersion.Core;
 using Solcogito.AutoVersion.Cli.Commands;
 using Solcogito.Common.Versioning;
+using System.ComponentModel.Design;
 
 namespace Solcogito.AutoVersion.Cli
 {
@@ -26,11 +27,15 @@ namespace Solcogito.AutoVersion.Cli
     {
         public static int Run(string[] args)
         {
+            var hasMultipleArgs = false;
+
             if (args == null || args.Length == 0)
             {
                 PrintHelp();
                 return 1;
             }
+            else
+                hasMultipleArgs = (args.Length > 1);
 
             // ------------------------------------------------------------
             // Global flag handling (before routing)
@@ -50,14 +55,24 @@ namespace Solcogito.AutoVersion.Cli
                 switch (command)
                 {
                     case "current":
-                        if (jsonMode)
+                        if (hasMultipleArgs)
+                        {
+                            LogArgError(args[1]);
+                            return 1;
+                        }
+                        else if (jsonMode)
                             RunCurrentJson();
                         else
                             CurrentCommand.Execute();
                         break;
 
                     case "bump":
-                        if (jsonMode)
+                        if (!hasMultipleArgs)
+                        {
+                            LogArgError(args[1]);
+                            return 1;
+                        }
+                        else if (jsonMode)
                             RunBumpJson(args);
                         else
                         {
@@ -73,11 +88,7 @@ namespace Solcogito.AutoVersion.Cli
                         return 0;
 
                     default:
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.Error.WriteLine($"Unknown command or option: '{command}'");
-                        Console.ResetColor();
-                        Console.WriteLine();
-                        PrintHelp();
+                        LogArgError(command);
                         return 1;
                 }
             }
@@ -104,6 +115,15 @@ namespace Solcogito.AutoVersion.Cli
             }
             return 0;
         }
+
+        private static void LogArgError(string arg)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Error.WriteLine($"Unknown command or option: '{arg}'");
+                Console.ResetColor();
+                Console.WriteLine();
+                PrintHelp();
+            }
 
         // --------------------------------------------------------------------
         // JSON handlers
@@ -149,12 +169,12 @@ namespace Solcogito.AutoVersion.Cli
             var versionNum = VersionResolver.ResolveVersion();
             Console.WriteLine($"AutoVersion Lite {versionNum}");
             Console.WriteLine("Usage:");
-            Console.WriteLine("  autoversion current [--json] [--force]");
-            Console.WriteLine("  autoversion bump <major|minor|patch|prerelease> [--dry-run] [--json] [--force]");
+            Console.WriteLine("  autoversion current");
+            Console.WriteLine("  autoversion bump <major|minor|patch|prerelease> [--dry-run] [--json] [--force] [--no-git]");
             Console.WriteLine();
             Console.WriteLine("Flags:");
-            Console.WriteLine("  --json     Output in JSON format for CI integration");
             Console.WriteLine("  --dry-run  Simulate operation without modifying files");
+            Console.WriteLine("  --json     Output in JSON format for CI integration");
             Console.WriteLine("  --force    Skip prompts and recreate default config automatically if invalid");
             Console.WriteLine("  --no-git   Skip git related operations");
             Console.WriteLine();
