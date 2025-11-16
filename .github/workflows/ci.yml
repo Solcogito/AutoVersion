@@ -18,9 +18,12 @@ jobs:
 
     steps:
       # -------------------------------
-      # Checkout
+      # Checkout (full clone to ensure valid HEAD for Git tests)
       # -------------------------------
-      - uses: actions/checkout@v4
+      - name: Checkout full repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # <--- CRITICAL: ensures .git/HEAD exists
 
       # -------------------------------
       # Install .NET 8
@@ -28,6 +31,14 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
+
+      # -------------------------------
+      # Configure Git user (required for tag creation tests)
+      # -------------------------------
+      - name: Configure Git identity
+        run: |
+          git config --global user.email "ci@solcogito.com"
+          git config --global user.name "Solcogito CI"
 
       # -------------------------------
       # Restore, Build, Test
