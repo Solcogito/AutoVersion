@@ -31,7 +31,7 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'  # stable SDK, no preview
-          dotnet-quality: 'ga'
+          cache: false
           
       # -------------------------------
       # Configure Git user (required for tag creation tests)
