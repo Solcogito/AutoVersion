@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main, alta-dev ]
     tags:
-      - 'v*' # version tag releases
+      - 'v*'
   pull_request:
 
 jobs:
@@ -17,25 +17,25 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
-      # -------------------------------
-      # Checkout (full clone to ensure valid HEAD for Git tests)
-      # -------------------------------
-      - name: Checkout full repository
+      # ------------------------------------------------------------
+      # Lightweight checkout with enough depth for commitlint + tests
+      # ------------------------------------------------------------
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0   # <--- CRITICAL: ensures .git/HEAD exists
-          
-      # -------------------------------
-      # Configure Git user (required for tag creation tests)
-      # -------------------------------
+          fetch-depth: 5
+
+      # ------------------------------------------------------------
+      # Configure Git (required for tag creation tests)
+      # ------------------------------------------------------------
       - name: Configure Git identity
         run: |
           git config --global user.email "ci@solcogito.com"
           git config --global user.name "Solcogito CI"
 
-      # -------------------------------
-      # Restore, Build, Test
-      # -------------------------------
+      # ------------------------------------------------------------
+      # Build and test using the SDK pinned via global.json
+      # ------------------------------------------------------------
       - name: Restore dependencies
         run: dotnet restore
 
@@ -45,10 +45,15 @@ jobs:
       - name: Run tests
         run: dotnet test --configuration Release --no-build --verbosity normal
 
-      # -------------------------------
-      # Lint commit messages (Linux only)
-      # Requires Node.js + commitlint
-      # -------------------------------
+      # ------------------------------------------------------------
+      # Validate AutoVersion configuration
+      # ------------------------------------------------------------
+      - name: Validate AutoVersion configuration
+        run: dotnet run --project src/AutoVersion.Cli -- current --json --force
+
+      # ------------------------------------------------------------
+      # CommitLint (Linux only)
+      # ------------------------------------------------------------
       - name: Setup Node (Linux only)
         if: runner.os == 'Linux'
         uses: actions/setup-node@v4

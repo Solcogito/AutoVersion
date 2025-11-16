@@ -1,70 +1,33 @@
-name: 🧪 AutoVersion Sandbox Tests
+name: AutoVersion – Test Workflow
 
 on:
-  push:
-    branches: [ main, develop ]
-  pull_request:
-    branches: [ main, develop ]
   workflow_dispatch:
 
 jobs:
-  test-autoversion:
-    # Run on both Windows and Ubuntu
-    strategy:
-      matrix:
-        os: [windows-latest, ubuntu-latest]
+  run-tests:
+    name: Run AutoVersion Tests (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
 
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
     steps:
-      - name: 📥 Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 5
 
-      - name: 🧪 Verify AutoVersion CLI
-        shell: pwsh
+      - name: Configure Git identity
         run: |
-          Write-Host "=== Environment ==="
-          Write-Host "Running on $env:RUNNER_OS"
-          Write-Host "====================="
+          git config --global user.email "ci@solcogito.com"
+          git config --global user.name "Solcogito CI"
 
-          $exe = "./Builds/autoversion.exe"
+      - name: Restore
+        run: dotnet restore
 
-          if (Test-Path $exe) {
-            Write-Host "=== autoversion --version ==="
-            & $exe --version
-            Write-Host "=== autoversion --help ==="
-            & $exe --help
-          }
-          else {
-            Write-Warning "autoversion.exe not found. Skipping CLI tests on $env:RUNNER_OS"
-          }
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
 
-      - name: 🧱 Run dry-run version bump
-        shell: pwsh
-        run: |
-          $exe = "./Builds/autoversion.exe"
-          if (Test-Path $exe) {
-            Write-Host "=== Running dry-run version bump ==="
-            & $exe bump patch --dry-run --allow-dirty --verbose
-          }
-          else {
-            Write-Warning "Skipping version bump: autoversion.exe missing."
-          }
-
-      - name: 🧾 Validate CHANGELOG generation
-        shell: pwsh
-        run: |
-          if (Test-Path "CHANGELOG.md") {
-            Write-Host "✅ CHANGELOG.md exists"
-            Get-Content CHANGELOG.md -TotalCount 10
-          }
-          else {
-            Write-Error "❌ Missing CHANGELOG.md"
-            exit 1
-          }
-
-      - name: 🧹 Cleanup build artifacts
-        if: always()
-        shell: pwsh
-        run: |
-          Write-Host "Cleaning temporary files..."
-          if (Test-Path "Builds") { Remove-Item "Builds/Test*" -Recurse -Force -ErrorAction SilentlyContinue }
+      - name: Test
+        run: dotnet test --configuration Release --no-build --verbosity normal
