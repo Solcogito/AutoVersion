@@ -83,30 +83,6 @@ namespace Solcogito.AutoVersion.Cli.Commands
                 var oldVersion = VersionResolver.ResolveVersion();
                 var newVersion = VersionBumper.Bump(oldVersion, args[1], pre);
 
-
-                // ------------------------------------------------------------
-                // 4. Git Tag Integration (skippable with --no-git)
-                // ------------------------------------------------------------
-                if (noGit)
-                {
-                    Logger.Info("Skipping all Git operations (--no-git).");
-                }
-                else if (config.Git != null && !string.IsNullOrEmpty(config.Git.TagPrefix))
-                {
-                    var tagName = config.Git.TagPrefix + newVersion;
-
-                    if (!GitService.IsClean() && !config.Git.AllowDirty && !allowDirty)
-                    {
-                        Logger.Warn("Repository is not clean. Use --allow-dirty to override.");
-                        return 2;
-                    }
-
-                    GitService.CreateTag(tagName, $"AutoVersion {newVersion} release");
-
-                    if (config.Git.Push)
-                        GitService.PushTag(tagName);
-                }
-
                 // ------------------------------------------------------------
                 // 5. Save version changes (unless dry-run)
                 // ------------------------------------------------------------
@@ -137,34 +113,6 @@ namespace Solcogito.AutoVersion.Cli.Commands
                 }
 
                 Logger.Action($"Version bump: {oldVersion} -> {newVersion}");
-
-                // ------------------------------------------------------------
-                // 6. Process artifacts
-                // ------------------------------------------------------------
-                if (config.Artifacts != null && config.Artifacts.Any())
-                {
-                    Logger.Info("Processing artifacts...");
-                    try
-                    {
-                        var artifactRules = config.Artifacts.Select(a => new ArtifactRule
-                        {
-                            Path = a.Path,
-                            Rename = a.Rename,
-                            Overwrite = a.Overwrite
-                        });
-
-                        ArtifactManager.ProcessArtifacts(
-                            artifactRules,
-                            newVersion.ToString(),
-                            dryRun: dryRun,
-                            force: force
-                        );
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Warn("Artifact processing failed: " + ex.Message);
-                    }
-                }
 
                 // ------------------------------------------------------------
                 // 7. Final output
