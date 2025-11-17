@@ -30,8 +30,8 @@ jobs:
       # ------------------------------------------------------------
       - name: Configure Git identity
         run: |
-          git config --global user.email "ci@solcogito.com"
-          git config --global user.name "Solcogito CI"
+          git config --global user.email "solcogito@gmail.com"
+          git config --global user.name "Solcogito"
 
       # ------------------------------------------------------------
       # Build and test using the SDK pinned via global.json
