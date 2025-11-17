@@ -1,18 +1,6 @@
 
 ---
 
-# ✅ **2️⃣ Minimal `ci.yml` (copy-paste ready)**
-
-This CI workflow:
-
-- Runs on Windows, Ubuntu, macOS
-- Restores, builds, and tests AutoVersion Lite
-- Requires no Git identity
-- Has no special checkouts
-- Never hangs  
-- Is stable and fast
-
-```yaml
 name: AutoVersion Lite – CI
 
 on:
