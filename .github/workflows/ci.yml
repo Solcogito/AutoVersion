@@ -1,67 +1,57 @@
-name: CI – Build & Test Matrix
+
+---
+
+# ✅ **2️⃣ Minimal `ci.yml` (copy-paste ready)**
+
+This CI workflow:
+
+- Runs on Windows, Ubuntu, macOS
+- Restores, builds, and tests AutoVersion Lite
+- Requires no Git identity
+- Has no special checkouts
+- Never hangs  
+- Is stable and fast
+
+```yaml
+name: AutoVersion Lite – CI
 
 on:
   push:
     branches: [ main, alta-dev ]
-    tags:
-      - 'v*'
   pull_request:
+    branches: [ main, alta-dev ]
 
 jobs:
   build-test:
-    name: Build & Test (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
 
     steps:
-      # ------------------------------------------------------------
-      # Lightweight checkout with enough depth for commitlint + tests
-      # ------------------------------------------------------------
-      - name: Checkout repository
+      # -------------------------------
+      # Checkout repository
+      # -------------------------------
+      - name: Checkout
         uses: actions/checkout@v4
+
+      # -------------------------------
+      # Setup .NET
+      # -------------------------------
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
         with:
-          fetch-depth: 5
+          dotnet-version: 8.0.x
 
-      # ------------------------------------------------------------
-      # Configure Git (required for tag creation tests)
-      # ------------------------------------------------------------
-      - name: Configure Git identity
-        run: |
-          git config --global user.email "solcogito@gmail.com"
-          git config --global user.name "Solcogito"
-
-      # ------------------------------------------------------------
-      # Build and test using the SDK pinned via global.json
-      # ------------------------------------------------------------
-      - name: Restore dependencies
+      # -------------------------------
+      # Restore, Build, Test
+      # -------------------------------
+      - name: Restore
         run: dotnet restore
 
-      - name: Build solution
+      - name: Build
         run: dotnet build --configuration Release --no-restore
 
-      - name: Run tests
+      - name: Test
         run: dotnet test --configuration Release --no-build --verbosity normal
-
-      # ------------------------------------------------------------
-      # Validate AutoVersion configuration
-      # ------------------------------------------------------------
-      - name: Validate AutoVersion configuration
-        run: dotnet run --project src/AutoVersion.Cli -- current --json --force
-
-      # ------------------------------------------------------------
-      # CommitLint (Linux only)
-      # ------------------------------------------------------------
-      - name: Setup Node (Linux only)
-        if: runner.os == 'Linux'
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Lint commit messages (Linux only)
-        if: runner.os == 'Linux'
-        run: |
-          npm install --save-dev @commitlint/{cli,config-conventional}
-          npx commitlint --from=HEAD~10 --to=HEAD

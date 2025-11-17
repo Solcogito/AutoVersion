@@ -1,25 +1,24 @@
 // ============================================================================
 // File:        BumpCommand.cs
 // Project:     AutoVersion Lite
-// Version:     0.5.4
+// Version:     0.6.0
 // Author:      Benoit Desrosiers (Solcogito S.E.N.C.)
 // ----------------------------------------------------------------------------
 // Description:
 //   Implements the 'bump' subcommand. Supports bumping of major, minor,
-//   patch, and prerelease identifiers, artifact renaming, and Git tag
-//   integration, including the --no-git flag.
+//   patch, and prerelease identifiers. This Lite version intentionally
+//   avoids Git integration, artifact processing, and CI responsibilities:
+//   it only computes and writes the new semantic version.
 // ----------------------------------------------------------------------------
 // License:     MIT
 // ============================================================================
 
 using System;
-using System.IO;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
+
 using Solcogito.AutoVersion.Core;
-using Solcogito.AutoVersion.Core.Git;
 using Solcogito.AutoVersion.Core.Config;
-using Solcogito.AutoVersion.Core.ArtifactsPipeline;
 using Solcogito.Common.Versioning;
 
 namespace Solcogito.AutoVersion.Cli.Commands
@@ -31,18 +30,23 @@ namespace Solcogito.AutoVersion.Cli.Commands
         /// </summary>
         public static int Execute(string[] args)
         {
+            // Expect at least: autoversion bump <type>
+            if (args.Length < 2)
+            {
+                Console.WriteLine("Usage: autoversion bump <major|minor|patch|prerelease> [--pre alpha.1] [--dry-run] [--force]");
+                return 1;
+            }
+
             var type = args[1].ToLowerInvariant();
 
             // ------------------------------------------------------------
-            // 0. Validate known flags
+            // 0. Validate known flags (Lite: only pre/dry-run/force)
             // ------------------------------------------------------------
             var validFlags = new HashSet<string>
             {
                 "--pre",
                 "--dry-run",
-                "--force",
-                "--allow-dirty",
-                "--no-git"
+                "--force"
             };
 
             var unknownFlags = args
@@ -52,7 +56,7 @@ namespace Solcogito.AutoVersion.Cli.Commands
             if (unknownFlags.Any())
             {
                 Logger.Error("Unknown option(s): " + string.Join(", ", unknownFlags));
-                Console.WriteLine("Usage: autoversion bump <major|minor|patch|prerelease> [--pre alpha.1] [--dry-run] [--force] [--allow-dirty] [--no-git]");
+                Console.WriteLine("Usage: autoversion bump <major|minor|patch|prerelease> [--pre alpha.1] [--dry-run] [--force]");
                 return 1;
             }
 
@@ -62,42 +66,52 @@ namespace Solcogito.AutoVersion.Cli.Commands
             var pre = args.FirstOrDefault(a => a == "--pre") != null
                 ? args.SkipWhile(a => a != "--pre").Skip(1).FirstOrDefault()
                 : null;
+
             var dryRun = args.Contains("--dry-run");
             var force = args.Contains("--force");
-            var allowDirty = args.Contains("--allow-dirty");
-            var noGit = args.Contains("--no-git");
 
             Logger.DryRun = dryRun;
 
             try
             {
-                // ------------------------------------------------------------
-                // 2. Load configuration
-                // ------------------------------------------------------------
+                // --------------------------------------------------------
+                // 2. Load configuration (Lite: just to ensure file is valid)
+                // --------------------------------------------------------
                 var config = ConfigLoader.Load();
                 Logger.Info("Loaded configuration.");
 
-                // ------------------------------------------------------------
+                // --------------------------------------------------------
                 // 3. Load current version and compute new one
-                // ------------------------------------------------------------
+                // --------------------------------------------------------
                 var oldVersion = VersionResolver.ResolveVersion();
-                var newVersion = VersionBumper.Bump(oldVersion, args[1], pre);
+                var newVersion = VersionBumper.Bump(oldVersion, type, pre);
 
-                // ------------------------------------------------------------
-                // 5. Save version changes (unless dry-run)
-                // ------------------------------------------------------------
+                if (newVersion.Equals(default(VersionModel)))
+                {
+                    Logger.Error("New version resolved to default (0.0.0). Aborting.");
+                    return 2;
+                }
+
+                // --------------------------------------------------------
+                // 4. Resolve version file path
+                // --------------------------------------------------------
                 var versionFilePath = VersionResolver.ResolveVersionFilePath();
                 Logger.Info($"Resolved version file path: '{versionFilePath}'");
 
-                if (newVersion.Equals(default(VersionModel)))
-                    Logger.Warn("newVersion is default (0.0.0?) before writing version file.");
-                else
-                    Logger.Info($"New version to write: {newVersion}");
-
                 if (string.IsNullOrWhiteSpace(versionFilePath))
+                {
+                    Logger.Error("Version file path is empty. Aborting.");
                     return 2;
+                }
 
-                if (!dryRun)
+                // --------------------------------------------------------
+                // 5. Save version changes (unless dry-run)
+                // --------------------------------------------------------
+                if (dryRun)
+                {
+                    Logger.Info($"[DRY-RUN] Would update version: {oldVersion} -> {newVersion}");
+                }
+                else
                 {
                     try
                     {
@@ -114,9 +128,9 @@ namespace Solcogito.AutoVersion.Cli.Commands
 
                 Logger.Action($"Version bump: {oldVersion} -> {newVersion}");
 
-                // ------------------------------------------------------------
-                // 7. Final output
-                // ------------------------------------------------------------
+                // --------------------------------------------------------
+                // 6. Final output
+                // --------------------------------------------------------
                 if (dryRun)
                     Logger.Info("Dry-run completed. No files were modified.");
                 else
@@ -125,6 +139,7 @@ namespace Solcogito.AutoVersion.Cli.Commands
             catch (Exception ex)
             {
                 Logger.Error("Bump failed: " + ex.Message);
+                return 2;
             }
 
             return 0;
