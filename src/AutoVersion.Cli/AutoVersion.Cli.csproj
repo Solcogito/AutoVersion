@@ -24,7 +24,11 @@
   <ItemGroup>
     <Reference Include="Solcogito.Common.Versioning">
       <HintPath>..\..\libs\Solcogito.Common.Versioning.dll</HintPath>
-      <Private>true</Private>
+      <CopyLocal>true</CopyLocal>
+    </Reference>
+	<Reference Include="Solcogito.Common.ArgForge">
+      <HintPath>..\..\libs\Solcogito.Common.ArgForge.dll</HintPath>
+      <CopyLocal>true</CopyLocal>
     </Reference>
   </ItemGroup>
 

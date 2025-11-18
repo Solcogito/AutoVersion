@@ -1,186 +1,86 @@
 // ============================================================================
 // File:        CommandRouter.cs
 // Project:     AutoVersion Lite
-// Version:     0.9.1
+// Version:     0.7.0
 // Author:      Benoit Desrosiers (Solcogito S.E.N.C.)
 // ----------------------------------------------------------------------------
 // Description:
-//   CLI router that interprets arguments and dispatches to subcommands.
-//   Supports 'current' and 'bump' with optional flags.
-//   Adds JSON output mode (--json) and force mode (--force) for CI integration.
+//   Unified command router for hierarchical ArgForge commands. This class
+//   decides which high-level command to execute (current, bump, set, etc.)
+//   based solely on ArgResult.CommandName and ArgResult.CommandPath.
 // ----------------------------------------------------------------------------
 // License:     MIT
 // ============================================================================
 
 using System;
-using System.Linq;
-using System.Diagnostics;
-using System.Text.Json;
-using Solcogito.AutoVersion.Core;
+using System.Collections.Generic;
+using Solcogito.Common.ArgForge;
 using Solcogito.AutoVersion.Cli.Commands;
-using Solcogito.Common.Versioning;
-using System.ComponentModel.Design;
 
 namespace Solcogito.AutoVersion.Cli
 {
     internal static class CommandRouter
     {
-        public static int Run(string[] args)
-        {
-            var hasMultipleArgs = false;
-
-            if (args == null || args.Length == 0)
-            {
-                PrintHelp();
-                return 1;
-            }
-            else
-                hasMultipleArgs = (args.Length > 1);
-
-            // ------------------------------------------------------------
-            // Global flag handling (before routing)
-            // ------------------------------------------------------------
-            bool forceMode = args.Contains("--force");
-            if (forceMode)
-            {
-                Environment.SetEnvironmentVariable("AUTOVERSION_FORCE_DEFAULT", "true");
-                Console.WriteLine("[INFO] Force mode enabled (AUTOVERSION_FORCE_DEFAULT=true)");
-            }
-
-            var command = args[0].ToLowerInvariant();
-            bool jsonMode = args.Contains("--json");
-
-            try
-            {
-                switch (command)
-                {
-                    case "current":
-                        if (hasMultipleArgs)
-                        {
-                            LogArgError(args[1]);
-                            return 1;
-                        }
-                        else if (jsonMode)
-                            RunCurrentJson();
-                        else
-                            CurrentCommand.Execute();
-                        break;
-
-                    case "bump":
-                        if (!hasMultipleArgs)
-                        {
-                            LogArgError(args[1]);
-                            return 1;
-                        }
-                        else if (jsonMode)
-                            RunBumpJson(args);
-                        else
-                        {
-                            Debug.WriteLine($"Executing 'bump' command with args: {string.Join(" ", args)}");
-                            BumpCommand.Execute(args);
-                        }
-                        break;
-
-                    case "--help":
-                    case "-h":
-                    case "help":
-                        PrintHelp();
-                        return 0;
-
-                    default:
-                        LogArgError(command);
-                        return 1;
-                }
-            }
-            catch (Exception ex)
-            {
-                if (jsonMode)
-                {
-                    var error = new
-                    {
-                        status = "error",
-                        message = ex.Message,
-                        stack = ex.StackTrace
-                    };
-                    Console.WriteLine(JsonSerializer.Serialize(error, new JsonSerializerOptions { WriteIndented = true }));
-                }
-                else
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.Error.WriteLine($"Error: {ex.Message}");
-                    Console.ResetColor();
-                }
-
-                return 1;
-            }
-            return 0;
-        }
-
-        private static void LogArgError(string arg)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.Error.WriteLine($"Unknown command or option: '{arg}'");
-                Console.ResetColor();
-                Console.WriteLine();
-                PrintHelp();
-            }
-
         // --------------------------------------------------------------------
-        // JSON handlers
+        // High-level command handlers
         // --------------------------------------------------------------------
-
-        private static void RunCurrentJson()
-        {
-            var version = VersionResolver.ResolveVersion();
-            var payload = new
+        private static readonly Dictionary<string, Func<ArgResult, int>> _rootHandlers =
+            new(StringComparer.OrdinalIgnoreCase)
             {
-                command = "current",
-                version,
-                status = "success"
-            };
-            Console.WriteLine(JsonSerializer.Serialize(payload, new JsonSerializerOptions { WriteIndented = true }));
-        }
+                { "current",    CurrentCommand.Execute },
+                { "set",        SetCommand.Execute     },
 
-        private static void RunBumpJson(string[] args)
-        {
-            bool dryRun = args.Contains("--dry-run") || args.Contains("--preview");
-            string type = args.Length > 1 ? args[1] : "patch";
-            var currentVersion = VersionResolver.ResolveVersion();
-
-            var result = VersionBumper.Bump(currentVersion, type);
-            var payload = new
-            {
-                command = "bump",
-                oldVersion = currentVersion,
-                newVersion = result,
-                dryRun,
-                status = "success"
+                // IMPORTANT:
+                // "bump" is NOT executed here!
+                // BumpCommand executes SUBCOMMANDS like patch/minor/etc.
             };
 
-            Console.WriteLine(JsonSerializer.Serialize(payload, new JsonSerializerOptions { WriteIndented = true }));
-        }
-
-        // --------------------------------------------------------------------
-        // Text-mode help
-        // -------------------------------------------------------------------- 
-
-        private static void PrintHelp()
+        /// <summary>
+        /// Entrypoint for routing after arguments have been parsed.
+        /// </summary>
+        public static int Run(ArgResult args, ArgSchema schema)
         {
-            var versionNum = VersionResolver.ResolveVersion();
-            Console.WriteLine($"AutoVersion Lite {versionNum}");
-            Console.WriteLine("Usage:");
-            Console.WriteLine("  autoversion current");
-            Console.WriteLine("  autoversion bump <major|minor|patch|prerelease> [--dry-run] [--json] [--force] [--no-git]");
+            // No command? → Show root help
+            if (args.CommandName == null || args.CommandPath.Count <= 1)
+            {
+                Console.WriteLine(schema.GetHelp("autoversion"));
+                return 1;
+            }
+
+            var command = args.CommandName;                       // e.g. "patch" or "current"
+            var parent = args.CommandPath[^2];                  // e.g. "bump" when inside bump
+
+            // ------------------------------------------------------------
+            // 1. If parent command is "bump", then route to BumpCommand.
+            //    (patch/minor/major/prerelease are handled INSIDE)
+            // ------------------------------------------------------------
+            if (parent.Equals("bump", StringComparison.OrdinalIgnoreCase))
+            {
+                return BumpCommand.Execute(args);
+            }
+
+            // ------------------------------------------------------------
+            // 2. If the command itself is a root-level command
+            // ------------------------------------------------------------
+            if (_rootHandlers.TryGetValue(command, out var handler))
+                return handler(args);
+
+            // ------------------------------------------------------------
+            // 3. If they typed: autoversion bump   (no subcommand)
+            // ------------------------------------------------------------
+            if (command.Equals("bump", StringComparison.OrdinalIgnoreCase))
+            {
+                Console.WriteLine(schema.GetHelp("autoversion", "bump"));
+                return 1;
+            }
+
+            // ------------------------------------------------------------
+            // 4. Unknown command → show help
+            // ------------------------------------------------------------
+            Console.WriteLine(schema.GetHelp("autoversion"));
             Console.WriteLine();
-            Console.WriteLine("Flags:");
-            Console.WriteLine("  --dry-run  Simulate operation without modifying files");
-            Console.WriteLine("  --json     Output in JSON format for CI integration");
-            Console.WriteLine("  --force    Skip prompts and recreate default config automatically if invalid");
-            Console.WriteLine("  --no-git   Skip git related operations");
-            Console.WriteLine();
-            Console.WriteLine("Examples:");
-            Console.WriteLine("  autoversion bump minor --dry-run --json");
-            Console.WriteLine("  autoversion bump patch --force");
+            Console.WriteLine($"Unknown command: {command}");
+            return 1;
         }
     }
 }

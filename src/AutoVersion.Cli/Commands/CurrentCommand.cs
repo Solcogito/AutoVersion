@@ -1,11 +1,11 @@
 // ============================================================================
 // File:        CurrentCommand.cs
 // Project:     AutoVersion Lite
-// Version:     0.1.0
+// Version:     0.2.0
 // Author:      Benoit Desrosiers (Solcogito S.E.N.C.)
 // ----------------------------------------------------------------------------
 // Description:
-//   Implements the 'current' subcommand, displaying the current version
+//   Implements the 'current' command, displaying the current version
 //   as stored in version.txt (or default if none exists).
 // ----------------------------------------------------------------------------
 // License:     MIT
@@ -13,6 +13,7 @@
 
 using System;
 using Solcogito.Common.Versioning;
+using Solcogito.Common.ArgForge;
 
 namespace Solcogito.AutoVersion.Cli.Commands
 {
@@ -21,10 +22,19 @@ namespace Solcogito.AutoVersion.Cli.Commands
         /// <summary>
         /// Displays the current project version.
         /// </summary>
-        public static void Execute()
+        public static int Execute(ArgResult args)
         {
-            var version = VersionResolver.ResolveVersion();
-            Console.WriteLine(version);
+            try
+            {
+                var version = VersionResolver.ResolveVersion();
+                Console.WriteLine(version);
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine("Error reading current version: " + ex.Message);
+                return 1;
+            }
         }
     }
 }
