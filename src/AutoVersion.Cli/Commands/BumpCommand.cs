@@ -1,7 +1,7 @@
 // ============================================================================
 // File:        BumpCommand.cs
 // Project:     AutoVersion Lite
-// Version:     0.7.0
+// Version:     0.7.1
 // Author:      Benoit Desrosiers (Solcogito S.E.N.C.)
 // ----------------------------------------------------------------------------
 // Description:
@@ -14,8 +14,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using Solcogito.AutoVersion.Core;
-using Solcogito.AutoVersion.Core.Config;
 using Solcogito.Common.Versioning;
 using Solcogito.Common.ArgForge;
 
@@ -59,9 +59,6 @@ namespace Solcogito.AutoVersion.Cli.Commands
 
             try
             {
-                var config = ConfigLoader.Load();
-                Logger.Info("Loaded configuration.");
-
                 var oldVersion = VersionResolver.ResolveVersion();
 
                 var newVersion = VersionBumper.Bump(oldVersion, type, preRelease: null);
@@ -107,7 +104,7 @@ namespace Solcogito.AutoVersion.Cli.Commands
         }
 
         // ====================================================================
-        // PRERELEASE LOGIC
+        // PRERELEASE LOGIC (with prerelease validation)
         // ====================================================================
         private static int ExecutePrerelease(ArgResult args)
         {
@@ -116,11 +113,25 @@ namespace Solcogito.AutoVersion.Cli.Commands
 
             args.TryGetValue("pre", out var pre);
 
+            // ----------------------------------------------------------------
+            // Validate prerelease identifier BEFORE doing anything else
+            // SemVer rule: only [0-9A-Za-z-] and dot separators
+            // ----------------------------------------------------------------
+            if (!string.IsNullOrWhiteSpace(pre))
+            {
+                // Regex per SemVer 2.0.0 prerelease component rules
+                var semverPreRegex = new Regex(@"^[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*$");
+
+                if (!semverPreRegex.IsMatch(pre))
+                {
+                    Logger.Error($"Invalid prerelease tag: '{pre}'.");
+                    Logger.Error("Allowed characters: [A-Za-z0-9-], separated by dots.");
+                    return 1;
+                }
+            }
+
             try
             {
-                var config = ConfigLoader.Load();
-                Logger.Info("Loaded configuration.");
-
                 var oldVersion = VersionResolver.ResolveVersion();
 
                 var newVersion = VersionBumper.Bump(oldVersion, "prerelease", pre);

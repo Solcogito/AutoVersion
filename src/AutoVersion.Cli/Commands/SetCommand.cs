@@ -13,7 +13,6 @@
 
 using System;
 using Solcogito.Common.Versioning;
-using Solcogito.AutoVersion.Core.Config;
 using Solcogito.Common.ArgForge;
 
 namespace Solcogito.AutoVersion.Cli.Commands
@@ -49,8 +48,7 @@ namespace Solcogito.AutoVersion.Cli.Commands
             }
 
             try
-            {
-                var config = ConfigLoader.Load();
+            { 
                 var versionFilePath = VersionResolver.ResolveVersionFilePath();
 
                 if (string.IsNullOrWhiteSpace(versionFilePath))

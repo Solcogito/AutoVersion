@@ -34,21 +34,21 @@ Tools: .NET 8, PowerShell 7, GitHub Actions, BuildStamp, ZipRelease
 ### 3.1 CLI Argument Parsing
 | Case | Command | Expected Output | Status |
 |------|----------|----------------|--------|
-| Help screen | `autoversion --help` | Lists commands and flags | ✅ |
-| Show version | `autoversion --currrent` | Prints version number | ✅ |
-| Dry-run flag | `autoversion bump patch --dry-run` | Displays preview only | ✅ | <-- what is display preview only? -->
-| Force flag | `autoversion bump patch --force` | Overrides safety checks | ✅ |  <-- should it work without "--allow-dirty"? -->
+| Help screen | `autoversion --help` | Lists commands and flags | ✅ | <!-- '-h' and 'help' also ok -->
+| Show version | `autoversion currrent` | Prints version number | ✅ |
+| Dry-run flag | `autoversion bump patch --dry-run` | Displays preview only | ✅ | <!-- what is display preview only? -->
+| Force flag | `autoversion bump patch --force` | Overrides safety checks | ✅ |  <!-- Feathure removed, will be handle by another program -->
 
 ---
 
 ### 3.2 Version Bump Operations
 | Type | Command | Expected Result | Status |
 |------|----------|----------------|--------|
-| Patch | `autoversion bump patch` | 0.0.5 → 0.0.6 | ☐ |
-| Minor | `autoversion bump minor` | 0.0.5 → 0.1.0 | ☐ |
-| Major | `autoversion bump major` | 0.0.5 → 1.0.0 | ☐ |
-| Prerelease | `autoversion bump prerelease` | Appends `-alpha.N` suffix | ☐ |
-| Custom tag | `--tag beta` | Applies metadata field | ☐ |
+| Patch | `autoversion bump patch` | 0.0.5 → 0.0.6 | ✅ |
+| Minor | `autoversion bump minor` | 0.0.5 → 0.1.0 | ✅ |
+| Major | `autoversion bump major` | 0.0.5 → 1.0.0 | ✅ |
+| Prerelease | `autoversion bump prerelease` | Appends `-alpha.N` suffix | ✅ |
+| Custom tag | `--tag beta` | Applies metadata field | ✅ | <!-- Feathure removed, will be handle by another program -->
 
 ---
 
@@ -59,6 +59,16 @@ Tools: .NET 8, PowerShell 7, GitHub Actions, BuildStamp, ZipRelease
 | Load valid config | Normal file present | CLI reads config correctly | ☐ |
 | Corrupt config | Remove a required field | Clear error message | ☐ |
 | Env override | `AUTOVERSION_VERSION=1.2.3` | Value overrides config | ☐ |
+
+### 3.4 Set Operations <!-- Not implemented yet -->
+| Case                   | Setup                           | Expected Output                         | Status |
+| ---------------------- | ------------------------------- | --------------------------------------- | ------ |
+| Set valid version      | `autoversion set 2.5.0`         | Files updated & version applied         | ☐      |
+| Invalid version string | `autoversion set abc`           | Clear validation error                  | ☐      |
+| Dry-run                | Add `--dry-run`                 | No file written; simulation output only | ☐      |
+| With prerelease        | `autoversion set 1.3.0-beta.2`  | Version applied with prerelease         | ☐      |
+| Dirty repo             | Modified file; no flag          | Error shown                             | ☐      |
+| Allow dirty            | Modified file + `--allow-dirty` | Version applied normally                | ☐      |
 
 ---
 

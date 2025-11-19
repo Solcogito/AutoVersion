@@ -18,7 +18,6 @@ using System;
 using System.IO;
 using Xunit;
 using Solcogito.AutoVersion.Core;
-using Solcogito.AutoVersion.Core.Config;
 using Solcogito.Common.Versioning;
 
 namespace Solcogito.AutoVersion.Tests
@@ -54,25 +53,6 @@ namespace Solcogito.AutoVersion.Tests
     // ------------------------------------------------------------------------
     public class ConfigAndVersionFileTests
     {
-        [Fact]
-        public void ConfigLoader_ThrowsIfMissingFile()
-        {
-            var dir = Path.Combine(Path.GetTempPath(), "AutoVersion_ConfigTest_" + Guid.NewGuid().ToString("N"));
-            Directory.CreateDirectory(dir);
-            var path = Path.Combine(dir, "autoversion.json");
-
-            var cwd = Directory.GetCurrentDirectory();
-            try
-            {
-                Directory.SetCurrentDirectory(dir);
-                Assert.Throws<FileNotFoundException>(() => ConfigLoader.Load());
-            }
-            finally
-            {
-                Directory.SetCurrentDirectory(cwd);
-            }
-        }
-
         [Fact]
         public void VersionFile_WriteAndReadRoundTrip()
         {
