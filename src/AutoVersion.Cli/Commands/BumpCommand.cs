@@ -59,10 +59,10 @@ namespace Solcogito.AutoVersion.Cli.Commands
 
             try
             {
-                var oldVersion = VersionResolver.ResolveVersion();
+                var oldVersion = VersionResolver.ResolveVersionDetailed().Version;
 
                 var newVersion = VersionBumper.Bump(oldVersion, type, preRelease: null);
-
+                
                 if (newVersion.Equals(default(VersionModel)))
                 {
                     Logger.Error("New version resolved to default (0.0.0). Aborting.");
@@ -83,7 +83,9 @@ namespace Solcogito.AutoVersion.Cli.Commands
                 else
                 {
                     Logger.Info("Attempting to write version file...");
+                    Logger.Info($"versionFilePath = {versionFilePath} and newVersion = {newVersion}"); // alta-dev
                     VersionFile.Write(versionFilePath, newVersion);
+                    Logger.Info($"versionFilePath = {versionFilePath} and newVersion = {newVersion} after fonction"); // alta-dev
                     Logger.Info("Version file written successfully.");
                 }
 
@@ -132,7 +134,7 @@ namespace Solcogito.AutoVersion.Cli.Commands
 
             try
             {
-                var oldVersion = VersionResolver.ResolveVersion();
+                var oldVersion = VersionResolver.ResolveVersionDetailed().Version;
 
                 var newVersion = VersionBumper.Bump(oldVersion, "prerelease", pre);
 

@@ -26,7 +26,7 @@ namespace Solcogito.AutoVersion.Cli.Commands
         {
             try
             {
-                var version = VersionResolver.ResolveVersion();
+                var version = VersionResolver.ResolveVersionDetailed().Version.ToString();
                 Console.WriteLine(version);
                 return 0;
             }
