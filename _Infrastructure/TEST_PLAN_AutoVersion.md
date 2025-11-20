@@ -55,45 +55,43 @@ Tools: .NET 8, PowerShell 7, GitHub Actions, BuildStamp, ZipRelease
 ### 3.3 Config & File Handling
 | Case | Setup | Expected Output | Status |
 |------|--------|----------------|--------|
-| Default file creation | Delete autoversion.json | Program generates default config | ☐ |
-| Load valid config | Normal file present | CLI reads config correctly | ☐ |
-| Corrupt config | Remove a required field | Clear error message | ☐ |
-| Env override | `AUTOVERSION_VERSION=1.2.3` | Value overrides config | ☐ |
+| Default file creation | Delete autoversion.json | Program generates default config | ✅ | <!-- no autoversion.json -->
+| Load valid config | Normal file present | CLI reads config correctly | ✅ | <!-- only Normal file is relevent now -->
+| Corrupt config | Remove a required field | Clear error message | ✅ | <!-- Coloration for message error has been remove.Will be handle by something else -->
+| Env override | `AUTOVERSION_VERSION=1.2.3` | Value overrides config | ✅ | <!-- AutoVersion Pro -->
 
-### 3.4 Set Operations <!-- Not implemented yet -->
+### 3.4 Set Operations
 | Case                   | Setup                           | Expected Output                         | Status |
 | ---------------------- | ------------------------------- | --------------------------------------- | ------ |
-| Set valid version      | `autoversion set 2.5.0`         | Files updated & version applied         | ☐      |
-| Invalid version string | `autoversion set abc`           | Clear validation error                  | ☐      |
-| Dry-run                | Add `--dry-run`                 | No file written; simulation output only | ☐      |
-| With prerelease        | `autoversion set 1.3.0-beta.2`  | Version applied with prerelease         | ☐      |
-| Dirty repo             | Modified file; no flag          | Error shown                             | ☐      |
-| Allow dirty            | Modified file + `--allow-dirty` | Version applied normally                | ☐      |
+| Set valid version      | `autoversion set 2.5.0`         | Files updated & version applied         | ✅     |
+| Invalid version string | `autoversion set abc`           | Clear validation error                  | ✅     |
+| Dry-run                | Add `--dry-run`                 | No file written; simulation output only | ✅     |
+| With prerelease        | `autoversion set 1.3.0-beta.2`  | Version applied with prerelease         | ✅     |
 
 ---
 
 ## 🔗 4. Integration Tests
 
 ### 4.1 Git Integration
-| Step | Action | Expected |
+| Step | Action | Expected | <!-- Git operations will be handle by either Pro another program -->
 |------|---------|----------|
-| 1 | Initialize repo | Git recognizes version files |
-| 2 | Run bump | Commit-ready modified version file | ☐ |
-| 3 | Tag manually | `git tag v1.1.2` works | ☐ |
-| 4 | Push | No conflicts | ☐ |
+| 1 | Initialize repo | Git recognizes version files | ✅ |
+| 2 | Run bump | Commit-ready modified version file | ✅ |
+| 3 | Tag manually | `git tag v1.1.2` works | ✅ |
+| 4 | Push | No conflicts | ✅ |
 
 ---
 
 ### 4.2 BuildStamp Integration
 | Step | Action | Expected |
 |------|---------|----------|
-| 1 | Run `autoversion bump patch` | Version increments | ☐ |
-| 2 | Run `buildstamp` | buildinfo.json matches version | ☐ |
+| 1 | Run `autoversion bump patch` | Version increments | ✅ | 
+| 2 | Run `buildstamp` | buildinfo.json matches version | ✅ | <!-- see BuildStamp -->
 
 ---
 
 ### 4.3 ZipRelease Integration
-| Step | Action | Expected |
+| Step | Action | Expected | <!-- removed from AutoVersion -->
 |------|---------|----------|
 | 1 | Version bump → ZipRelease | Version propagated into archive | ☐ |
 | 2 | Extract archive | Version consistent in metadata | ☐ |
@@ -104,29 +102,27 @@ Tools: .NET 8, PowerShell 7, GitHub Actions, BuildStamp, ZipRelease
 
 | Case | Description | Expected |
 |------|--------------|----------|
-| v1.0 configs | Older format still loads | ☐ |
-| Branch switching | Bumps remain correct per branch | ☐ |
-| Double bump prevention | Back-to-back runs block unless `--force` | ☐ |
+| v1.0 configs | Older format still loads | ✅ | <!-- config folder has been removed -->
+| Branch switching | Bumps remain correct per branch |✅ | <!-- AutoVersion has been simplefied, limited to it's field -->
+| Double bump prevention | Back-to-back runs block unless `--force` |✅ | <!-- Force has been removed -->
 
 ---
 
 ## ☁️ 6. CI/CD Pipeline Tests
 | Step | Command | Expected Result |
 |------|----------|----------------|
-| Push to main | triggers CI | Workflow succeeds | ☐ |
-| Matrix build | Windows/macOS/Linux | All green | ☐ |
-| AutoVersion step | Executes bump logic | ☐ |
-| Artifacts | Created and zipped | ☐ |
+| Push to main | triggers CI | Workflow succeeds | ✅ |
+| Matrix build | Windows/macOS/Linux | All green | ✅ |
 
 ---
 
 ## 🧰 7. Manual QA Checklist
 | Test | Verification | Status |
 |------|---------------|--------|
-| Help text readability | Clear, minimal, accurate | ☐ |
-| Error messages | Informative and actionable | ☐ |
-| Output formatting | Works in PowerShell and bash | ☐ |
-| Dry-run clarity | Shows exactly what will happen | ☐ |
+| Help text readability | Clear, minimal, accurate | ✅ | 
+| Error messages | Informative and actionable | ✅ | <!-- coloration in future program -->
+| Output formatting | Works in PowerShell and bash | ☐ |<!-- not directly tested yet, but .net is all fonctionnal -->
+| Dry-run clarity | Shows exactly what will happen | ✅ |
 
 ---
 

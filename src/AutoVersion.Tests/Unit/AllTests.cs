@@ -16,11 +16,15 @@
 
 using System;
 using System.IO;
-using Xunit;
+
+using FluentAssertions;
+
 using Solcogito.AutoVersion.Core;
 using Solcogito.Common.Versioning;
 
-namespace Solcogito.AutoVersion.Tests
+using Xunit;
+
+namespace Solcogito.AutoVersion.Tests.Unit
 {
     // ------------------------------------------------------------------------
     // 1. Semantic Versioning Tests
@@ -60,12 +64,17 @@ namespace Solcogito.AutoVersion.Tests
             Directory.CreateDirectory(dir);
             var path = Path.Combine(dir, "version.txt");
 
+            // Write version first
             var version = VersionModel.Parse("1.2.3");
             VersionFile.Write(path, version);
 
-            var readBack = VersionFile.TryRead(path);
-            Assert.NotNull(readBack);
-            Assert.Equal(version.ToString(), readBack!.ToString());
+            // Read back
+            VersionModel result;
+            bool ok = VersionFile.TryRead(path, out result);
+
+            ok.Should().BeTrue();
+            result.Should().NotBeNull();
+            result.ToString().Should().Be("1.2.3");
         }
     }
 }

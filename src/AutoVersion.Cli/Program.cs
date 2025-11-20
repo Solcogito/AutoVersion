@@ -6,14 +6,15 @@
 // ----------------------------------------------------------------------------
 // Description:
 //   Application entrypoint. Builds the CLI schema, parses arguments using
-//   ArgForge, and forwards execution to the CommandRouter.
+//   ArgForge, and forwards execution to the CommandRouter with injected
+//   services (version environment + logger).
 // ----------------------------------------------------------------------------
 // License:     MIT
 // ============================================================================
 
 using System;
-
 using Solcogito.Common.ArgForge;
+using Solcogito.AutoVersion.Core;
 
 namespace Solcogito.AutoVersion.Cli
 {
@@ -23,7 +24,7 @@ namespace Solcogito.AutoVersion.Cli
         {
             var schema = BuildSchema();
 
-            // If user typed only autoversion OR help flags
+            // Help handling (no args or explicit help)
             if (args.Length == 0 ||
                 args[0].Equals("--help", StringComparison.OrdinalIgnoreCase) ||
                 args[0].Equals("-h", StringComparison.OrdinalIgnoreCase) ||
@@ -33,7 +34,6 @@ namespace Solcogito.AutoVersion.Cli
                 return 0;
             }
 
-            // Parse arguments
             var result = ArgParser.Parse(args, schema);
 
             if (!result.IsValid)
@@ -44,8 +44,13 @@ namespace Solcogito.AutoVersion.Cli
                 return 1;
             }
 
-            // Route execution
-            return CommandRouter.Run(result, schema);
+            // ----------------------------------------------------------------
+            // Composition root: create concrete services here
+            // ----------------------------------------------------------------
+            IVersionEnvironment env = new DefaultVersionEnvironment();
+            ICliLogger logger       = new ConsoleCliLogger();
+
+            return CommandRouter.Run(result, schema, env, logger);
         }
 
         // =====================================================================
@@ -55,27 +60,19 @@ namespace Solcogito.AutoVersion.Cli
         {
             var schema = ArgSchema.Create("autoversion", "Semantic versioning tool");
 
-            // ------------------------------------------------------------
-            // GLOBAL FLAGS (valid for every command)
-            // ------------------------------------------------------------
+            // GLOBAL FLAGS
             schema.Flag("dry-run", null, "--dry-run", "Simulate operation, do not write files");
 
-            // ------------------------------------------------------------
-            // current  (root command)
-            // ------------------------------------------------------------
+            // current
             schema.Command("current", "Show the current version");
 
-            // ------------------------------------------------------------
-            // set <version> 
-            // ------------------------------------------------------------
+            // set <version>
             schema.Command("set", "Set the version directly", cmd =>
             {
                 cmd.Positional("version", 0, "Version to set (e.g., 1.2.3)", required: true);
             });
 
-            // ------------------------------------------------------------
             // bump <patch|minor|major|prerelease>
-            // ------------------------------------------------------------
             schema.Command("bump", "Increment version components", bump =>
             {
                 bump.Command("patch", "Increment patch version");
