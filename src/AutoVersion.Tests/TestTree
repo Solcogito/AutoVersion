@@ -1,0 +1,15 @@
+AutoVersion.Tests/
+│
+├── AutoVersion.Tests.csproj
+│
+├── Unit/
+│   ├── ProgramTests.cs
+│   ├── ArgSchemaTests.cs
+│   ├── BumpCommandTests.cs   ← Fully implemented below
+│   ├── CurrentCommandTests.cs
+│   └── ValidationTests.cs
+│
+└── TestUtils/
+    ├── FakeLogger.cs
+    ├── MockConfigFactory.cs
+    └── TestData.cs
