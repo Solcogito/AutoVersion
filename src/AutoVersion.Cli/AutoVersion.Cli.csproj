@@ -6,7 +6,8 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <AssemblyName>AutoVersion.Cli</AssemblyName>
+    <AssemblyName>AutoVersion</AssemblyName>
+    <OutputName>AutoVersion</OutputName>
     <RootNamespace>Solcogito.AutoVersion.Cli</RootNamespace>
 
   </PropertyGroup>
