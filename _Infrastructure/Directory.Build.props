@@ -5,41 +5,31 @@ Author:      Benoit Desrosiers (Solcogito S.E.N.C.)
 -------------------------------------------------------------------------------
 Description:
   Shared MSBuild configuration applied to all projects.
-  Defines consistent compiler settings, versioning, and metadata.
+  Provides consistent compiler settings and metadata.
 ============================================================================ -->
 
 <Project>
   <PropertyGroup>
-    <!-- Target framework -->
+    <!-- Target framework and language -->
     <TargetFramework>net8.0</TargetFramework>
-
-    <!-- Language + warnings -->
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
+
+    <!-- Warnings as errors -->
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 
-    <!-- Output -->
-    <Configurations>Debug;Release</Configurations>
+    <!-- Output and general metadata -->
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <OutputType>Library</OutputType>
     <Authors>Soleria / Benoit Desrosiers</Authors>
     <Company>Soleria S.E.N.C.</Company>
     <Product>AutoVersion Lite</Product>
     <RepositoryUrl>https://github.com/solcogito/AutoVersion</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
 
-    <!-- Encoding -->
+    <!-- Build behavior -->
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Deterministic>true</Deterministic>
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
-
-    <!-- Default version placeholder (will be overwritten by AutoVersion) -->
-    <Version>0.0.0</Version>
-    <FileVersion>0.0.0.0</FileVersion>
-    <AssemblyVersion>0.0.0.0</AssemblyVersion>
-
-    <!-- Optimize Release builds -->
-    <Optimize Condition="'$(Configuration)' == 'Release'">true</Optimize>
   </PropertyGroup>
 
   <!-- Optional code analysis settings -->
@@ -47,14 +37,4 @@ Description:
     <AnalysisLevel>latest</AnalysisLevel>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
   </PropertyGroup>
-
-  <PropertyGroup>
-    <Nullable>enable</Nullable>
-    <WarningsAsErrors>false</WarningsAsErrors>
-  </PropertyGroup>
-
-  <!-- Exclude build metadata files -->
-  <ItemGroup>
-    <None Remove="*.md" />
-  </ItemGroup>
 </Project>
