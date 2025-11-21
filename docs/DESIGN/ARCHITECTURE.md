@@ -1,87 +1,156 @@
-# 🧱 ARCHITECTURE — AutoVersion Lite v0.0.1
+# 🧱 ARCHITECTURE — AutoVersion Lite v1.1.x
 
 ---
 
 ## 🧩 System Overview
 
-AutoVersion follows a **modular layered architecture**, built to support both CLI and Unity Editor integration.
+AutoVersion Lite uses a **layered architecture**:
 
 ```
-┌──────────────────────────────┐
-│        AutoVersion.Cli       │  ← CLI entry point (System.CommandLine)
-└─────────────┬────────────────┘
+┌─────────────────────────────┐
+│       AutoVersion.Cli       │  ← CLI (ArgForge, commands)
+└─────────────┬───────────────┘
               │
-┌─────────────▼────────────────┐
-│       AutoVersion.Core       │  ← Versioning logic, changelog generator
-└─────────────┬────────────────┘
+┌─────────────▼───────────────┐
+│      AutoVersion.Core       │  ← Versioning logic + environment
+└─────────────┬───────────────┘
               │
-┌─────────────▼────────────────┐
-│       AutoVersion.Unity      │  ← Unity Editor UI (optional)
-└──────────────────────────────┘
+┌─────────────▼───────────────┐
+│      File System I/O        │  ← version.json + version.txt
+└─────────────────────────────┘
 ```
+
+Unity is not part of the Lite version.
 
 ---
 
 ## 🧱 Core Components
 
-| Component | Purpose |
-|------------|----------|
-| `VersionModel` | Encapsulates semantic version (major.minor.patch[-pre][+meta]) |
-| `VersionManager` | Reads/writes version files, executes bumps |
-| `ChangelogService` *(planned)* | Generates Markdown changelog from Git commits |
-| `GitService` *(planned)* | Handles tagging, clean checks, and remote push |
-| `ConfigLoader` *(planned)* | Parses and validates `autoversion.json` |
+### VersionModel  
+- Semantic version structure  
+- Parsing / validation  
+- Bumping (major/minor/patch/pre)  
+- Comparison  
+
+### VersionEnvironment  
+- Detect version files  
+- Load both  
+- Return highest version  
+- Safe write operations  
+
+### Logger (ICliLogger)  
+- Console output abstraction  
+- Mockable for tests  
 
 ---
 
-## 🧭 Execution Flow
+## 🧱 CLI Layer
 
-### Bump Command
+### ArgForge Schema  
+Responsible for:
 
-1. CLI receives command → parses arguments  
-2. VersionManager reads current version  
-3. VersionModel performs bump logic  
-4. If `--dry-run`: prints next version only  
-5. Otherwise:
-   - Writes new version to file
-   - (Later phases) updates changelog & tags repo
+- Defining commands  
+- Options (`--pre`, `--dry-run`)  
+- Flags  
+- Positional argument rules  
+- Type validation  
+- Uniform error messages  
 
-```
-[ CLI ] → [ VersionManager ] → [ VersionModel ] → [ File I/O ] → [ Console Output ]
-```
+Handles:
+
+- Unknown flags  
+- Wrong positional count  
+- Invalid values  
+- Missing required inputs  
+
+### CommandRouter  
+- Builds schema  
+- Parses input  
+- Maps to correct command  
+- Routes ArgResult  
+- Converts errors into exit codes  
+
+### Commands
+
+#### BumpCommand  
+- All bump types supported  
+- Optional prerelease label  
+- Dry-run support  
+- Standard exit codes  
+
+#### SetCommand  
+- Validates version  
+- Writes if correct  
+
+#### CurrentCommand  
+- Loads json + txt  
+- Returns highest version  
 
 ---
 
 ## ⚙️ Build System
 
 | Script | Purpose |
-|---------|----------|
-| `build.ps1` | Restores, builds, and tests all projects |
-| `build.sh` | Linux/macOS equivalent |
-| `publish.ps1` | Runs tests, bumps version, tags, and pushes |
-| `Directory.Build.props` | Defines shared compiler properties (.NET 8, warnings as errors) |
+|--------|---------|
+| `build.ps1` | Build + test (Windows) |
+| `build.sh` | Build + test (Linux/macOS) |
+| `publish.ps1` | Test + version bump + future tag integration |
+| `Directory.Build.props` | Shared .NET 8 compiler rules |
 
 ---
 
-## 🧪 Testing Layout
+## 🧪 Test Architecture
 
-| Project | Test Scope |
-|----------|-------------|
-| `AutoVersion.Tests` | Unit tests for all Core components |
-| Example test file: | `VersionModelTests.cs` — verifies parse, bump, and comparison logic |
+### VersionModelTests  
+- Parse  
+- TryParse  
+- Normalize  
+- Comparison rules  
+- Bump logic  
 
-Tests are executed automatically in CI via:
-```
-dotnet test --configuration Release
-```
+### VersionEnvironmentTests  
+- json/txt detection  
+- Highest-version resolution  
+- Write behavior  
+
+### BumpCommandTests  
+- Valid bump types  
+- Invalid bump types  
+- Pre-label  
+- Dry-run  
+- Exit codes  
+
+### SetCommandTests  
+- Invalid version → exit 1  
+- Valid → writes safely  
+
+### CurrentCommandTests  
+- No files  
+- One file  
+- Both files (highest wins)  
+
+### ArgForge Negative Tests  
+- Unknown flag  
+- Invalid positional count  
+- Invalid option  
+- Duplicate option  
+
+### FakeCliLogger  
+- Deterministic log capture  
 
 ---
 
 ## 📁 Integration Points
 
-- **Unity** → uses `AutoVersion.Unity` to invoke Core logic from menu actions.  
-- **CI/CD** → GitHub Actions call `publish.ps1` or CLI commands.  
-- **Gumroad (future)** → via API or webhook integration.
+Active:
+- CLI usage  
+- Test suite  
+- CI/CD  
+
+Planned (not implemented):
+- Unity integration  
+- Git tagging  
+- Changelog service  
 
 ---
 

@@ -1,74 +1,99 @@
-# 🧭 TECH_OVERVIEW — AutoVersion Lite v0.0.1
+# 🧭 TECH OVERVIEW — AutoVersion Lite v1.1.x
 
 ---
 
 ## 🎯 Purpose
 
-AutoVersion Lite is a lightweight cross-platform **semantic versioning and changelog automation tool**  
-for Unity and .NET projects. It is designed to streamline release workflows by automating version bumps,  
-CHANGELOG generation, and Git tagging from the command line or within the Unity Editor.
+AutoVersion Lite provides **predictable semantic version automation** for .NET and general projects through a simple CLI built on a custom schema parser.
+
+No Unity integration.  
+No Git integration.  
+No changelog automation (yet).  
+Just clean, safe, testable versioning.
 
 ---
 
 ## 🧱 Architecture Summary
 
-AutoVersion consists of three main layers:
+AutoVersion is composed of three active layers:
 
-| Layer | Location | Description |
-|-------|-----------|-------------|
-| **Core** | `src/AutoVersion.Core/` | Contains the logic for version parsing, bumping, and changelog management. |
-| **CLI** | `src/AutoVersion.Cli/` | Provides a command-line interface using `System.CommandLine`. |
-| **Unity** | `src/AutoVersion.Unity/` | Integrates AutoVersion functionality directly into the Unity Editor menus. |
+| Layer | Location | Role |
+|-------|----------|------|
+| **Core** | `AutoVersion.Core` | Version parsing, comparison, bumping, file I/O environment |
+| **CLI** | `AutoVersion.Cli` | Commands, ArgForge schema, and routing |
+| **Tests** | `AutoVersion.Tests` | Full unit test suite for all commands and parsing |
 
-Support systems include:
-- `_Infrastructure/` — build and release automation scripts
-- `.github/workflows/` — CI/CD pipelines
-- `/docs/` — developer documentation and configuration schema
+Future (not implemented): `AutoVersion.Unity`
 
 ---
 
 ## ⚙️ Technology Stack
 
 | Category | Technology |
-|-----------|-------------|
-| Runtime | .NET 8 SDK |
+|----------|------------|
+| Runtime | .NET 8 |
 | Language | C# 12 |
-| Build | MSBuild + PowerShell + Bash |
+| Parsing | Custom ArgForge schema |
 | Testing | xUnit |
 | CI/CD | GitHub Actions |
-| Packaging | UPM / .NET CLI |
-| Editor Integration | Unity 2022.3 LTS (Editor-only assemblies) |
+| Scripting | PowerShell / Bash |
 
 ---
 
-## 🔁 Development Flow
+## 🔁 CLI Workflow
 
-1. Developer runs `pwsh _Infrastructure/build.ps1 -Release`
-2. CLI builds Core + Tests
-3. Tests run automatically (xUnit)
-4. `publish.ps1` bumps version and updates changelog
-5. Git tag created and pushed
-6. CI builds on all OSes and releases artifacts
+### Example: Bump
+
+1. User calls:  
+   ```
+   autoversion bump minor
+   ```
+2. ArgForge schema validates input  
+3. VersionEnvironment loads version.json + version.txt  
+4. VersionModel bumps it  
+5. Writes file unless dry-run  
+6. CLI logs output  
+7. Exit code returned  
+
+---
+
+## 🗂 Source of Truth: Version Files
+
+AutoVersion reads:
+
+- `version.json`  
+- `version.txt`
+
+**Rule:**  
+> AutoVersion uses the highest valid semantic version.
+
+Example:  
+- version.json → `1.2.3`  
+- version.txt → `1.1.0`  
+
+Current version = **1.2.3**
 
 ---
 
 ## 🧠 Design Principles
 
-- **Single Source of Truth**: version number lives in one place and propagates to all files.  
-- **Predictable Automation**: every step (bump → changelog → tag) is reproducible and reversible.  
-- **Cross-Platform**: works identically on Windows, macOS, Linux, and within Unity.  
-- **Readable & Transparent**: all output is human-readable — no black box behavior.  
-- **Zero External Dependencies**: no npm, pip, or node toolchains — pure .NET & Unity.
+- **Predictable** — deterministic version changes  
+- **Safe** — dry-run support, isolated environment  
+- **Injectable & Testable** — all dependencies abstracted  
+- **Minimal** — semantic versioning only  
+- **Transparent** — human-readable output  
 
 ---
 
-## 🧩 Future Direction
+## 🚧 Future Direction
 
-- AutoVersion Pro will extend Core functionality:
-  - Multi-project configs
-  - GUI “Release Window”
-  - Webhooks (Discord, Gumroad)
-  - Integration with asset build pipelines
+Not part of v1.1.x:
+
+- Changelog generation  
+- Git tagging API  
+- Multi-project config  
+- Unity Editor UI  
+- Webhooks  
 
 ---
 

@@ -1,85 +1,140 @@
-# 🧩 COMPONENT_GUIDES — AutoVersion Lite v0.0.1
+# 🧩 COMPONENT GUIDE — AutoVersion Lite v1.1.x
+
+This guide describes every functional component in **AutoVersion Lite**, focusing only on what exists in the *current* version.
 
 ---
 
-## ⚙️ Core Components
+## ⚙️ Core Components (`AutoVersion.Core`)
 
-### 🟩 VersionModel.cs
-Encapsulates semantic version logic.
+### 🟩 VersionModel.cs  
+Central semantic-version container and parser.
 
 | Method | Description |
-|---------|--------------|
-| `Parse(string)` | Validates and converts a version string into structured data. |
-| `Bump(string, string?)` | Increments version part (`major`, `minor`, `patch`, or `prerelease`). |
-| `CompareTo(VersionModel)` | Implements version comparison. |
-| `ToString()` | Returns normalized version string. |
+|--------|-------------|
+| `Parse(string)` | Converts strings like `1.2.3-alpha.1` into structured data. |
+| `TryParse(string, out VersionModel)` | Safe parsing variant. |
+| `CompareTo(VersionModel)` | Standard semantic comparison. |
+| `Bump(string part, string? preLabel)` | Bumps major/minor/patch or handles prerelease logic. |
+| `ToString()` | Returns normalized semantic version. |
 
-**Example**
-```csharp
-var v = VersionModel.Parse("1.2.3-alpha");
-var next = v.Bump("patch");
-Console.WriteLine(next); // 1.2.4
+Handles:
+- major/minor/patch
+- prerelease identifiers
+- metadata ignored for ordering
+- normalization and validation
+
+---
+
+### 🟩 VersionEnvironment.cs (`IVersionEnvironment` / `DefaultVersionEnvironment`)  
+Handles all **file system interactions**.
+
+Responsible for:
+
+- Locating version files  
+  - `version.json` (if present)  
+  - `version.txt`  
+- Loading both and returning the **highest semantic version**
+- Writing the version  
+- Ensuring safe, testable file I/O  
+- Providing paths for the CLI
+
+This is injectable and fully mockable.
+
+---
+
+### 🟩 ICliLogger / ConsoleCliLogger  
+Centralized CLI output.
+
+- Capturable logs during tests (`FakeCliLogger`)
+- Separation of console concerns
+- Supports info/warn/error levels
+
+---
+
+## 🧩 CLI Components (`AutoVersion.Cli`)
+
+### 🟦 ArgForge Schema  
+Custom schema-driven parser defining:
+
+- Commands  
+- Options  
+- Flags  
+- Positional arguments  
+- Type validation  
+- Error messages & exit codes
+
+It supports:
+
+- Unknown flag detection  
+- Missing positional detection  
+- Duplicate argument rules  
+- Proper error propagation
+
+---
+
+### 🟦 CommandRouter.cs  
+The entry-point router:
+
+- Builds the ArgForge schema  
+- Parses raw arguments  
+- Selects the correct command  
+- Passes ArgResult to execution  
+- Maps all errors to standardized exit codes  
+
+---
+
+### 🟩 Commands
+
+#### **BumpCommand.cs**
+```
+autoversion bump <major|minor|patch|pre> [-p <label>] [--dry-run]
 ```
 
----
+- Loads current version  
+- Bumps part  
+- Applies prerelease label when given  
+- Writes file unless `--dry-run`  
+- Logs actions  
+- Exit codes:
+  - `0` success  
+  - `1` invalid input  
+  - `2` fatal error  
 
-### 🟩 VersionManager.cs
-Handles file I/O for reading and writing version data.
-
-| Method | Description |
-|---------|--------------|
-| `ReadCurrentVersion()` | Reads from `version.txt` or fallback file. |
-| `WriteVersion(VersionModel)` | Writes current version string to file. |
-| `Bump(string, bool)` | Reads, increments, and writes version (or simulates in dry-run). |
-
-**Example**
-```csharp
-VersionManager.Bump("minor");
+#### **SetCommand.cs**
+```
+autoversion set <version>
 ```
 
----
+- Validates provided version  
+- Writes it using VersionEnvironment  
+- Prevents unsafe overwrites  
 
-### 🟩 CommandRouter.cs
-Parses CLI arguments using `System.CommandLine`.
+#### **CurrentCommand.cs**
+```
+autoversion current
+```
 
-| Command | Description |
-|----------|-------------|
-| `autoversion current` | Displays current version. |
-| `autoversion bump [type]` | Increments the version (`major`, `minor`, etc). |
-| `--dry-run` | Simulates without writing. |
-| `--pre` | Adds prerelease label. |
-
----
-
-## 🧠 Planned Components (v0.2.0+)
-
-| Name | Purpose |
-|------|----------|
-| `ConfigLoader` | Reads & validates `autoversion.json` |
-| `FileUpdater` | Applies version replacements in multiple file types |
-| `ChangelogGenerator` | Creates CHANGELOG.md from Git commits |
-| `GitWrapper` | Handles clean repo checks, tagging, and pushing |
+- Loads `version.json` and/or `version.txt`  
+- Shows **the highest version**
 
 ---
 
-## 🧾 Unity Integration Components (v0.6.0+)
+## 📚 Supporting Files
 
 | File | Description |
-|-------|--------------|
-| `AutoVersionMenu.cs` | Adds menu entries under Tools/AutoVersion |
-| `AutoVersionWindow.cs` *(planned)* | GUI version dashboard |
-| `VersionStatusDrawer.cs` *(planned)* | EditorWindow for current version & history |
+|------|-------------|
+| `test/` | Unit tests for all components |
+| `Directory.Build.props` | Shared compiler settings (.NET 8, warnings as errors) |
 
 ---
 
-## 🧩 Utility Scripts
+## 🧠 Planned Extensions (Not Yet Implemented)
 
-| File | Description |
-|-------|--------------|
-| `build.ps1 / build.sh` | Cross-platform build & test automation |
-| `publish.ps1` | End-to-end release workflow |
-| `autoversion.schema.json` | JSON schema validation for config file |
+- Changelog generator  
+- Git tagging  
+- Multi-file update engine  
+- Unity Editor integration  
 
 ---
 
-**End of Component Guides**
+**End of Component Guide**

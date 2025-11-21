@@ -32,7 +32,7 @@ Guarantee that AutoVersion v1.1.3 (Lite) is stable, documented, and synchronized
 ## 4️⃣ Cross-Tool Integration
 | Tool | Integration Test | Status |
 |------|------------------|--------|
-| BuildStamp | buildstamp uses new version | ☐ | <-- no available yet -->
+| BuildStamp | buildstamp uses new version | ☐ | <-- not available yet -->
 | ZipRelease | archive includes CHANGELOG + metadata | ☐ | <-- no available yet -->
 | CompleteRelease | AutoVersion → BuildStamp → ZipRelease chain | ☐ | <-- no available yet -->
 
