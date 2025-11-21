@@ -14,6 +14,9 @@ namespace Solcogito.AutoVersion.Cli.Commands
             if (!args.Positionals.TryGetValue("version", out var versionString) ||
                 string.IsNullOrWhiteSpace(versionString))
             {
+                // TODO (Logging v2): replace all Console.WriteLine/Error.WriteLine with logger only. 
+                // Current implementation left for backwards compatibility with initial CLI behavior.
+
                 Console.Error.WriteLine("Error: missing required version argument.");
                 logger.Error("Missing required version argument for 'set'.");
                 return 1;

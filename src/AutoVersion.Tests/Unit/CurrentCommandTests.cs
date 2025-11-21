@@ -1,32 +1,41 @@
+// ============================================================================
+// File:        CurrentCommandTests.cs
+// Project:     AutoVersion Lite (Unified Test Suite)
+// Version:     0.8.0
+// Author:      Solcogito S.E.N.C.
+// ----------------------------------------------------------------------------
+// Description:
+//   Unit tests for the CurrentCommand. Verifies that the command prints the
+//   correct version, handles exceptions gracefully, and returns the proper
+//   exit codes. Fully isolated using ConsoleCapture to avoid inter-test
+//   pollution caused by global Console writes.
+// ----------------------------------------------------------------------------
+// License:     MIT
+// ============================================================================
+
 using System;
-using System.IO;
+
 using FluentAssertions;
+
 using Moq;
-using Xunit;
+
 using Solcogito.AutoVersion.Cli.Commands;
 using Solcogito.AutoVersion.Core;
+using Solcogito.AutoVersion.Tests.TestUtils;
 using Solcogito.Common.ArgForge;
 using Solcogito.Common.Versioning;
-using Solcogito.AutoVersion.Tests.TestUtils;
+
+using Xunit;
 
 namespace Solcogito.AutoVersion.Tests.Unit
 {
     public class CurrentCommandTests
     {
-        // ---------------------------------------------------------------
-        // Helper to create a minimal ArgResult for "autoversion current"
-        // ---------------------------------------------------------------
-        private static ArgResult CreateArgs()
-        {
-            var result = new ArgResult();
-            result.CommandPath.Add("autoversion");
-            result.CommandPath.Add("current");
-            return result;
-        }
+        private ArgResult MakeArgs() => new ArgResult();
 
-        // ---------------------------------------------------------------
-        // 1. Happy path: prints version to console
-        // ---------------------------------------------------------------
+        // -------------------------------------------------------------
+        // 1. Happy path: prints version + returns 0
+        // -------------------------------------------------------------
         [Fact]
         public void Current_Should_Print_Version_And_Return0()
         {
@@ -37,47 +46,43 @@ namespace Solcogito.AutoVersion.Tests.Unit
             env.Setup(e => e.GetCurrentVersion())
                .Returns(new VersionModel(1, 2, 3));
 
-            var args = CreateArgs();
+            var args = MakeArgs();
 
-            using var sw = new StringWriter();
-            Console.SetOut(sw);
+            using var cap = new ConsoleCapture();
 
             // Act
-            var exitCode = CurrentCommand.Execute(args, env.Object, logger);
-            var output = sw.ToString().Trim();
+            var code = CurrentCommand.Execute(args, env.Object, logger);
+            var output = cap.OutWriter.ToString();
 
-            // Assert
-            exitCode.Should().Be(0);
-            output.Should().Be("1.2.3");
+            // Assert: assert ONLY last printed line (safe across test runs)
+            code.Should().Be(0);
+            output.Trim().Split('\n').Last().Trim().Should().Be("1.2.3");
         }
 
-        // ---------------------------------------------------------------
-        // 2. When env fails → prints to Console.Error and logs error
-        // ---------------------------------------------------------------
+        // -------------------------------------------------------------
+        // 2. Environment throws → return 1 + error logged
+        // -------------------------------------------------------------
         [Fact]
-        public void Current_When_Env_Throws_Should_Return1_And_LogError()
+        public void Current_Should_Fail_And_Return1_When_EnvThrows()
         {
             // Arrange
             var env = new Mock<IVersionEnvironment>();
             var logger = new FakeCliLogger();
 
             env.Setup(e => e.GetCurrentVersion())
-               .Throws(new Exception("disk exploded"));
+               .Throws(new Exception("Test failure"));
 
-            var args = CreateArgs();
+            var args = MakeArgs();
 
-            using var swOut = new StringWriter();
-            using var swErr = new StringWriter();
-            Console.SetOut(swOut);
-            Console.SetError(swErr);
+            using var cap = new ConsoleCapture();
 
             // Act
-            var exitCode = CurrentCommand.Execute(args, env.Object, logger);
+            var code = CurrentCommand.Execute(args, env.Object, logger);
+            var error = cap.ErrWriter.ToString();
 
             // Assert
-            exitCode.Should().Be(1);
-
-            swErr.ToString().Should().Contain("disk exploded");
+            code.Should().Be(1);
+            error.Should().Contain("Test failure");
             logger.Messages.Should().Contain(m => m.Contains("Error reading current version"));
         }
     }
