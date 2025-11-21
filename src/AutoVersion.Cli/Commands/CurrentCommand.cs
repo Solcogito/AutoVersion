@@ -1,3 +1,14 @@
+// ============================================================================
+// File:        CurrentCommand.cs
+// Project:     AutoVersion Lite
+// Author:      Benoit Desrosiers (Solcogito S.E.N.C.)
+// -----------------------------------------------------------------------------
+// Description:
+//   Implements the `autoversion current` command.
+//   Retrieves the current project version using the version environment,
+//   prints it to stdout, and handles errors gracefully.
+// ============================================================================
+
 using System;
 using Solcogito.Common.ArgForge;
 using Solcogito.AutoVersion.Core;

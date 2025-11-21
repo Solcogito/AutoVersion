@@ -1,3 +1,15 @@
+// ============================================================================
+// File:        SetCommand.cs
+// Project:     AutoVersion Lite
+// Author:      Benoit Desrosiers (Solcogito S.E.N.C.)
+// -----------------------------------------------------------------------------
+// Description:
+//   Implements the `autoversion set <version>` command.
+//   Validates the semantic version string, performs optional dry-run behavior,
+//   resolves the version file location, and writes the new version using the
+//   environment abstraction. Errors are logged and surfaced with exit codes.
+// ============================================================================
+
 using System;
 using Solcogito.Common.Versioning;
 using Solcogito.Common.ArgForge;

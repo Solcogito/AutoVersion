@@ -1,3 +1,14 @@
+// ============================================================================
+// File:        FakeCliLogger.cs
+// Project:     AutoVersion Lite (Test Utilities)
+// Author:      Benoit Desrosiers (Solcogito S.E.N.C.)
+// -----------------------------------------------------------------------------
+// Description:
+//   In-memory implementation of ICliLogger for unit testing. Captures all log
+//   messages in a deterministic list without writing to the real console.
+//   Used to validate command behavior and error paths in AutoVersion.Tests.
+// ============================================================================
+
 using System.Collections.Generic;
 using Solcogito.AutoVersion.Core;
 

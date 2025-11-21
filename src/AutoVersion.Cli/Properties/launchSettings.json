@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "AutoVersion.Cli": {
-      "commandName": "Project",
-      "commandLineArgs": "Bump Patch"
-    }
-  }
-}

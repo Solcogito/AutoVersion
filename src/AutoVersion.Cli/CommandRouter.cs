@@ -1,3 +1,15 @@
+// ============================================================================
+// File: CommandRouter.cs
+// Project:     AutoVersion Lite
+// Author:      Benoit Desrosiers (Solcogito S.E.N.C.)
+// ------------------------------------------------------------------------------
+// Description:
+//   Routes parsed CLI arguments to the appropriate command handlers.
+//   Handles root-level commands (current, set) and delegates bump-related
+//   subcommands to BumpCommand. Provides unified error handling and help output.
+// ============================================================================
+
+
 using System;
 using System.Collections.Generic;
 using Solcogito.Common.ArgForge;

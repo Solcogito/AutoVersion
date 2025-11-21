@@ -1,3 +1,16 @@
+// ============================================================================
+// File:        SetCommandTests.cs
+// Project:     AutoVersion Lite (Unit Tests)
+// Author:      Benoit Desrosiers (Solcogito S.E.N.C.)
+// -----------------------------------------------------------------------------
+// Description:
+//   Unit tests for SetCommand. Covers successful version writes, dry-run
+//   behavior, missing or invalid version inputs, empty version file paths, and
+//   exception handling when write operations fail. Ensures that correct exit
+//   codes and logger messages are produced and that environment methods are
+//   invoked as expected.
+// ============================================================================
+
 using FluentAssertions;
 using Moq;
 using Xunit;

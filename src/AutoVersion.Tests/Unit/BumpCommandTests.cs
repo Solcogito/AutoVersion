@@ -1,3 +1,15 @@
+// ============================================================================
+// File:        BumpCommandTests.cs
+// Project:     AutoVersion Lite (Unit Tests)
+// Author:      Benoit Desrosiers (Solcogito S.E.N.C.)
+// -----------------------------------------------------------------------------
+// Description:
+//   Unit tests for BumpCommand. Verifies correct behavior for patch, minor,
+//   major, and prerelease bump operations, including dry-run behavior, error
+//   handling, prerelease validation, and unknown bump type detection. Ensures
+//   correct interaction with IVersionEnvironment and FakeCliLogger.
+// ============================================================================
+
 using System;
 using System.Collections.Generic;
 using FluentAssertions;

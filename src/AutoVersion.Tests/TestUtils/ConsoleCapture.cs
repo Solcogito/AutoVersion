@@ -1,3 +1,14 @@
+// ============================================================================
+// File:        ConsoleCapture.cs
+// Project:     AutoVersion Lite (Test Utilities)
+// Author:      Benoit Desrosiers (Solcogito S.E.N.C.)
+// -----------------------------------------------------------------------------
+// Description:
+//   Provides isolated redirection of Console.Out and Console.Error during tests.
+//   Ensures safe capture of CLI output and prevents cross-test pollution or
+//   ObjectDisposedException issues when restoring console streams.
+// ============================================================================
+
 using System;
 using System.IO;
 
