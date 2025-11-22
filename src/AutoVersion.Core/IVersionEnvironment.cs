@@ -15,12 +15,10 @@ namespace Solcogito.AutoVersion.Core
     public interface IVersionEnvironment
     {
         /// <summary>Gets the current project version (from version.txt or default).</summary>
-        VersionModel GetCurrentVersion();
-
-        /// <summary>Resolves the version file path.</summary>
-        string GetVersionFilePath();
+        VersionResolutionResult GetCurrentVersion();
 
         /// <summary>Writes the specified version to the version file.</summary>
+        void WriteVersion(VersionResolutionResult vR);
         void WriteVersion(VersionModel version);
     }
 }

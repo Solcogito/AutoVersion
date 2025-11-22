@@ -13,20 +13,27 @@ namespace Solcogito.AutoVersion.Core
 {
     public sealed class DefaultVersionEnvironment : IVersionEnvironment
     {
-        public VersionModel GetCurrentVersion()
+        public VersionResolutionResult GetCurrentVersion()
         {
-            return VersionResolver.ResolveVersionDetailed().Version;
+            return VersionResolver.ResolveVersionDetailed();
         }
 
-        public string GetVersionFilePath()
+        public void WriteVersion(VersionResolutionResult vR)
         {
-            return VersionResolver.ResolveVersionFilePath();
+            if (string.IsNullOrWhiteSpace(vR.FilePath))
+                throw new InvalidOperationException(
+                    "VersionResolutionResult.FilePath is null or empty. Cannot write version file.");
+
+            VersionFile.Write(vR.FilePath, vR.Version);
         }
 
         public void WriteVersion(VersionModel version)
         {
-            var path = GetVersionFilePath();
-            VersionFile.Write(path, version);
+            var vR = GetCurrentVersion();
+            if (string.IsNullOrWhiteSpace(vR.FilePath))
+                throw new InvalidOperationException(
+                    "Current version file path is null or empty. Cannot write version file.");
+            VersionFile.Write(vR.FilePath, version);
         }
     }
 }

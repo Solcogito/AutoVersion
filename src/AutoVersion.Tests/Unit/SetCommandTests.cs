@@ -19,6 +19,7 @@ using Solcogito.AutoVersion.Core;
 using Solcogito.Common.ArgForge;
 using Solcogito.Common.Versioning;
 using Solcogito.AutoVersion.Tests.TestUtils;
+using System.IO;
 
 namespace Solcogito.AutoVersion.Tests.Unit
 {
@@ -49,6 +50,17 @@ namespace Solcogito.AutoVersion.Tests.Unit
             return result;
         }
 
+        private static VersionResolutionResult MakeResult(string filePath)
+        {
+            return new VersionResolutionResult
+            {
+                Version = new VersionModel(0, 0, 0),
+                Source = string.IsNullOrWhiteSpace(filePath) ? "default" : filePath,
+                FilePath = filePath,
+                Success = !string.IsNullOrWhiteSpace(filePath)
+            };
+        }
+
         // ---------------------------------------------------------------------
         // 1. Happy path: valid version, normal write
         // ---------------------------------------------------------------------
@@ -59,7 +71,8 @@ namespace Solcogito.AutoVersion.Tests.Unit
             var env = new Mock<IVersionEnvironment>();
             var logger = new FakeCliLogger();
 
-            env.Setup(e => e.GetVersionFilePath()).Returns("version.txt");
+            env.Setup(e => e.GetCurrentVersion())
+               .Returns(MakeResult("version.txt"));
 
             VersionModel? written = null;
             env.Setup(e => e.WriteVersion(It.IsAny<VersionModel>()))
@@ -75,7 +88,7 @@ namespace Solcogito.AutoVersion.Tests.Unit
             written.Should().NotBeNull();
             written!.ToString().Should().Be("1.2.3");
 
-            env.Verify(e => e.GetVersionFilePath(), Times.Once);
+            env.Verify(e => e.GetCurrentVersion(), Times.Once);
             env.Verify(e => e.WriteVersion(It.IsAny<VersionModel>()), Times.Once);
         }
 
@@ -89,7 +102,8 @@ namespace Solcogito.AutoVersion.Tests.Unit
             var env = new Mock<IVersionEnvironment>();
             var logger = new FakeCliLogger();
 
-            env.Setup(e => e.GetVersionFilePath()).Returns("version.txt");
+            env.Setup(e => e.GetCurrentVersion())
+               .Returns(MakeResult("version.txt"));
 
             var args = CreateArgs("1.2.3", dryRun: true);
 
@@ -99,13 +113,13 @@ namespace Solcogito.AutoVersion.Tests.Unit
             // Assert
             exitCode.Should().Be(0);
 
-            env.Verify(e => e.GetVersionFilePath(), Times.Once);
+            env.Verify(e => e.GetCurrentVersion(), Times.Once);
             env.Verify(e => e.WriteVersion(It.IsAny<VersionModel>()), Times.Never);
 
-            logger.DryRun.Should().BeFalse(); // SetCommand itself doesn't toggle DryRun
+            // SetCommand itself doesn't toggle DryRun flag on logger
+            logger.DryRun.Should().BeFalse();
             logger.Messages.Any(m => m.Contains("[DRY-RUN]") || m.Contains("DRY-RUN"))
-            .Should().BeTrue();
-
+                  .Should().BeTrue();
         }
 
         // ---------------------------------------------------------------------
@@ -158,7 +172,8 @@ namespace Solcogito.AutoVersion.Tests.Unit
             var env = new Mock<IVersionEnvironment>();
             var logger = new FakeCliLogger();
 
-            env.Setup(e => e.GetVersionFilePath()).Returns(string.Empty);
+            env.Setup(e => e.GetCurrentVersion())
+               .Returns(MakeResult(string.Empty));
 
             var args = CreateArgs("1.2.3");
 
@@ -167,7 +182,7 @@ namespace Solcogito.AutoVersion.Tests.Unit
 
             // Assert
             exitCode.Should().Be(2);
-            env.Verify(e => e.GetVersionFilePath(), Times.Once);
+            env.Verify(e => e.GetCurrentVersion(), Times.Once);
             env.Verify(e => e.WriteVersion(It.IsAny<VersionModel>()), Times.Never);
         }
 
@@ -181,7 +196,9 @@ namespace Solcogito.AutoVersion.Tests.Unit
             var env = new Mock<IVersionEnvironment>();
             var logger = new FakeCliLogger();
 
-            env.Setup(e => e.GetVersionFilePath()).Returns("version.txt");
+            env.Setup(e => e.GetCurrentVersion())
+               .Returns(MakeResult("version.txt"));
+
             env.Setup(e => e.WriteVersion(It.IsAny<VersionModel>()))
                .Throws(new IOException("disk full"));
 
@@ -192,7 +209,7 @@ namespace Solcogito.AutoVersion.Tests.Unit
 
             // Assert
             exitCode.Should().Be(2);
-            env.Verify(e => e.GetVersionFilePath(), Times.Once);
+            env.Verify(e => e.GetCurrentVersion(), Times.Once);
             env.Verify(e => e.WriteVersion(It.IsAny<VersionModel>()), Times.Once);
 
             logger.Messages.Should().Contain(m => m.Contains("Error setting version"));

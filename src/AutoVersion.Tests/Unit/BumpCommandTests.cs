@@ -48,6 +48,17 @@ namespace Solcogito.AutoVersion.Tests.Unit
             return result;
         }
 
+        private static VersionResolutionResult MakeResult(VersionModel v, string? path = "version.txt")
+        {
+            return new VersionResolutionResult
+            {
+                Version = v,
+                Source = path ?? "test",
+                FilePath = path,
+                Success = !string.IsNullOrWhiteSpace(path)
+            };
+        }
+
         // ---------------------------------------------------------------------
 
         [Fact]
@@ -59,8 +70,8 @@ namespace Solcogito.AutoVersion.Tests.Unit
             var env = new Mock<IVersionEnvironment>();
             var logger = new FakeCliLogger();
 
-            env.Setup(e => e.GetCurrentVersion()).Returns(oldVersion);
-            env.Setup(e => e.GetVersionFilePath()).Returns("version.txt");
+            env.Setup(e => e.GetCurrentVersion())
+               .Returns(MakeResult(oldVersion, "version.txt"));
 
             env.Setup(e => e.WriteVersion(It.IsAny<VersionModel>()))
                .Callback<VersionModel>(v => v.Should().Be(newVersion));
@@ -83,8 +94,8 @@ namespace Solcogito.AutoVersion.Tests.Unit
             var env = new Mock<IVersionEnvironment>();
             var logger = new FakeCliLogger();
 
-            env.Setup(e => e.GetCurrentVersion()).Returns(oldVersion);
-            env.Setup(e => e.GetVersionFilePath()).Returns("version.txt");
+            env.Setup(e => e.GetCurrentVersion())
+               .Returns(MakeResult(oldVersion, "version.txt"));
 
             var args = CreateArgs("patch", dryRun: true);
 
@@ -106,8 +117,8 @@ namespace Solcogito.AutoVersion.Tests.Unit
             var env = new Mock<IVersionEnvironment>();
             var logger = new FakeCliLogger();
 
-            env.Setup(e => e.GetCurrentVersion()).Returns(oldVersion);
-            env.Setup(e => e.GetVersionFilePath()).Returns("version.txt");
+            env.Setup(e => e.GetCurrentVersion())
+               .Returns(MakeResult(oldVersion, "version.txt"));
 
             var args = CreateArgs("prerelease", pre: "cornichon.5");
 
@@ -127,8 +138,8 @@ namespace Solcogito.AutoVersion.Tests.Unit
             var env = new Mock<IVersionEnvironment>();
             var logger = new FakeCliLogger();
 
-            env.Setup(e => e.GetCurrentVersion()).Returns(oldVersion);
-            env.Setup(e => e.GetVersionFilePath()).Returns("version.txt");
+            env.Setup(e => e.GetCurrentVersion())
+               .Returns(MakeResult(oldVersion, "version.txt"));
 
             var args = CreateArgs("prerelease", pre: "!!bad tag!!");
 

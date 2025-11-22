@@ -64,7 +64,8 @@ namespace Solcogito.AutoVersion.Cli.Commands
             try
             {
                 // Read version via DI
-                var oldVersion = env.GetCurrentVersion();
+                var cV = env.GetCurrentVersion();
+                var oldVersion = cV.Version;
 
                 // Use your real VersionBumper
                 var newVersion = VersionBumper.Bump(oldVersion, type, preRelease: null);
@@ -75,7 +76,7 @@ namespace Solcogito.AutoVersion.Cli.Commands
                     return 2;
                 }
 
-                var path = env.GetVersionFilePath();
+                var path = cV.FilePath;
                 if (string.IsNullOrWhiteSpace(path))
                 {
                     logger.Error("Version file path is empty. Aborting.");
@@ -138,7 +139,9 @@ namespace Solcogito.AutoVersion.Cli.Commands
 
             try
             {
-                var oldVersion = env.GetCurrentVersion();
+                var cV = env.GetCurrentVersion();
+
+                var oldVersion = cV.Version;
                 var newVersion = VersionBumper.Bump(oldVersion, "prerelease", pre);
 
                 if (newVersion.Equals(default(VersionModel)))
@@ -147,7 +150,7 @@ namespace Solcogito.AutoVersion.Cli.Commands
                     return 2;
                 }
 
-                var path = env.GetVersionFilePath();
+                var path = cV.FilePath;
                 if (string.IsNullOrWhiteSpace(path))
                 {
                     logger.Error("Version file path is empty. Aborting.");

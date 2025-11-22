@@ -1,7 +1,7 @@
 // ============================================================================
 // File:        CurrentCommandTests.cs
 // Project:     AutoVersion Lite (Unified Test Suite)
-// Version:     0.8.0
+// Version:     0.9.0
 // Author:      Solcogito S.E.N.C.
 // ----------------------------------------------------------------------------
 // Description:
@@ -33,6 +33,22 @@ namespace Solcogito.AutoVersion.Tests.Unit
     {
         private ArgResult MakeArgs() => new ArgResult();
 
+        private static VersionResolutionResult MakeResult(
+            int major,
+            int minor,
+            int patch,
+            string? path = null,
+            bool success = true)
+        {
+            return new VersionResolutionResult
+            {
+                Version = new VersionModel(major, minor, patch),
+                Source = path ?? "test",
+                FilePath = path,
+                Success = success
+            };
+        }
+
         // -------------------------------------------------------------
         // 1. Happy path: prints version + returns 0
         // -------------------------------------------------------------
@@ -44,7 +60,7 @@ namespace Solcogito.AutoVersion.Tests.Unit
             var logger = new FakeCliLogger();
 
             env.Setup(e => e.GetCurrentVersion())
-               .Returns(new VersionModel(1, 2, 3));
+               .Returns(MakeResult(1, 2, 3));
 
             var args = MakeArgs();
 
@@ -56,7 +72,9 @@ namespace Solcogito.AutoVersion.Tests.Unit
 
             // Assert: assert ONLY last printed line (safe across test runs)
             code.Should().Be(0);
-            output.Trim().Split('\n').Last().Trim().Should().Be("1.2.3");
+            var last = output.Trim().Split('\n').Last().Trim();
+            var versionOnly = last.Split(' ')[0];   // take only "1.2.3"
+            versionOnly.Should().Be("1.2.3");
         }
 
         // -------------------------------------------------------------

@@ -49,7 +49,9 @@ namespace Solcogito.AutoVersion.Cli.Commands
 
             try
             {
-                var versionFilePath = env.GetVersionFilePath();
+                var cV = env.GetCurrentVersion();
+
+                var versionFilePath = cV.FilePath;
 
                 if (string.IsNullOrWhiteSpace(versionFilePath))
                 {

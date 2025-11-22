@@ -1,7 +1,7 @@
 // ============================================================================
 // File:        CommandRouterTests.cs
 // Project:     AutoVersion Lite (Unified Test Suite)
-// Version:     0.8.0
+// Version:     0.9.0
 // Author:      Solcogito S.E.N.C.
 // ----------------------------------------------------------------------------
 // Description:
@@ -45,6 +45,22 @@ namespace Solcogito.AutoVersion.Tests.Unit
             return r;
         }
 
+        private static VersionResolutionResult MakeResult(
+            int major,
+            int minor,
+            int patch,
+            string? path = "version.txt",
+            bool success = true)
+        {
+            return new VersionResolutionResult
+            {
+                Version = new VersionModel(major, minor, patch),
+                Source = path ?? "test",
+                FilePath = path,
+                Success = success
+            };
+        }
+
         // Copy of Program.BuildSchema() (private there)
         private static ArgSchema BuildSchema()
         {
@@ -85,8 +101,8 @@ namespace Solcogito.AutoVersion.Tests.Unit
             var env = new Mock<IVersionEnvironment>();
             var logger = new FakeCliLogger();
 
-            env.Setup(e => e.GetCurrentVersion()).Returns(new VersionModel(1, 2, 3));
-            env.Setup(e => e.GetVersionFilePath()).Returns("version.txt");
+            env.Setup(e => e.GetCurrentVersion())
+               .Returns(MakeResult(1, 2, 3, "version.txt"));
 
             var args = Make("autoversion", "bump", "patch");
 
@@ -125,7 +141,8 @@ namespace Solcogito.AutoVersion.Tests.Unit
             var env = new Mock<IVersionEnvironment>();
             var logger = new FakeCliLogger();
 
-            env.Setup(e => e.GetCurrentVersion()).Returns(new VersionModel(9, 9, 9));
+            env.Setup(e => e.GetCurrentVersion())
+               .Returns(MakeResult(9, 9, 9, path: null, success: false));
 
             var args = Make("autoversion", "current");
 
@@ -137,7 +154,9 @@ namespace Solcogito.AutoVersion.Tests.Unit
             var output = cap.OutWriter.ToString();
 
             code.Should().Be(0);
-            output.Trim().Split('\n').Last().Trim().Should().Be("9.9.9");
+            var last = output.Trim().Split('\n').Last().Trim();
+            var versionOnly = last.Split(' ')[0];
+            versionOnly.Should().Be("9.9.9");
         }
 
         // -------------------------------------------------------------
@@ -151,7 +170,8 @@ namespace Solcogito.AutoVersion.Tests.Unit
 
             using var cap = new ConsoleCapture();
 
-            env.Setup(e => e.GetVersionFilePath()).Returns("version.txt");
+            env.Setup(e => e.GetCurrentVersion())
+               .Returns(MakeResult(0, 0, 0, "version.txt"));
 
             VersionModel? written = null;
             env.Setup(e => e.WriteVersion(It.IsAny<VersionModel>()))
