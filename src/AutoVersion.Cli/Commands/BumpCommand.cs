@@ -7,7 +7,7 @@
 // Description:
 //   Fully dependency-injected implementation of the "bump" command.
 //   All version resolution, file write operations, and logging now go
-//   through IVersionEnvironment and ICliLogger, making the command fully
+//   through IVersionEnvironment and LogScribe, making the command fully
 //   unit-testable without filesystem access.
 // ----------------------------------------------------------------------------
 // License:     MIT
@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Solcogito.AutoVersion.Core;
 using Solcogito.Common.Versioning;
+using Solcogito.Common.LogScribe;
 using Solcogito.Common.ArgForge;
 
 namespace Solcogito.AutoVersion.Cli.Commands
@@ -27,7 +28,7 @@ namespace Solcogito.AutoVersion.Cli.Commands
         // --------------------------------------------------------------------
         // Handler dictionary — DI-aware command dispatch
         // --------------------------------------------------------------------
-        private static readonly Dictionary<string, Func<ArgResult, IVersionEnvironment, ICliLogger, int>> _handlers =
+        private static readonly Dictionary<string, Func<ArgResult, IVersionEnvironment, Logger, int>> _handlers =
             new(StringComparer.OrdinalIgnoreCase)
             {
                 { "patch",      (args, env, logger) => ExecuteBump(args, "patch", env, logger) },
@@ -39,7 +40,7 @@ namespace Solcogito.AutoVersion.Cli.Commands
         // --------------------------------------------------------------------
         // Entry point (DI-enabled)
         // --------------------------------------------------------------------
-        public static int Execute(ArgResult args, IVersionEnvironment env, ICliLogger logger)
+        public static int Execute(ArgResult args, IVersionEnvironment env, Logger logger)
         {
             if (args.CommandName != null &&
                 _handlers.TryGetValue(args.CommandName, out var handler))
@@ -56,10 +57,9 @@ namespace Solcogito.AutoVersion.Cli.Commands
             ArgResult args,
             string type,
             IVersionEnvironment env,
-            ICliLogger logger)
+            Logger logger)
         {
             bool dryRun = args.HasFlag("dry-run");
-            logger.DryRun = dryRun;
 
             try
             {
@@ -95,10 +95,10 @@ namespace Solcogito.AutoVersion.Cli.Commands
                     logger.Info("Version file written successfully.");
                 }
 
-                logger.Action($"Version bump: {oldVersion} -> {newVersion}");
+                logger.Info($"Version bump: {oldVersion} -> {newVersion}");
 
                 if (!dryRun)
-                    logger.Success($"Version bump complete: {newVersion}");
+                    logger.Info($"Version bump complete: {newVersion}");
                 else
                     logger.Info("Dry-run completed. No files were modified.");
 
@@ -117,10 +117,9 @@ namespace Solcogito.AutoVersion.Cli.Commands
         private static int ExecutePrerelease(
             ArgResult args,
             IVersionEnvironment env,
-            ICliLogger logger)
+            Logger logger)
         {
             bool dryRun = args.HasFlag("dry-run");
-            logger.DryRun = dryRun;
 
             args.TryGetValue("pre", out var pre);
 
@@ -168,10 +167,10 @@ namespace Solcogito.AutoVersion.Cli.Commands
                     logger.Info("Version file written successfully.");
                 }
 
-                logger.Action($"Version bump: {oldVersion} -> {newVersion}");
+                logger.Info($"Version bump: {oldVersion} -> {newVersion}");
 
                 if (!dryRun)
-                    logger.Success($"Version bump complete: {newVersion}");
+                    logger.Info($"Version bump complete: {newVersion}");
                 else
                     logger.Info("Dry-run completed. No files were modified.");
 

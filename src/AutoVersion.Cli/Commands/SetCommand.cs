@@ -13,13 +13,14 @@
 using System;
 using Solcogito.Common.Versioning;
 using Solcogito.Common.ArgForge;
+using Solcogito.Common.LogScribe;
 using Solcogito.AutoVersion.Core;
 
 namespace Solcogito.AutoVersion.Cli.Commands
 {
     internal static class SetCommand
     {
-        public static int Execute(ArgResult args, IVersionEnvironment env, ICliLogger logger)
+        public static int Execute(ArgResult args, IVersionEnvironment env, Logger logger)
         {
             bool dryRun = args.HasFlag("dry-run");
 
@@ -69,7 +70,7 @@ namespace Solcogito.AutoVersion.Cli.Commands
                 {
                     env.WriteVersion(newVersion);
                     Console.WriteLine($"Version set to: {newVersion}");
-                    logger.Success($"Version set to: {newVersion}");
+                    logger.Info($"Version set to: {newVersion}");
                 }
 
                 return 0;

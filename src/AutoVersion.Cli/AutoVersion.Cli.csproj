@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <!-- Reference the Core library -->
+  <!-- TODO: transfert this to a dll!!! -->
   <ItemGroup>
     <ProjectReference Include="..\AutoVersion.Core\AutoVersion.Core.csproj" />
   </ItemGroup>
@@ -33,6 +34,12 @@
       <HintPath>..\..\libs\Solcogito.Common.ArgForge.dll</HintPath>
       <CopyLocal>true</CopyLocal>
     </Reference>
+
+    <Reference Include="Solcogito.Common.LogScribe">
+        <HintPath>..\..\libs\Solcogito.Common.LogScribe.dll</HintPath>
+        <CopyLocal>true</CopyLocal>
+    </Reference>
+    
   </ItemGroup>
 
 </Project>

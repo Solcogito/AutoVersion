@@ -141,7 +141,7 @@ namespace Solcogito.AutoVersion.Tests.Unit
         {
             var schema = GetSchema();
 
-            var help = schema.GetHelp("autoversion");
+            var help = schema.GetHelp();
 
             help.Should().NotBeNullOrWhiteSpace();
             help.Should().Contain("Usage");

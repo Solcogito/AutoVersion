@@ -6,6 +6,10 @@
       <HintPath>..\..\libs\Solcogito.Common.Versioning.dll</HintPath>
       <Private>true</Private>
     </Reference>
+    <Reference Include="Solcogito.Common.LogScribe">
+      <HintPath>..\..\libs\Solcogito.Common.LogScribe.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
   </ItemGroup>
 
   <!-- Project settings -->

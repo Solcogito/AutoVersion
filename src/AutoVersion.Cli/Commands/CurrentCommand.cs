@@ -11,6 +11,7 @@
 
 using System;
 using Solcogito.Common.ArgForge;
+using Solcogito.Common.LogScribe;
 using Solcogito.AutoVersion.Core;
 
 namespace Solcogito.AutoVersion.Cli.Commands
@@ -20,7 +21,7 @@ namespace Solcogito.AutoVersion.Cli.Commands
         /// <summary>
         /// Displays the current project version.
         /// </summary>
-        public static int Execute(ArgResult args, IVersionEnvironment env, ICliLogger logger)
+        public static int Execute(ArgResult args, IVersionEnvironment env, Logger logger)
         {
             try
             {

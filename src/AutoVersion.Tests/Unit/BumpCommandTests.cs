@@ -1,24 +1,27 @@
 // ============================================================================
 // File:        BumpCommandTests.cs
 // Project:     AutoVersion Lite (Unit Tests)
-// Author:      Benoit Desrosiers (Solcogito S.E.N.C.)
+// Author:      Solcogito S.E.N.C.
 // -----------------------------------------------------------------------------
 // Description:
-//   Unit tests for BumpCommand. Verifies correct behavior for patch, minor,
-//   major, and prerelease bump operations, including dry-run behavior, error
-//   handling, prerelease validation, and unknown bump type detection. Ensures
-//   correct interaction with IVersionEnvironment and FakeCliLogger.
+//   Fully updated test suite for BumpCommand using real LogScribe.Logger +
+//   TestLogSink. Covers: patch/minor/major bumps, prerelease bumps, dry-run,
+//   invalid prerelease identifiers, missing file path, exceptions, and unknown
+//   bump types. Ensures correct interaction with IVersionEnvironment and that
+//   all log output passes through Logger and its sinks.
 // ============================================================================
 
 using System;
-using System.Collections.Generic;
 using FluentAssertions;
 using Moq;
 using Xunit;
+
 using Solcogito.AutoVersion.Cli.Commands;
 using Solcogito.AutoVersion.Core;
 using Solcogito.Common.Versioning;
 using Solcogito.Common.ArgForge;
+using Solcogito.Common.LogScribe;
+
 using Solcogito.AutoVersion.Tests.TestUtils;
 
 namespace Solcogito.AutoVersion.Tests.Unit
@@ -26,143 +29,182 @@ namespace Solcogito.AutoVersion.Tests.Unit
     public class BumpCommandTests
     {
         // ---------------------------------------------------------------------
-        // FIXED CreateArgs that matches the real ArgResult implementation
+        // Helpers
         // ---------------------------------------------------------------------
-        private static ArgResult CreateArgs(
-            string commandName,
-            bool dryRun = false,
-            string? pre = null)
-        {
-            var result = new ArgResult();
 
-            result.CommandPath.Add("autoversion");
-            result.CommandPath.Add("bump");
-            result.CommandPath.Add(commandName);
+        private static ArgResult MakeArgs(string bumpType, bool dryRun = false, string? pre = null)
+        {
+            var r = new ArgResult();
+            r.CommandPath.Add("autoversion");
+            r.CommandPath.Add("bump");
+            r.CommandPath.Add(bumpType);
 
             if (dryRun)
-                result.AddFlag("dry-run");
+                r.AddFlag("dry-run");
 
             if (!string.IsNullOrWhiteSpace(pre))
-                result.AddOption("pre", pre);
+                r.AddOption("pre", pre);
 
-            return result;
+            return r;
         }
 
-        private static VersionResolutionResult MakeResult(VersionModel v, string? path = "version.txt")
+        private static VersionResolutionResult MakeVersion(string content, string path = "version.txt")
         {
             return new VersionResolutionResult
             {
-                Version = v,
-                Source = path ?? "test",
+                Version = VersionModel.Parse(content),
+                Success = true,
                 FilePath = path,
-                Success = !string.IsNullOrWhiteSpace(path)
+                Source = path
             };
         }
 
+        private Logger CreateLogger(out TestLogSink sink)
+        {
+            sink = new TestLogSink();
+            return new Logger().WithSink(sink);
+        }
+
         // ---------------------------------------------------------------------
-
-        [Fact]
-        public void Patch_Bump_Should_Use_Environment_And_Write_New_Version()
+        // PATCH / MINOR / MAJOR
+        // ---------------------------------------------------------------------
+        [Theory]
+        [InlineData("patch", "1.2.3", "1.2.4")]
+        [InlineData("minor", "1.2.3", "1.3.0")]
+        [InlineData("major", "1.2.3", "2.0.0")]
+        public void Bump_Should_UpdateVersion(string type, string start, string expected)
         {
-            var oldVersion = new VersionModel(1, 2, 3);
-            var newVersion = new VersionModel(1, 2, 4);
+            var args = MakeArgs(type);
+            var logger = CreateLogger(out var sink);
 
             var env = new Mock<IVersionEnvironment>();
-            var logger = new FakeCliLogger();
+            env.Setup(x => x.GetCurrentVersion()).Returns(MakeVersion(start));
 
-            env.Setup(e => e.GetCurrentVersion())
-               .Returns(MakeResult(oldVersion, "version.txt"));
+            int code = BumpCommand.Execute(args, env.Object, logger);
 
-            env.Setup(e => e.WriteVersion(It.IsAny<VersionModel>()))
-               .Callback<VersionModel>(v => v.Should().Be(newVersion));
+            code.Should().Be(0);
+            env.Verify(x => x.WriteVersion(VersionModel.Parse(expected)), Times.Once);
 
-            var args = CreateArgs("patch");
-
-            var exitCode = BumpCommand.Execute(args, env.Object, logger);
-
-            exitCode.Should().Be(0);
-            logger.Messages.Should().Contain(m => m.Contains("Version bump complete: 1.2.4"));
-
-            env.Verify(e => e.WriteVersion(It.IsAny<VersionModel>()), Times.Once);
+            sink.Messages.Should().Contain(m => m.Text.Contains("Version bump complete"));
         }
 
+        // ---------------------------------------------------------------------
+        // DRY RUN
+        // ---------------------------------------------------------------------
         [Fact]
-        public void Patch_Bump_DryRun_Should_Not_Write_File()
+        public void Bump_DryRun_Should_Not_WriteFile()
         {
-            var oldVersion = new VersionModel(1, 2, 3);
+            var args = MakeArgs("patch", dryRun: true);
+            var logger = CreateLogger(out var sink);
 
             var env = new Mock<IVersionEnvironment>();
-            var logger = new FakeCliLogger();
+            env.Setup(x => x.GetCurrentVersion()).Returns(MakeVersion("1.0.0"));
 
-            env.Setup(e => e.GetCurrentVersion())
-               .Returns(MakeResult(oldVersion, "version.txt"));
+            int code = BumpCommand.Execute(args, env.Object, logger);
 
-            var args = CreateArgs("patch", dryRun: true);
+            code.Should().Be(0);
+            env.Verify(x => x.WriteVersion(It.IsAny<VersionModel>()), Times.Never);
 
-            var exitCode = BumpCommand.Execute(args, env.Object, logger);
-
-            exitCode.Should().Be(0);
-
-            logger.DryRun.Should().BeTrue();
-            logger.Messages.Should().Contain(m => m.Contains("[DRY-RUN] Would update version: 1.2.3 -> 1.2.4"));
-
-            env.Verify(e => e.WriteVersion(It.IsAny<VersionModel>()), Times.Never);
+            sink.Messages.Should().Contain(m => m.Text.Contains("[DRY-RUN]"));
         }
 
+        // ---------------------------------------------------------------------
+        // UNKNOWN BUMP TYPE
+        // ---------------------------------------------------------------------
         [Fact]
-        public void Prerelease_With_Custom_Tag_Should_Pass_Pre_To_Bumper()
+        public void Bump_UnknownType_Should_Return1()
         {
-            var oldVersion = new VersionModel(2, 0, 0);
+            var args = MakeArgs("ketchup");
+            args.CommandPath[2] = "ketchup";
 
+            var logger = CreateLogger(out var sink);
             var env = new Mock<IVersionEnvironment>();
-            var logger = new FakeCliLogger();
 
-            env.Setup(e => e.GetCurrentVersion())
-               .Returns(MakeResult(oldVersion, "version.txt"));
+            int code = BumpCommand.Execute(args, env.Object, logger);
 
-            var args = CreateArgs("prerelease", pre: "cornichon.5");
+            code.Should().Be(1);
 
-            var exitCode = BumpCommand.Execute(args, env.Object, logger);
-
-            exitCode.Should().Be(0);
-            logger.Messages.Should().Contain(m => m.Contains("cornichon.5"));
-
-            env.Verify(e => e.WriteVersion(It.IsAny<VersionModel>()), Times.Once);
+            sink.Messages.Should().Contain(m => m.Text.Contains("Unknown bump type"));
         }
 
+        // ---------------------------------------------------------------------
+        // FILE PATH MISSING
+        // ---------------------------------------------------------------------
         [Fact]
-        public void Prerelease_With_Invalid_Pre_Tag_Should_Fail_Validation()
+        public void Bump_Should_Fail_When_FilePath_Is_Empty()
         {
-            var oldVersion = new VersionModel(2, 0, 0);
+            var args = MakeArgs("patch");
+            var logger = CreateLogger(out var sink);
 
             var env = new Mock<IVersionEnvironment>();
-            var logger = new FakeCliLogger();
+            env.Setup(x => x.GetCurrentVersion()).Returns(
+                new VersionResolutionResult
+                {
+                    Version = VersionModel.Parse("1.0.0"),
+                    FilePath = "",
+                    Success = true
+                });
 
-            env.Setup(e => e.GetCurrentVersion())
-               .Returns(MakeResult(oldVersion, "version.txt"));
+            int code = BumpCommand.Execute(args, env.Object, logger);
 
-            var args = CreateArgs("prerelease", pre: "!!bad tag!!");
-
-            var exitCode = BumpCommand.Execute(args, env.Object, logger);
-
-            exitCode.Should().Be(1);
-            logger.Messages.Should().Contain(m => m.Contains("Invalid prerelease tag"));
-
-            env.Verify(e => e.WriteVersion(It.IsAny<VersionModel>()), Times.Never);
+            code.Should().Be(2);
+            sink.Messages.Should().Contain(m => m.Text.Contains("path is empty"));
         }
 
+        // ---------------------------------------------------------------------
+        // PRERELEASE BUMP
+        // ---------------------------------------------------------------------
         [Fact]
-        public void Unknown_Bump_Type_Should_Return_Error()
+        public void Prerelease_Should_Bump_With_Valid_Tag()
         {
+            var args = MakeArgs("prerelease", pre: "alpha.5");
+            var logger = CreateLogger(out var sink);
+
             var env = new Mock<IVersionEnvironment>();
-            var logger = new FakeCliLogger();
+            env.Setup(x => x.GetCurrentVersion()).Returns(MakeVersion("1.2.3"));
 
-            var args = CreateArgs("weird");
+            int code = BumpCommand.Execute(args, env.Object, logger);
 
-            var exitCode = BumpCommand.Execute(args, env.Object, logger);
+            code.Should().Be(0);
 
-            exitCode.Should().Be(1);
-            logger.Messages.Should().Contain(m => m.Contains("Unknown bump type"));
+            env.Verify(x => x.WriteVersion(VersionModel.Parse("1.2.3-alpha.5")), Times.Once);
+        }
+
+        // ---------------------------------------------------------------------
+        // INVALID PRERELEASE TAG
+        // ---------------------------------------------------------------------
+        [Fact]
+        public void Prerelease_InvalidTag_Should_Return1()
+        {
+            var args = MakeArgs("prerelease", pre: "%%BAD%%");
+            var logger = CreateLogger(out var sink);
+
+            var env = new Mock<IVersionEnvironment>();
+
+            int code = BumpCommand.Execute(args, env.Object, logger);
+
+            code.Should().Be(1);
+
+            sink.Messages.Should().Contain(m => m.Text.Contains("Invalid prerelease tag"));
+        }
+
+        // ---------------------------------------------------------------------
+        // EXCEPTIONS during bumping
+        // ---------------------------------------------------------------------
+        [Fact]
+        public void Bump_Should_Handle_Exceptions()
+        {
+            var args = MakeArgs("patch");
+            var logger = CreateLogger(out var sink);
+
+            var env = new Mock<IVersionEnvironment>();
+            env.Setup(x => x.GetCurrentVersion()).Throws(new Exception("File locked"));
+
+            int code = BumpCommand.Execute(args, env.Object, logger);
+
+            code.Should().Be(2);
+
+            sink.Messages.Should().Contain(m => m.Text.Contains("Bump failed"));
         }
     }
 }

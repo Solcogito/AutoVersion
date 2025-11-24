@@ -14,7 +14,9 @@
 
 using System;
 using Solcogito.Common.ArgForge;
+using Solcogito.Common.LogScribe;
 using Solcogito.AutoVersion.Core;
+using System.Net.WebSockets;
 
 namespace Solcogito.AutoVersion.Cli
 {
@@ -30,17 +32,18 @@ namespace Solcogito.AutoVersion.Cli
                 args[0].Equals("-h", StringComparison.OrdinalIgnoreCase) ||
                 args[0].Equals("help", StringComparison.OrdinalIgnoreCase))
             {
-                Console.WriteLine(schema.GetHelp("autoversion"));
+                Console.WriteLine(schema.GetHelp());
                 return 0;
             }
 
-            var result = ArgParser.Parse(args, schema);
+            var logger = new Solcogito.Common.LogScribe.Logger();
+            var parser = new ArgParser();
+            var result = parser.Parse(args, schema);
 
             if (!result.IsValid)
             {
-                Console.WriteLine("Error: " + result.Error);
-                Console.WriteLine();
-                Console.WriteLine(schema.GetHelp("autoversion"));
+                logger.Error("Error: " + result.Error);
+                logger.Internal(schema.GetHelp());
                 return 1;
             }
 
@@ -48,7 +51,6 @@ namespace Solcogito.AutoVersion.Cli
             // Composition root: create concrete services here
             // ----------------------------------------------------------------
             IVersionEnvironment env = new DefaultVersionEnvironment();
-            ICliLogger logger       = new ConsoleCliLogger();
 
             return CommandRouter.Run(result, schema, env, logger);
         }

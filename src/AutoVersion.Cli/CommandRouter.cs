@@ -13,6 +13,7 @@
 using System;
 using System.Collections.Generic;
 using Solcogito.Common.ArgForge;
+using Solcogito.Common.LogScribe;
 using Solcogito.AutoVersion.Cli.Commands;
 using Solcogito.AutoVersion.Core;
 
@@ -20,7 +21,7 @@ namespace Solcogito.AutoVersion.Cli
 {
     internal static class CommandRouter
     {
-        private static readonly Dictionary<string, Func<ArgResult, IVersionEnvironment, ICliLogger, int>> _rootHandlers =
+        private static readonly Dictionary<string, Func<ArgResult, IVersionEnvironment, Logger, int>> _rootHandlers =
             new(StringComparer.OrdinalIgnoreCase)
             {
                 { "current", (args, env, logger) => CurrentCommand.Execute(args, env, logger) },
@@ -32,12 +33,12 @@ namespace Solcogito.AutoVersion.Cli
         /// <summary>
         /// Entrypoint for routing after arguments have been parsed.
         /// </summary>
-        public static int Run(ArgResult args, ArgSchema schema, IVersionEnvironment env, ICliLogger logger)
+        public static int Run(ArgResult args, ArgSchema schema, IVersionEnvironment env, Logger logger)
         {
             // No command? → Show root help
             if (args.CommandName == null || args.CommandPath.Count <= 1)
             {
-                Console.WriteLine(schema.GetHelp("autoversion"));
+                Console.WriteLine(schema.GetHelp());
                 return 1;
             }
 
@@ -57,12 +58,12 @@ namespace Solcogito.AutoVersion.Cli
             // 3. autoversion bump (no subcommand)
             if (command.Equals("bump", StringComparison.OrdinalIgnoreCase))
             {
-                Console.WriteLine(schema.GetHelp("autoversion", "bump"));
+                Console.WriteLine(schema.GetHelp());
                 return 1;
             }
 
             // 4. Unknown command → help
-            Console.WriteLine(schema.GetHelp("autoversion"));
+            Console.WriteLine(schema.GetHelp());
             Console.WriteLine();
             Console.WriteLine($"Unknown command: {command}");
             return 1;
