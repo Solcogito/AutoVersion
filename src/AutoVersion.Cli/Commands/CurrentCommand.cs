@@ -26,12 +26,11 @@ namespace Solcogito.AutoVersion.Cli.Commands
             try
             {
                 var version = env.GetCurrentVersion().Version;
-                Console.WriteLine(version);
+                logger.Internal(version.ToString());
                 return 0;
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine("Error reading current version: " + ex.Message);
                 logger.Error("Error reading current version: " + ex.Message);
                 return 1;
             }

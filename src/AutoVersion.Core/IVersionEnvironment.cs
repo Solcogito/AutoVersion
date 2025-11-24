@@ -8,6 +8,7 @@
 //   mocks.
 // ============================================================================
 
+using Solcogito.Common.LogScribe;
 using Solcogito.Common.Versioning;
 
 namespace Solcogito.AutoVersion.Core

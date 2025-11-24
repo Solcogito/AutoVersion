@@ -38,7 +38,7 @@ namespace Solcogito.AutoVersion.Cli
             // No command? → Show root help
             if (args.CommandName == null || args.CommandPath.Count <= 1)
             {
-                Console.WriteLine(schema.GetHelp());
+                logger.Internal(schema.GetHelp());
                 return 1;
             }
 
@@ -58,14 +58,13 @@ namespace Solcogito.AutoVersion.Cli
             // 3. autoversion bump (no subcommand)
             if (command.Equals("bump", StringComparison.OrdinalIgnoreCase))
             {
-                Console.WriteLine(schema.GetHelp());
+                logger.Internal(schema.GetHelp());
                 return 1;
             }
 
             // 4. Unknown command → help
-            Console.WriteLine(schema.GetHelp());
-            Console.WriteLine();
-            Console.WriteLine($"Unknown command: {command}");
+            logger.Internal(schema.GetHelp());
+            logger.Error($"Unknown command: {command}");
             return 1;
         }
     }

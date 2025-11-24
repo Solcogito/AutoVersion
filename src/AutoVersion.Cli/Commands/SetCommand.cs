@@ -27,10 +27,7 @@ namespace Solcogito.AutoVersion.Cli.Commands
             if (!args.Positionals.TryGetValue("version", out var versionString) ||
                 string.IsNullOrWhiteSpace(versionString))
             {
-                // TODO (Logging v2): replace all Console.WriteLine/Error.WriteLine with logger only. 
-                // Current implementation left for backwards compatibility with initial CLI behavior.
-
-                Console.Error.WriteLine("Error: missing required version argument.");
+                
                 logger.Error("Missing required version argument for 'set'.");
                 return 1;
             }
@@ -43,7 +40,6 @@ namespace Solcogito.AutoVersion.Cli.Commands
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error: '{versionString}' is not a valid semantic version. {ex.Message}");
                 logger.Error($"Invalid version '{versionString}': {ex.Message}");
                 return 1;
             }
@@ -56,20 +52,17 @@ namespace Solcogito.AutoVersion.Cli.Commands
 
                 if (string.IsNullOrWhiteSpace(versionFilePath))
                 {
-                    Console.Error.WriteLine("Error: Version file path is empty or could not be resolved.");
                     logger.Error("Version file path is empty or could not be resolved.");
                     return 2;
                 }
 
                 if (dryRun)
                 {
-                    Console.WriteLine($"[DRY-RUN] Would set version to: {newVersion}");
                     logger.Info($"[DRY-RUN] Would set version to: {newVersion}");
                 }
                 else
                 {
                     env.WriteVersion(newVersion);
-                    Console.WriteLine($"Version set to: {newVersion}");
                     logger.Info($"Version set to: {newVersion}");
                 }
 
@@ -77,7 +70,6 @@ namespace Solcogito.AutoVersion.Cli.Commands
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine("Error setting version: " + ex.Message);
                 logger.Error("Error setting version: " + ex.Message);
                 return 2;
             }

@@ -80,14 +80,13 @@ namespace Solcogito.AutoVersion.Tests.Unit
 
             var logger = MakeLogger(out var sink);
 
-            using var cap = new ConsoleCapture();
-
             var args = Make("autoversion", "bump", "patch");
             var schema = BuildSchema();
+
             var code = CommandRouter.Run(args, schema, env.Object, logger);
 
             code.Should().Be(0);
-            sink.Messages.Should().Contain(m => m.Text.Contains("Version bump complete"));
+            sink.Messages.Any(m => m.Text.Contains("Version bump complete")).Should().BeTrue();
         }
 
         // -------------------------------------------------------------
@@ -97,9 +96,7 @@ namespace Solcogito.AutoVersion.Tests.Unit
         public void Router_Should_Fail_When_BumpType_Is_Missing()
         {
             var env = new Mock<IVersionEnvironment>();
-            var logger = MakeLogger(out _);
-
-            using var cap = new ConsoleCapture();
+            var logger = MakeLogger(out var sink);
 
             var args = Make("autoversion", "bump");
             var schema = BuildSchema();
@@ -107,7 +104,7 @@ namespace Solcogito.AutoVersion.Tests.Unit
             var code = CommandRouter.Run(args, schema, env.Object, logger);
 
             code.Should().Be(1);
-            cap.OutWriter.ToString().Should().Contain("Usage");
+            sink.Messages.Any(m => m.Text.Contains("Usage")).Should().BeTrue();
         }
 
         // -------------------------------------------------------------
@@ -120,17 +117,15 @@ namespace Solcogito.AutoVersion.Tests.Unit
             env.Setup(e => e.GetCurrentVersion())
                .Returns(MakeResult(9, 9, 9));
 
-            var logger = MakeLogger(out _);
-
-            using var cap = new ConsoleCapture();
+            var logger = MakeLogger(out var sink);
 
             var args = Make("autoversion", "current");
             var schema = BuildSchema();
 
             var code = CommandRouter.Run(args, schema, env.Object, logger);
 
-            var last = cap.OutWriter.ToString().Trim().Split('\n').Last().Trim();
-            last.Split(' ')[0].Should().Be("9.9.9");
+            // Look for "9.9.9" in the logs
+            sink.Messages.Any(m => m.Text.Contains("9.9.9")).Should().BeTrue();
 
             code.Should().Be(0);
         }
@@ -149,14 +144,13 @@ namespace Solcogito.AutoVersion.Tests.Unit
             env.Setup(e => e.WriteVersion(It.IsAny<VersionModel>()))
                .Callback<VersionModel>(v => written = v);
 
-            var logger = MakeLogger(out _);
-
-            using var cap = new ConsoleCapture();
+            var logger = MakeLogger(out var sink);
 
             var args = Make("autoversion", "set");
             args.AddPositional("version", "1.2.3");
 
             var schema = BuildSchema();
+
             var code = CommandRouter.Run(args, schema, env.Object, logger);
 
             code.Should().Be(0);
@@ -170,16 +164,16 @@ namespace Solcogito.AutoVersion.Tests.Unit
         public void Router_Should_Fail_On_Unknown_Command()
         {
             var env = new Mock<IVersionEnvironment>();
-            var logger = MakeLogger(out _);
-
-            using var cap = new ConsoleCapture();
+            var logger = MakeLogger(out var sink);
 
             var args = Make("autoversion", "potato");
             var schema = BuildSchema();
+
             var code = CommandRouter.Run(args, schema, env.Object, logger);
 
             code.Should().Be(1);
-            cap.OutWriter.ToString().Should().Contain("Unknown command");
+
+            sink.Messages.Any(m => m.Text.Contains("Unknown command")).Should().BeTrue();
         }
 
         // -------------------------------------------------------------
@@ -189,16 +183,16 @@ namespace Solcogito.AutoVersion.Tests.Unit
         public void Router_Should_Show_Root_Help_When_No_Command()
         {
             var env = new Mock<IVersionEnvironment>();
-            var logger = MakeLogger(out _);
-
-            using var cap = new ConsoleCapture();
+            var logger = MakeLogger(out var sink);
 
             var args = Make("autoversion");
             var schema = BuildSchema();
+
             var code = CommandRouter.Run(args, schema, env.Object, logger);
 
             code.Should().Be(1);
-            cap.OutWriter.ToString().Should().Contain("Usage");
+
+            sink.Messages.Any(m => m.Text.Contains("Usage")).Should().BeTrue();
         }
     }
 }

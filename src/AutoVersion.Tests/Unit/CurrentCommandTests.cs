@@ -34,25 +34,28 @@ namespace Solcogito.AutoVersion.Tests.Unit
             };
         }
 
+        // -------------------------------------------------------------
+        // SUCCESS PATH
+        // -------------------------------------------------------------
         [Fact]
         public void Current_Should_Print_Version_And_Return0()
         {
             var env = new Mock<IVersionEnvironment>();
             env.Setup(e => e.GetCurrentVersion()).Returns(MakeResult(1, 2, 3));
 
-            var logger = MakeLogger(out _);
-
-            using var cap = new ConsoleCapture();
+            var logger = MakeLogger(out var sink);
 
             var code = CurrentCommand.Execute(new ArgResult(), env.Object, logger);
-            var output = cap.OutWriter.ToString();
 
             code.Should().Be(0);
 
-            var last = output.Trim().Split('\n').Last().Trim();
-            last.Split(' ')[0].Should().Be("1.2.3");
+            // Check logger output instead of console
+            sink.Messages.Any(m => m.Text.Contains("1.2.3")).Should().BeTrue();
         }
 
+        // -------------------------------------------------------------
+        // ERROR PATH
+        // -------------------------------------------------------------
         [Fact]
         public void Current_Should_Return1_On_Exception()
         {
@@ -65,7 +68,8 @@ namespace Solcogito.AutoVersion.Tests.Unit
             var code = CurrentCommand.Execute(new ArgResult(), env.Object, logger);
 
             code.Should().Be(1);
-            sink.Messages.Should().Contain(m => m.Text.Contains("Error"));
+
+            sink.Messages.Any(m => m.Text.Contains("Error")).Should().BeTrue();
         }
     }
 }

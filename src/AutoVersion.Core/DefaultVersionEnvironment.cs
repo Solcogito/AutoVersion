@@ -8,14 +8,20 @@
 // ============================================================================
 
 using Solcogito.Common.Versioning;
+using Solcogito.Common.LogScribe;
 
 namespace Solcogito.AutoVersion.Core
 {
     public sealed class DefaultVersionEnvironment : IVersionEnvironment
     {
+        private Logger _logger;
+        public DefaultVersionEnvironment(Logger logger)
+        {
+            _logger = logger;
+        }
         public VersionResolutionResult GetCurrentVersion()
         {
-            return VersionResolver.ResolveVersionDetailed();
+            return VersionResolver.ResolveVersionDetailed(_logger);
         }
 
         public void WriteVersion(VersionResolutionResult vR)

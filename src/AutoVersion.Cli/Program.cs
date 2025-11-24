@@ -25,18 +25,20 @@ namespace Solcogito.AutoVersion.Cli
         public static int Main(string[] args)
         {
             var schema = BuildSchema();
-
+            var logger = new Logger()
+                .WithMinimumLevel(LogLevel.Debug)
+                .WithSink(new ConsoleSink());
+            logger.Debug("Debug logging enabled.");
             // Help handling (no args or explicit help)
             if (args.Length == 0 ||
                 args[0].Equals("--help", StringComparison.OrdinalIgnoreCase) ||
                 args[0].Equals("-h", StringComparison.OrdinalIgnoreCase) ||
                 args[0].Equals("help", StringComparison.OrdinalIgnoreCase))
             {
-                Console.WriteLine(schema.GetHelp());
+                logger.Internal(schema.GetHelp());
                 return 0;
             }
 
-            var logger = new Solcogito.Common.LogScribe.Logger();
             var parser = new ArgParser();
             var result = parser.Parse(args, schema);
 
@@ -50,7 +52,7 @@ namespace Solcogito.AutoVersion.Cli
             // ----------------------------------------------------------------
             // Composition root: create concrete services here
             // ----------------------------------------------------------------
-            IVersionEnvironment env = new DefaultVersionEnvironment();
+            IVersionEnvironment env = new DefaultVersionEnvironment(logger);
 
             return CommandRouter.Run(result, schema, env, logger);
         }
