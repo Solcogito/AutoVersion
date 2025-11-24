@@ -80,4 +80,8 @@ _cache/
 _autoversion_temp/
 _autoversion_backup/
 
+## Private sections
+Media/
+GumroadPackage/
+
 # End of .gitignore
