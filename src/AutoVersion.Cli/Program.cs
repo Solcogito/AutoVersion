@@ -26,7 +26,7 @@ namespace Solcogito.AutoVersion.Cli
         {
             var schema = BuildSchema();
             var logger = new Logger()
-                .WithMinimumLevel(LogLevel.Debug)
+                .WithMinimumLevel(LogLevel.Info)
                 .WithSink(new ConsoleSink());
             logger.Debug("Debug logging enabled.");
             // Help handling (no args or explicit help)
