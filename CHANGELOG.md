@@ -6,8 +6,31 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [1.2.6] – 2025-11-25
+**Added**
 
-## [1.2.1] – 2025-11-21
+- New recursive, hierarchical help formatter providing Git-style expanded help.
+
+  - Root autoversion help now displays all nested commands (bump/major, bump/minor, bump/prerelease, etc.).
+
+  - Each subcommand now includes its flags, options, and positional arguments.
+
+  - Improved discoverability and UX for new users.
+
+**Changed**
+
+- HelpFormatter refactored to support structured indentation and multi-level command trees.
+
+- Root-level CLI help is now more descriptive and consistent with standard CLI conventions.
+
+**Improved**
+
+- Help output is clearer, more readable, and easier to navigate.
+
+- Documentation alignment with the new help behavior.
+
+
+## [1.2.5] – 2025-11-25
 
 ### Added
 - Comprehensive unit tests for all CLI commands (`current`, `set`, `bump`).
