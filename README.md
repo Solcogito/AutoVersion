@@ -1,5 +1,11 @@
 # AutoVersion Lite
 
+[![Build](https://github.com/Solcogito/AutoVersion/actions/workflows/ci.yml/badge.svg)](https://github.com/Solcogito/AutoVersion/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/Solcogito/AutoVersion)](https://github.com/Solcogito/AutoVersion/releases)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Downloads](https://img.shields.io/github/downloads/Solcogito/AutoVersion/total)](https://github.com/Solcogito/AutoVersion/releases)
+
+
 **AutoVersion Lite** is a lightweight, deterministic semantic-versioning CLI tool built with .NET 8.  
 It provides simple, predictable version bumping with zero configuration and cross-platform support.
 
