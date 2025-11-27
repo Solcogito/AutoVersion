@@ -1,45 +1,43 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <!-- Cli configurations -->
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <AssemblyName>AutoVersion</AssemblyName>
-    <OutputName>AutoVersion</OutputName>
-    <RootNamespace>Solcogito.AutoVersion.Cli</RootNamespace>
+    <!-- CLI project configuration -->
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <AssemblyName>AutoVersion</AssemblyName>
+        <OutputName>AutoVersion</OutputName>
+        <RootNamespace>Solcogito.AutoVersion.Cli</RootNamespace>
+    </PropertyGroup>
 
-  </PropertyGroup>
+    <!-- NuGet dependencies -->
+    <ItemGroup>
+        <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
+    </ItemGroup>
 
-  <!-- NuGet dependencies -->
-  <ItemGroup>
-    <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
-  </ItemGroup>
+    <!-- Reference the Core library -->
+    <!-- TODO: transfer this to a DLL when API automation is ready -->
+    <ItemGroup>
+        <ProjectReference Include="..\AutoVersion.Core\AutoVersion.Core.csproj" />
+    </ItemGroup>
 
-  <!-- Reference the Core library -->
-  <!-- TODO: transfert this to a dll!!! -->
-  <ItemGroup>
-    <ProjectReference Include="..\AutoVersion.Core\AutoVersion.Core.csproj" />
-  </ItemGroup>
+    <!-- External shared API DLL references -->
+    <ItemGroup>
+        <Reference Include="Solcogito.Common.Versioning">
+            <HintPath>$(SolutionDir)libs\Solcogito.Common.Versioning.dll</HintPath>
+            <CopyLocal>true</CopyLocal>
+        </Reference>
 
-  <!-- External shared API DLL references -->
-  <ItemGroup>
-    <Reference Include="Solcogito.Common.Versioning">
-      <HintPath>..\..\libs\Solcogito.Common.Versioning.dll</HintPath>
-      <CopyLocal>true</CopyLocal>
-    </Reference>
+        <Reference Include="Solcogito.Common.ArgForge">
+            <HintPath>$(SolutionDir)libs\Solcogito.Common.ArgForge.dll</HintPath>
+            <CopyLocal>true</CopyLocal>
+        </Reference>
 
-    <Reference Include="Solcogito.Common.ArgForge">
-      <HintPath>..\..\libs\Solcogito.Common.ArgForge.dll</HintPath>
-      <CopyLocal>true</CopyLocal>
-    </Reference>
-
-    <Reference Include="Solcogito.Common.LogScribe">
-        <HintPath>..\..\libs\Solcogito.Common.LogScribe.dll</HintPath>
-        <CopyLocal>true</CopyLocal>
-    </Reference>
-    
-  </ItemGroup>
+        <Reference Include="Solcogito.Common.LogScribe">
+            <HintPath>$(SolutionDir)libs\Solcogito.Common.LogScribe.dll</HintPath>
+            <CopyLocal>true</CopyLocal>
+        </Reference>
+    </ItemGroup>
 
 </Project>

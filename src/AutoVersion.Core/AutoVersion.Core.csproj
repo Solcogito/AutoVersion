@@ -1,26 +1,25 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <!-- External dependencies -->
-  <ItemGroup>
-    <Reference Include="Solcogito.Common.Versioning">
-      <HintPath>..\..\libs\Solcogito.Common.Versioning.dll</HintPath>
-      <Private>true</Private>
-    </Reference>
-    <Reference Include="Solcogito.Common.LogScribe">
-      <HintPath>..\..\libs\Solcogito.Common.LogScribe.dll</HintPath>
-      <Private>true</Private>
-    </Reference>
-  </ItemGroup>
+    <!-- External Solcogito API dependencies -->
+    <ItemGroup>
+        <Reference Include="Solcogito.Common.Versioning">
+            <HintPath>$(SolutionDir)libs\Solcogito.Common.Versioning.dll</HintPath>
+            <Private>true</Private>
+        </Reference>
 
-  <!-- Project settings -->
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <AssemblyName>AutoVersion.Core</AssemblyName>
-    <RootNamespace>Solcogito.AutoVersion.Core</RootNamespace>
-  </PropertyGroup>
+        <Reference Include="Solcogito.Common.LogScribe">
+            <HintPath>$(SolutionDir)libs\Solcogito.Common.LogScribe.dll</HintPath>
+            <Private>true</Private>
+        </Reference>
+    </ItemGroup>
+
+    <!-- Project settings -->
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <AssemblyName>AutoVersion.Core</AssemblyName>
+        <RootNamespace>Solcogito.AutoVersion.Core</RootNamespace>
+    </PropertyGroup>
 
 </Project>
-
-
