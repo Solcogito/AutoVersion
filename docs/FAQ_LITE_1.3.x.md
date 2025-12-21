@@ -1,4 +1,4 @@
-# ❓ FAQ — AutoVersion Lite v1.1.x
+# ❓ FAQ — AutoVersion v1.3.x
 
 This FAQ covers **ONLY the real features of AutoVersion Lite v1.1.x**.  
 All configuration, Git integration, changelog generation, Unity menus, templates, or artifact systems  
@@ -8,9 +8,9 @@ are **not part of AutoVersion Lite** and belong to other Solcogito tools.
 
 # 🧩 General
 
-## 🟦 What is AutoVersion Lite?
+## 🟦 What is AutoVersion?
 
-AutoVersion Lite is a lightweight, deterministic semantic-versioning CLI.
+AutoVersion is a lightweight, deterministic semantic-versioning CLI.
 
 It provides:
 - Reading versions from `version.txt` and/or `version.json`
@@ -20,7 +20,7 @@ It provides:
 - Safe dry-run functionality
 - Fully testable environment (no external dependencies)
 
-AutoVersion Lite does **not**:
+AutoVersion does **not**:
 - generate changelogs  
 - tag Git commits  
 - rename artifacts  
@@ -70,7 +70,7 @@ autoversion set 1.2.3
 autoversion bump patch
 autoversion bump minor
 autoversion bump major
-autoversion bump pre -p alpha
+autoversion bump prerelease --pre alpha
 ```
 
 Dry-run example:
@@ -139,7 +139,7 @@ Resolve by:
 - Use `--dry-run` before committing anything.  
 - Prefer prerelease labels during iterative development:
   ```
-  autoversion bump pre -p beta
+  autoversion bump prerelease --pre beta
   ```
 - Keep only **one** version file unless both are needed.  
 - Commit version changes explicitly for clarity.  
@@ -149,7 +149,7 @@ Resolve by:
 # 🗂 Related Documentation
 
 - `AUTOVERSION_LITE.md` — Complete CLI reference  
-- `QUICKSTART_LITE_1.1.x.md` — Setup + basic usage  
+- `QUICKSTART_LITE_1.3.x.md` — Setup + basic usage  
 - `ARCHITECTURE.md` — Internal project design  
 
 ---

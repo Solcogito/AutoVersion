@@ -1,4 +1,4 @@
-# 🚀 QUICKSTART — AutoVersion Lite v1.1.x
+# 🚀 QUICKSTART — AutoVersion v1.3.x
 
 This guide helps you install and use **AutoVersion Lite v1.1.x** — a simple, deterministic semantic‑versioning CLI.
 
@@ -71,7 +71,7 @@ autoversion bump minor --dry-run
 
 Prerelease:
 ```bash
-autoversion bump pre -p alpha
+autoversion bump prerelease --pre alpha
 ```
 
 ---

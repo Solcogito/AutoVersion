@@ -1,4 +1,4 @@
-# ⚙️ WORKFLOWS — AutoVersion Lite v1.1.x
+# ⚙️ WORKFLOWS — AutoVersion Lite v1.3.x
 
 AutoVersion Lite v1.1.x has **no required CI workflow** and does not depend on external validation tasks.
 
@@ -36,8 +36,8 @@ This ensures your project builds and passes tests.
 
 ---
 
-## ❌ Removed from Lite
-The following should **not** be included in AutoVersion Lite usage:
+## ❌ Removed from AutoVersion
+The following should **not** be included in AutoVersion usage:
 
 - commitlint  
 - config validation  
@@ -51,10 +51,10 @@ These belong to *future or Pro features*.
 
 ---
 
-## [Pro Feature — Not available in AutoVersion Lite]
+## [Planned Feature — Not available in AutoVersion now]
 ### Advanced CI/CD Capabilities (reference only)
-AutoVersion Pro will support:
-- version‑aware release pipelines  
+AutoVersion will support:
+- version=aware release pipelines  
 - config validation   
 
 ---

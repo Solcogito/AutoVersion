@@ -1,4 +1,4 @@
-# 📘 AutoVersion Lite — CLI Reference (v1.1.x)
+# 📘 AutoVersion — CLI Reference (v1.3.x)
 
 This is the **official CLI reference** for **AutoVersion Lite v1.1.x**.  
 It documents ONLY features that exist in the Lite version.
@@ -57,7 +57,7 @@ autoversion bump <type> [-p label] [--dry-run]
 ```
 autoversion bump patch
 autoversion bump minor --dry-run
-autoversion bump pre -p alpha
+autoversion bump prerelease --pre alpha
 ```
 
 ---

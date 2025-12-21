@@ -1,14 +1,14 @@
-# AutoVersion Lite v1.1.x — README
+# AutoVersion v1.3.x — README
 
-AutoVersion Lite is a **simple, deterministic semantic versioning CLI tool** designed for small to medium projects that need clean and predictable version management without configuration files, Git integration, or Unity dependencies.
+AutoVersion is a **simple, deterministic semantic versioning CLI tool** designed for small to medium projects that need clean and predictable version management without configuration files, Git integration, or Unity dependencies.
 
 This README covers **ONLY the features supported in AutoVersion Lite v1.1.x**.
 
 ---
 
-# 🚀 What Is AutoVersion Lite?
+# 🚀 What Is AutoVersion?
 
-AutoVersion Lite provides:
+AutoVersion provides:
 
 - Semantic version parsing (SemVer 2.0.0)
 - Automatic version bumping
@@ -17,7 +17,7 @@ AutoVersion Lite provides:
 - Fully testable architecture
 - Cross-platform .NET 8 CLI
 
-AutoVersion Lite **does NOT** include:
+AutoVersion **does NOT** include:
 
 - autoversion.json configuration  
 - multi-file version propagation  
@@ -43,7 +43,6 @@ These features belong to *other Solcogito versioning tools*.
 ```bash
 git clone https://github.com/Solcogito/AutoVersion.git
 cd AutoVersion
-pwsh _Infrastructure/build.ps1
 ```
 
 This builds all projects and runs tests located in:
@@ -85,7 +84,7 @@ autoversion bump major
 
 ### Prerelease bumps
 ```bash
-autoversion bump pre -p alpha
+autoversion bump prerelease --pre alpha
 ```
 
 ### Dry-run

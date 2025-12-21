@@ -34,7 +34,6 @@ Clone and build:
 ```bash
 git clone https://github.com/Solcogito/AutoVersion.git
 cd AutoVersion
-pwsh _Infrastructure/build.ps1
 ```
 
 ## 🧭 Usage
@@ -58,7 +57,7 @@ autoversion bump major
 
 Prerelease example:
 ```bash
-autoversion bump pre -p alpha
+autoversion bump prerelease --pre alpha
 ```
 
 Dry-run:
