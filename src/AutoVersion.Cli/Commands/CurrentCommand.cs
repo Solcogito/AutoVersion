@@ -1,38 +1,69 @@
 // ============================================================================
 // File:        CurrentCommand.cs
-// Project:     AutoVersion Lite
-// Author:      Benoit Desrosiers (Solcogito S.E.N.C.)
-// -----------------------------------------------------------------------------
-// Description:
-//   Implements the `autoversion current` command.
-//   Retrieves the current project version using the version environment,
-//   prints it to stdout, and handles errors gracefully.
+// Project:     AutoVersion
 // ============================================================================
 
 using System;
-using Solcogito.Common.ArgForge;
-using Solcogito.Common.LogScribe;
+
 using Solcogito.AutoVersion.Core;
+using Solcogito.AutoVersion.Errors;
+using Solcogito.Common.Errors;
+using Solcogito.Common.IOKit;
+using Solcogito.Common.LogScribe;
+using Solcogito.Common.Versioning;
 
 namespace Solcogito.AutoVersion.Cli.Commands
 {
     internal static class CurrentCommand
     {
-        /// <summary>
-        /// Displays the current project version.
-        /// </summary>
-        public static int Execute(ArgResult args, IVersionEnvironment env, Logger logger)
+        public static int Execute(IVersionEnvironment env, ICliContext cli)
         {
+            string? explicitPath = null;
+
+            if (cli.Args.Options.TryGetValue("path", out var raw) &&
+                !string.IsNullOrWhiteSpace(raw))
+            {
+                try
+                {
+                    explicitPath = PathUtils.ToAbsolutePath(raw);
+                }
+                catch (Exception ex)
+                {
+                    env.Logger.Error(ErrorInfo.From(
+                        AutoVersionErrors.InvalidPath,
+                        "Invalid --path argument",
+                        ("path", raw),
+                        ("error", ex.Message)));
+                    return 1;
+                }
+            }
+
             try
             {
-                var version = env.GetCurrentVersion().Version;
-                logger.Internal(version.ToString());
+                VersionResolveResult res = env.GetCurrentVersions(explicitPath);
+
+                if (!res.HasFinal)
+                {
+                    env.Logger.Error(ErrorInfo.From(
+                        AutoVersionErrors.NoFinalVersion,
+                        "No version could be resolved.",
+                        ("path", explicitPath ?? "<defaults>")));
+                    return 2;
+                }
+
+                string output = res.Final!.Value.ToString();
+
+                // USER-VISIBLE CLI OUTPUT (captured by tests)
+                cli.Output.WriteLine(output);
+
                 return 0;
             }
             catch (Exception ex)
             {
-                logger.Error("Error reading current version: " + ex.Message);
-                return 1;
+                env.Logger.Error(ErrorInfo.Unexpected(
+                    AutoVersionErrors.CliFailure,
+                    ex));
+                return 2;
             }
         }
     }

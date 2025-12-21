@@ -1,4 +1,13 @@
-using System.Linq;
+// ============================================================================
+// File:        CurrentCommandTests.cs
+// Project:     AutoVersion.Tests
+// ----------------------------------------------------------------------------
+// License:     MIT
+// ============================================================================
+
+using System;
+
+using AutoVersion.Tests;
 
 using FluentAssertions;
 
@@ -8,6 +17,8 @@ using Solcogito.AutoVersion.Cli.Commands;
 using Solcogito.AutoVersion.Core;
 using Solcogito.AutoVersion.Tests.TestUtils;
 using Solcogito.Common.ArgForge;
+using Solcogito.Common.Errors;
+using Solcogito.Common.IOKit;
 using Solcogito.Common.LogScribe;
 using Solcogito.Common.Versioning;
 
@@ -15,61 +26,61 @@ using Xunit;
 
 namespace Solcogito.AutoVersion.Tests.Unit
 {
-    public class CurrentCommandTests
+    public sealed class CurrentCommandTests
     {
-        private Logger MakeLogger(out TestLogSink sink)
+        private static (Logger logger, TestLogSink sink) MakeLogger()
         {
-            sink = new TestLogSink();
-            return new Logger().WithSink(sink);
+            var sink = new TestLogSink();
+            var logger = new Logger()
+                .WithMinimumLevel(LogLevel.Debug)
+                .WithSink(sink);
+
+            return (logger, sink);
         }
 
-        private static VersionResolutionResult MakeResult(int major, int minor, int patch)
-        {
-            return new VersionResolutionResult
-            {
-                Version = new VersionModel(major, minor, patch),
-                FilePath = null,
-                Source = "test",
-                Success = true
-            };
-        }
-
-        // -------------------------------------------------------------
-        // SUCCESS PATH
-        // -------------------------------------------------------------
         [Fact]
-        public void Current_Should_Print_Version_And_Return0()
+        public void Current_PrintsVersion_Returns0()
         {
-            var env = new Mock<IVersionEnvironment>();
-            env.Setup(e => e.GetCurrentVersion()).Returns(MakeResult(1, 2, 3));
+            var (logger, logSink) = MakeLogger();
+            var env = VersionEnvironmentMock.Create(logger);
 
-            var logger = MakeLogger(out var sink);
+            env.Setup(e => e.GetCurrentVersions(null))
+               .Returns(new VersionResolveResult(
+                   checkedSources: new[] { "test" },
+                   successfulVersions: new[] { VersionModel.Parse("1.2.3") },
+                   errors: Array.Empty<ErrorInfo>(),
+                   final: VersionModel.Parse("1.2.3")
+               ));
 
-            var code = CurrentCommand.Execute(new ArgResult(), env.Object, logger);
+            var schema = TestSchemaFactory.Build();
+            var args = new ArgParser().Parse(schema, new[] { "current" });
+            var cli = new TestCliContext(args, schema);
+
+            int code = CurrentCommand.Execute(env.Object, cli);
 
             code.Should().Be(0);
 
-            // Check logger output instead of console
-            sink.Messages.Any(m => m.Text.Contains("1.2.3")).Should().BeTrue();
+            var outputSink = (BufferTextSink)cli.Output;
+            outputSink.Content.Should().Contain("1.2.3");
         }
 
-        // -------------------------------------------------------------
-        // ERROR PATH
-        // -------------------------------------------------------------
         [Fact]
-        public void Current_Should_Return1_On_Exception()
+        public void Current_Returns2_OnException()
         {
-            var env = new Mock<IVersionEnvironment>();
-            env.Setup(e => e.GetCurrentVersion())
-               .Throws(new System.Exception("boom"));
+            var (logger, sink) = MakeLogger();
+            var env = VersionEnvironmentMock.Create(logger);
 
-            var logger = MakeLogger(out var sink);
+            env.Setup(e => e.GetCurrentVersions(null))
+               .Throws(new Exception("boom"));
 
-            var code = CurrentCommand.Execute(new ArgResult(), env.Object, logger);
+            var schema = TestSchemaFactory.Build();
+            var args = new ArgParser().Parse(schema, new[] { "current" });
+            var cli = new TestCliContext(args, schema);
 
-            code.Should().Be(1);
+            int code = CurrentCommand.Execute(env.Object, cli);
 
-            sink.Messages.Any(m => m.Text.Contains("Error")).Should().BeTrue();
+            code.Should().Be(2);
+            sink.Content.Should().NotBeEmpty();
         }
     }
 }

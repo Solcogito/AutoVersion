@@ -6,6 +6,43 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [1.3.0] – 2025-12-20
+**Added**
+
+- Explicit, testable CLI output abstraction (`ITextSink`) separating user-facing output from logging.
+- Deterministic in-memory text sinks for unit and sandbox testing.
+- Minimal command-list emission for invalid subcommand errors, matching sandbox and UNIX CLI conventions.
+
+**Changed**
+
+- Standard output (`stdout`) is now reserved exclusively for user-visible command results and help text.
+- Standard error (`stderr`) is now reserved for diagnostics, errors, and dry-run informational messages.
+- Dry-run mode no longer emits any stdout output; all dry-run messaging is diagnostic-only.
+- Help routing behavior clarified:
+  - `--help` and root invocation emit full help to stdout.
+  - Invalid subcommands emit a minimal, ordered list of valid subcommands only.
+- Command router updated to emit contextual help on errors instead of full command usage blocks.
+- Logger configuration adjusted to prevent informational logs from leaking into stdout.
+
+**Fixed**
+
+- Multiple cases of stdout/stderr leakage detected by sandbox validation.
+- Inconsistent help output between valid, invalid, and error paths.
+- Non-deterministic CLI output affecting scriptability and CI usage.
+- Edge cases where help text was silently suppressed due to logging configuration.
+
+**Improved**
+
+- Full compliance with the AutoVersion sandbox specification.
+- Script-safe, composable CLI behavior suitable for CI pipelines and automation.
+- Clear, stable CLI contract suitable for long-term support and future 2.x evolution.
+
+**Notes**
+
+- This release represents a CLI contract stabilization.
+- No command names, flags, or versioning semantics were changed.
+- This is the final minor release before the next major version.
+---
 ## [1.2.6] – 2025-11-25
 **Added**
 

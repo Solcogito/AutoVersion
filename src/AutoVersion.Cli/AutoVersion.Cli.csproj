@@ -4,6 +4,18 @@
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <TargetFramework>net8.0</TargetFramework>
+
+        <!-- Single-file executable -->
+        <PublishSingleFile>true</PublishSingleFile>
+        <SelfContained>true</SelfContained>
+
+        <!-- Windows x64 (adjust if needed) -->
+        <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+
+        <!-- Clean behavior -->
+        <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+        <InvariantGlobalization>true</InvariantGlobalization>
+        
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <AssemblyName>AutoVersion</AssemblyName>
@@ -13,31 +25,17 @@
 
     <!-- NuGet dependencies -->
     <ItemGroup>
-        <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
-    </ItemGroup>
-
-    <!-- Reference the Core library -->
-    <!-- TODO: transfer this to a DLL when API automation is ready -->
-    <ItemGroup>
         <ProjectReference Include="..\AutoVersion.Core\AutoVersion.Core.csproj" />
-    </ItemGroup>
-
-    <!-- External shared API DLL references -->
-    <ItemGroup>
-        <Reference Include="Solcogito.Common.Versioning">
-            <HintPath>$(SolutionDir)libs\Solcogito.Common.Versioning.dll</HintPath>
-            <CopyLocal>true</CopyLocal>
-        </Reference>
-
-        <Reference Include="Solcogito.Common.ArgForge">
-            <HintPath>$(SolutionDir)libs\Solcogito.Common.ArgForge.dll</HintPath>
-            <CopyLocal>true</CopyLocal>
-        </Reference>
-
-        <Reference Include="Solcogito.Common.LogScribe">
-            <HintPath>$(SolutionDir)libs\Solcogito.Common.LogScribe.dll</HintPath>
-            <CopyLocal>true</CopyLocal>
-        </Reference>
+            
+        <PackageReference Include="System.CommandLine" />
+        
+        <!-- Solcogito Common -->
+        <PackageReference Include="Solcogito.Common.ArgForge" />
+        <PackageReference Include="Solcogito.Common.Versioning" />
+        <PackageReference Include="Solcogito.Common.LogScribe" />
+        <PackageReference Include="Solcogito.Common.Errors" />
+        <PackageReference Include="Solcogito.Common.IOKit" />
+        
     </ItemGroup>
 
 </Project>

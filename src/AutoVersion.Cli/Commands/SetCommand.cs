@@ -1,76 +1,110 @@
 // ============================================================================
 // File:        SetCommand.cs
-// Project:     AutoVersion Lite
-// Author:      Benoit Desrosiers (Solcogito S.E.N.C.)
-// -----------------------------------------------------------------------------
-// Description:
-//   Implements the `autoversion set <version>` command.
-//   Validates the semantic version string, performs optional dry-run behavior,
-//   resolves the version file location, and writes the new version using the
-//   environment abstraction. Errors are logged and surfaced with exit codes.
+// Project:     AutoVersion
+// Author:      Solcogito S.E.N.C.
 // ============================================================================
 
 using System;
-using Solcogito.Common.Versioning;
-using Solcogito.Common.ArgForge;
-using Solcogito.Common.LogScribe;
+
 using Solcogito.AutoVersion.Core;
+using Solcogito.AutoVersion.Errors;
+using Solcogito.Common.Errors;
+using Solcogito.Common.IOKit;
+using Solcogito.Common.Versioning;
 
 namespace Solcogito.AutoVersion.Cli.Commands
 {
     internal static class SetCommand
     {
-        public static int Execute(ArgResult args, IVersionEnvironment env, Logger logger)
+        public static int Execute(IVersionEnvironment env, ICliContext cli)
         {
-            bool dryRun = args.HasFlag("dry-run");
+            bool dryRun = cli.Args.Flags.GetValueOrDefault("dry-run");
 
-            if (!args.Positionals.TryGetValue("version", out var versionString) ||
-                string.IsNullOrWhiteSpace(versionString))
+            if (cli.Args.Positionals.Count == 0 ||
+                string.IsNullOrWhiteSpace(cli.Args.Positionals[0]))
             {
-                
-                logger.Error("Missing required version argument for 'set'.");
+                env.Logger.Error(ErrorInfo.From(
+                    AutoVersionErrors.MissingVersion,
+                    "Missing required version argument"));
                 return 1;
             }
 
-            VersionModel newVersion;
+            string rawVersion = cli.Args.Positionals[0];
 
+            VersionModel newVersion;
             try
             {
-                newVersion = VersionModel.Parse(versionString);
+                newVersion = VersionModel.Parse(rawVersion);
             }
             catch (Exception ex)
             {
-                logger.Error($"Invalid version '{versionString}': {ex.Message}");
+                env.Logger.Error(ErrorInfo.From(
+                    AutoVersionErrors.InvalidVersion,
+                    "Invalid version string",
+                    ("value", rawVersion),
+                    ("error", ex.Message)));
                 return 1;
+            }
+
+            string? explicitPath = null;
+
+            if (cli.Args.Options.TryGetValue("path", out var rawPath) &&
+                !string.IsNullOrWhiteSpace(rawPath))
+            {
+                try
+                {
+                    explicitPath = PathUtils.ToAbsolutePath(rawPath);
+                }
+                catch (Exception ex)
+                {
+                    env.Logger.Error(ErrorInfo.From(
+                        AutoVersionErrors.InvalidPath,
+                        "Invalid --path argument",
+                        ("path", rawPath),
+                        ("error", ex.Message)));
+                    return 1;
+                }
             }
 
             try
             {
-                var cV = env.GetCurrentVersion();
-
-                var versionFilePath = cV.FilePath;
-
-                if (string.IsNullOrWhiteSpace(versionFilePath))
-                {
-                    logger.Error("Version file path is empty or could not be resolved.");
-                    return 2;
-                }
-
                 if (dryRun)
                 {
-                    logger.Info($"[DRY-RUN] Would set version to: {newVersion}");
-                }
-                else
-                {
-                    env.WriteVersion(newVersion);
-                    logger.Info($"Version set to: {newVersion}");
+                    env.Logger.Info("[DRY-RUN] Would set version to: " + newVersion);
+                    return 0;
                 }
 
+                if (!string.IsNullOrWhiteSpace(explicitPath))
+                {
+                    env.WriteVersion(newVersion, explicitPath);
+                    env.Logger.Info("Version set to: " + newVersion);
+                    return 0;
+                }
+
+                VersionResolveResult resolved = env.GetCurrentVersions(null);
+
+                if (!resolved.HasFinal)
+                {
+                    env.Logger.Error(ErrorInfo.From(
+                        AutoVersionErrors.MissingPath,
+                        "No default version files found. Use --path to specify a write target."));
+                    return 1;
+                }
+
+                // IMPORTANT:
+                // Writing applies to ALL discovered default sources.
+                foreach (string source in resolved.CheckedSources)
+                {
+                    env.WriteVersion(newVersion, source);
+                }
+
+                env.Logger.Info("Version set to: " + newVersion);
                 return 0;
             }
             catch (Exception ex)
             {
-                logger.Error("Error setting version: " + ex.Message);
+                env.Logger.Error(
+                    ErrorInfo.Unexpected(AutoVersionErrors.WriteFailed, ex));
                 return 2;
             }
         }

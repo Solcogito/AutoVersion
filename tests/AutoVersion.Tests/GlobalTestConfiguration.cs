@@ -1,20 +1,34 @@
 // ============================================================================
 // File:        GlobalTestConfiguration.cs
-// Project:     AutoVersion Lite (Unified Test Suite)
-// Version:     0.8.0
+// Project:     AutoVersion Lite (Unit Tests)
 // Author:      Solcogito S.E.N.C.
 // ----------------------------------------------------------------------------
 // Description:
-//   Global xUnit configuration. Disables test parallelization because the CLI
-//   layer uses global Console streams, which cannot safely be captured from
-//   multiple tests at the same time.
+//   Global test configuration for the AutoVersion test suite.
+//   Forces invariant culture and predictable environment behavior so tests are
+//   deterministic across machines and CI.
 // ----------------------------------------------------------------------------
 // License:     MIT
 // ============================================================================
 
-// IMPORTANT: Using directives MUST COME BEFORE the assembly attribute.
+using System.Globalization;
+
 using Xunit;
 
-// IMPORTANT: Assembly attribute MUST BE OUTSIDE any namespace,
-// and MUST come AFTER using directives.
-[assembly: CollectionBehavior(DisableTestParallelization = true)]
+namespace Solcogito.AutoVersion.Tests
+{
+    [CollectionDefinition(Name)]
+    public sealed class GlobalTestCollection : ICollectionFixture<GlobalTestConfiguration>
+    {
+        public const string Name = "GlobalTestCollection";
+    }
+
+    public sealed class GlobalTestConfiguration
+    {
+        public GlobalTestConfiguration()
+        {
+            CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
+            CultureInfo.CurrentUICulture = CultureInfo.InvariantCulture;
+        }
+    }
+}

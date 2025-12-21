@@ -37,23 +37,31 @@ namespace Solcogito.AutoVersion.Core
         /// <param name="preRelease">Optional prerelease tag override.</param>
         /// <returns>A new <see cref="VersionModel"/> instance with the incremented version.</returns>
         /// <exception cref="ArgumentException">Thrown if <paramref name="bumpType"/> is invalid.</exception>
-        public static VersionModel Bump(VersionModel current, string bumpType, string? preRelease = null)
+        public static VersionModel Bump(
+            VersionModel? current,
+            string bumpType,
+            string? preRelease = null)
         {
             if (string.IsNullOrWhiteSpace(bumpType))
                 throw new ArgumentException("Bump type must be specified.", nameof(bumpType));
 
             bumpType = bumpType.Trim().ToLowerInvariant();
 
+            if (current is null)
+                throw new ArgumentException("Current version is null.", nameof(current));
+
+            // Rebind to non-null local (this is the critical step)
+            VersionModel c = (VersionModel)current;
+
             return bumpType switch
             {
-                "major" => new VersionModel(current.Major + 1, 0, 0),
-                "minor" => new VersionModel(current.Major, current.Minor + 1, 0),
-                "patch" => new VersionModel(current.Major, current.Minor, current.Patch + 1),
-                "prerelease" => HandlePrerelease(current, preRelease),
-                _ => throw new ArgumentException($"Unknown bump type '{bumpType}'.", nameof(bumpType))
+                "major" => new VersionModel(c.Major + 1, 0, 0),
+                "minor" => new VersionModel(c.Major, c.Minor + 1, 0),
+                "patch" => new VersionModel(c.Major, c.Minor, c.Patch + 1),
+                "prerelease" => HandlePrerelease(c, preRelease),
+                _ => throw new ArgumentException($"Unknown bump type: {bumpType}", nameof(bumpType))
             };
         }
-
         /// <summary>
         /// Attempts to bump a version string safely.
         /// </summary>
@@ -85,10 +93,10 @@ namespace Solcogito.AutoVersion.Core
         {
             // Use provided prerelease tag override, or increment existing one.
             if (!string.IsNullOrEmpty(preRelease))
-                return new VersionModel(current.Major, current.Minor, current.Patch, preRelease, current.Metadata);
+                return new VersionModel(current.Major, current.Minor, current.Patch, preRelease);
 
-            var nextPre = IncrementPrerelease(current.PreRelease);
-            return new VersionModel(current.Major, current.Minor, current.Patch, nextPre, current.Metadata);
+            var nextPre = IncrementPrerelease(current.Pre);
+            return new VersionModel(current.Major, current.Minor, current.Patch, nextPre);
         }
 
         /// <summary>

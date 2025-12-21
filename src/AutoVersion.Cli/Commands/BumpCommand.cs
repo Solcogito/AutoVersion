@@ -1,186 +1,148 @@
 // ============================================================================
 // File:        BumpCommand.cs
-// Project:     AutoVersion Lite
-// Version:     0.8.0 (DI-enabled)
+// Project:     AutoVersion
 // Author:      Solcogito S.E.N.C.
-// ----------------------------------------------------------------------------
-// Description:
-//   Fully dependency-injected implementation of the "bump" command.
-//   All version resolution, file write operations, and logging now go
-//   through IVersionEnvironment and LogScribe, making the command fully
-//   unit-testable without filesystem access.
-// ----------------------------------------------------------------------------
-// License:     MIT
 // ============================================================================
 
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+
 using Solcogito.AutoVersion.Core;
+using Solcogito.AutoVersion.Errors;
+using Solcogito.Common.Errors;
+using Solcogito.Common.IOKit;
 using Solcogito.Common.Versioning;
-using Solcogito.Common.LogScribe;
-using Solcogito.Common.ArgForge;
 
 namespace Solcogito.AutoVersion.Cli.Commands
 {
-    public static class BumpCommand
+    internal static class BumpCommand
     {
-        // --------------------------------------------------------------------
-        // Handler dictionary — DI-aware command dispatch
-        // --------------------------------------------------------------------
-        private static readonly Dictionary<string, Func<ArgResult, IVersionEnvironment, Logger, int>> _handlers =
-            new(StringComparer.OrdinalIgnoreCase)
+        private static readonly Dictionary<string, Func<IVersionEnvironment, ICliContext, int>>
+            Handlers = new(StringComparer.OrdinalIgnoreCase)
             {
-                { "patch",      (args, env, logger) => ExecuteBump(args, "patch", env, logger) },
-                { "minor",      (args, env, logger) => ExecuteBump(args, "minor", env, logger) },
-                { "major",      (args, env, logger) => ExecuteBump(args, "major", env, logger) },
+                { "patch",      (e, c) => ExecuteBump("patch", null, e, c) },
+                { "minor",      (e, c) => ExecuteBump("minor", null, e, c) },
+                { "major",      (e, c) => ExecuteBump("major", null, e, c) },
                 { "prerelease", ExecutePrerelease }
             };
 
-        // --------------------------------------------------------------------
-        // Entry point (DI-enabled)
-        // --------------------------------------------------------------------
-        public static int Execute(ArgResult args, IVersionEnvironment env, Logger logger)
+        public static int Execute(IVersionEnvironment env, ICliContext cli)
         {
-            if (args.CommandName != null &&
-                _handlers.TryGetValue(args.CommandName, out var handler))
-                return handler(args, env, logger);
+            var cmd = cli.Args.Command;
 
-            logger.Error($"Unknown bump type: {args.CommandName}");
-            return 1;
+            if (cmd == null)
+            {
+                env.Logger.Error(ErrorInfo.From(
+                    AutoVersionErrors.MissingCommand,
+                    "No bump type provided"));
+                return 1;
+            }
+
+            if (!Handlers.TryGetValue(cmd.Name, out var handler))
+            {
+                env.Logger.Error(ErrorInfo.From(
+                    AutoVersionErrors.UnknownBumpType,
+                    "Unknown bump type",
+                    ("type", cmd.Name)));
+                return 1;
+            }
+
+            return handler(env, cli);
         }
 
-        // ====================================================================
-        // GENERIC BUMP LOGIC (major/minor/patch)
-        // ====================================================================
         private static int ExecuteBump(
-            ArgResult args,
             string type,
+            string? prerelease,
             IVersionEnvironment env,
-            Logger logger)
+            ICliContext cli)
         {
-            bool dryRun = args.HasFlag("dry-run");
+            bool dryRun = cli.Args.Flags.GetValueOrDefault("dry-run");
 
-            try
+            string? explicitPath = null;
+
+            if (cli.Args.Options.TryGetValue("path", out var rawPath) &&
+                !string.IsNullOrWhiteSpace(rawPath))
             {
-                // Read version via DI
-                var cV = env.GetCurrentVersion();
-                var oldVersion = cV.Version;
-
-                // Use your real VersionBumper
-                var newVersion = VersionBumper.Bump(oldVersion, type, preRelease: null);
-
-                if (newVersion.Equals(default(VersionModel)))
+                try
                 {
-                    logger.Error("New version resolved to default (0.0.0). Aborting.");
-                    return 2;
+                    explicitPath = PathUtils.ToAbsolutePath(rawPath);
                 }
-
-                var path = cV.FilePath;
-                if (string.IsNullOrWhiteSpace(path))
+                catch (Exception ex)
                 {
-                    logger.Error("Version file path is empty. Aborting.");
-                    return 2;
-                }
-
-                // Dry-run: no I/O
-                if (dryRun)
-                {
-                    logger.Info($"[DRY-RUN] Would update version: {oldVersion} -> {newVersion}");
-                }
-                else
-                {
-                    logger.Info("Attempting to write version file...");
-                    env.WriteVersion(newVersion);
-                    logger.Info("Version file written successfully.");
-                }
-
-                logger.Info($"Version bump: {oldVersion} -> {newVersion}");
-
-                if (!dryRun)
-                    logger.Info($"Version bump complete: {newVersion}");
-                else
-                    logger.Info("Dry-run completed. No files were modified.");
-
-                return 0;
-            }
-            catch (Exception ex)
-            {
-                logger.Error("Bump failed: " + ex.Message);
-                return 2;
-            }
-        }
-
-        // ====================================================================
-        // PRERELEASE LOGIC (DI-enabled)
-        // ====================================================================
-        private static int ExecutePrerelease(
-            ArgResult args,
-            IVersionEnvironment env,
-            Logger logger)
-        {
-            bool dryRun = args.HasFlag("dry-run");
-
-            args.TryGetValue("pre", out var pre);
-
-            // Validate prerelease identifier BEFORE doing anything else
-            if (!string.IsNullOrWhiteSpace(pre))
-            {
-                var semverPreRegex = new Regex(@"^[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*$");
-
-                if (!semverPreRegex.IsMatch(pre))
-                {
-                    logger.Error($"Invalid prerelease tag: '{pre}'.");
-                    logger.Error("Allowed characters: [A-Za-z0-9-], separated by dots.");
+                    env.Logger.Error(ErrorInfo.From(
+                        AutoVersionErrors.InvalidPath,
+                        "Invalid --path argument",
+                        ("path", rawPath),
+                        ("error", ex.Message)));
                     return 1;
                 }
             }
 
             try
             {
-                var cV = env.GetCurrentVersion();
+                VersionResolveResult resolved =
+                    env.GetCurrentVersions(explicitPath);
 
-                var oldVersion = cV.Version;
-                var newVersion = VersionBumper.Bump(oldVersion, "prerelease", pre);
-
-                if (newVersion.Equals(default(VersionModel)))
+                if (!resolved.HasFinal)
                 {
-                    logger.Error("New version resolved to default (0.0.0). Aborting.");
-                    return 2;
+                    env.Logger.Error(ErrorInfo.From(
+                        AutoVersionErrors.MissingVersion,
+                        "No version found to bump",
+                        ("path", explicitPath ?? "<defaults>")));
+                    return 1;
                 }
 
-                var path = cV.FilePath;
-                if (string.IsNullOrWhiteSpace(path))
-                {
-                    logger.Error("Version file path is empty. Aborting.");
-                    return 2;
-                }
+                VersionModel? current = resolved.Final!;
+                VersionModel next = VersionBumper.Bump(current, type, prerelease);
 
                 if (dryRun)
                 {
-                    logger.Info($"[DRY-RUN] Would update version: {oldVersion} -> {newVersion}");
+                    env.Logger.Info(
+                        "[DRY-RUN] Would bump " + type + ": " +
+                        current + " -> " + next);
+                    return 0;
                 }
-                else
+
+                foreach (string source in resolved.CheckedSources)
                 {
-                    logger.Info("Attempting to write version file...");
-                    env.WriteVersion(newVersion);
-                    logger.Info("Version file written successfully.");
+                    env.WriteVersion(next, source);
                 }
 
-                logger.Info($"Version bump: {oldVersion} -> {newVersion}");
-
-                if (!dryRun)
-                    logger.Info($"Version bump complete: {newVersion}");
-                else
-                    logger.Info("Dry-run completed. No files were modified.");
+                env.Logger.Info(
+                    "Version bump (" + type + "): " +
+                    current + " -> " + next);
 
                 return 0;
             }
             catch (Exception ex)
             {
-                logger.Error("Prerelease bump failed: " + ex.Message);
+                env.Logger.Error(
+                    ErrorInfo.Unexpected(AutoVersionErrors.CliFailure, ex));
                 return 2;
             }
+        }
+
+        private static int ExecutePrerelease(
+            IVersionEnvironment env,
+            ICliContext cli)
+        {
+            cli.Args.Options.TryGetValue("pre", out var pre);
+
+            if (!string.IsNullOrWhiteSpace(pre))
+            {
+                var rx = new Regex(@"^[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*$");
+                if (!rx.IsMatch(pre))
+                {
+                    env.Logger.Error(ErrorInfo.From(
+                        AutoVersionErrors.InvalidPrerelease,
+                        "Invalid prerelease tag",
+                        ("value", pre)));
+                    return 1;
+                }
+            }
+
+            return ExecuteBump("prerelease", pre, env, cli);
         }
     }
 }

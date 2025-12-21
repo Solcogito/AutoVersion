@@ -1,16 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <!-- External Solcogito API dependencies -->
     <ItemGroup>
-        <Reference Include="Solcogito.Common.Versioning">
-            <HintPath>$(SolutionDir)libs\Solcogito.Common.Versioning.dll</HintPath>
-            <Private>true</Private>
-        </Reference>
-
-        <Reference Include="Solcogito.Common.LogScribe">
-            <HintPath>$(SolutionDir)libs\Solcogito.Common.LogScribe.dll</HintPath>
-            <Private>true</Private>
-        </Reference>
+        <!-- Solcogito Common -->
+        <PackageReference Include="Solcogito.Common.ArgForge" />
+        <PackageReference Include="Solcogito.Common.Versioning" />
+        <PackageReference Include="Solcogito.Common.LogScribe" />
+        <PackageReference Include="Solcogito.Common.Errors" />
+        <PackageReference Include="Solcogito.Common.IOKit" />
     </ItemGroup>
 
     <!-- Project settings -->

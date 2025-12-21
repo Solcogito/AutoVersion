@@ -1,0 +1,1 @@
+autoversion set 2.0.0 --path version.txt

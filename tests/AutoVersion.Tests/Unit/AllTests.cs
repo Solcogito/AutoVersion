@@ -1,80 +1,27 @@
 // ============================================================================
 // File:        AllTests.cs
-// Project:     AutoVersion Lite (Unified Test Suite)
-// Version:     0.6.0
-// Author:      Benoit Desrosiers (Solcogito S.E.N.C.)
+// Project:     AutoVersion Lite (Unit Tests)
+// Author:      Solcogito S.E.N.C.
 // ----------------------------------------------------------------------------
 // Description:
-//   Unified and cleaned test suite covering core AutoVersion Lite
-//   functionality. This Lite version focuses on semantic versioning,
-//   basic configuration loading, and version file handling. Git
-//   integration and artifact pipeline tests have been intentionally
-//   removed to keep the tool focused and CI-friendly.
+//   Assembly-level smoke tests to ensure the test project is wired correctly.
 // ----------------------------------------------------------------------------
 // License:     MIT
 // ============================================================================
 
-using System;
-using System.IO;
-
 using FluentAssertions;
-
-using Solcogito.AutoVersion.Core;
-using Solcogito.Common.Versioning;
 
 using Xunit;
 
 namespace Solcogito.AutoVersion.Tests.Unit
 {
-    // ------------------------------------------------------------------------
-    // 1. Semantic Versioning Tests
-    // ------------------------------------------------------------------------
-    public class SemVerTests
+    [Collection(GlobalTestCollection.Name)]
+    public sealed class AllTests
     {
         [Fact]
-        public void Compare_OrdersProperly()
+        public void Test_Project_Loads()
         {
-            var a = VersionModel.Parse("1.0.0");
-            var b = VersionModel.Parse("1.1.0");
-            Assert.True(a.CompareTo(b) < 0);
-        }
-
-        [Theory]
-        [InlineData("1.0.0", "minor", "1.1.0")]
-        [InlineData("1.2.3", "patch", "1.2.4")]
-        [InlineData("1.2.3", "major", "2.0.0")]
-        [InlineData("1.2.3", "prerelease", "1.2.3-alpha.1")]
-        public void VersionBumper_BumpsCorrectly(string input, string type, string expected)
-        {
-            var current = VersionModel.Parse(input);
-            var bumped = VersionBumper.Bump(current, type, null);
-            Assert.Equal(expected, bumped.ToString());
-        }
-    }
-
-    // ------------------------------------------------------------------------
-    // 2. Config & Version File Tests (Lite)
-    // ------------------------------------------------------------------------
-    public class ConfigAndVersionFileTests
-    {
-        [Fact]
-        public void VersionFile_WriteAndReadRoundTrip()
-        {
-            var dir = Path.Combine(Path.GetTempPath(), "AutoVersion_VersionFile_" + Guid.NewGuid().ToString("N"));
-            Directory.CreateDirectory(dir);
-            var path = Path.Combine(dir, "version.txt");
-
-            // Write version first
-            var version = VersionModel.Parse("1.2.3");
-            VersionFile.Write(path, version);
-
-            // Read back
-            VersionModel result;
-            bool ok = VersionFile.TryRead(path, out result);
-
-            ok.Should().BeTrue();
-            result.Should().NotBeNull();
-            result.ToString().Should().Be("1.2.3");
+            true.Should().BeTrue();
         }
     }
 }

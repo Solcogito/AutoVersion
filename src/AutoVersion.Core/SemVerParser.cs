@@ -46,8 +46,7 @@ namespace Solcogito.AutoVersion.Core
                 int.Parse(match.Groups["major"].Value),
                 int.Parse(match.Groups["minor"].Value),
                 int.Parse(match.Groups["patch"].Value),
-                match.Groups["pre"].Success ? match.Groups["pre"].Value : null,
-                match.Groups["build"].Success ? match.Groups["build"].Value : null
+                match.Groups["pre"].Success ? match.Groups["pre"].Value : null
             );
             return true;
         }

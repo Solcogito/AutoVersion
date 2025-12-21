@@ -1,95 +1,254 @@
 // ============================================================================
 // File:        Program.cs
 // Project:     AutoVersion Lite
-// Version:     0.7.0
-// Author:      Benoit Desrosiers (Solcogito S.E.N.C.)
+// Author:      Solcogito S.E.N.C.
 // ----------------------------------------------------------------------------
 // Description:
-//   Application entrypoint. Builds the CLI schema, parses arguments using
-//   ArgForge, and forwards execution to the CommandRouter with injected
-//   services (version environment + logger).
+//   CLI entrypoint for AutoVersion Lite.
 // ----------------------------------------------------------------------------
 // License:     MIT
 // ============================================================================
 
 using System;
+using System.Collections.Generic;
+
+using Solcogito.AutoVersion.Cli;
+using Solcogito.AutoVersion.Cli.Commands;
+using Solcogito.AutoVersion.Core;
 using Solcogito.Common.ArgForge;
 using Solcogito.Common.LogScribe;
-using Solcogito.AutoVersion.Core;
-using System.Net.WebSockets;
+using Solcogito.Common.Versioning;
+using Solcogito.Common.IOKit;
 
-namespace Solcogito.AutoVersion.Cli
+namespace Solcogito.AutoVersion
 {
     public static class Program
     {
         public static int Main(string[] args)
         {
-            var schema = BuildSchema();
-            var logger = new Logger()
-                .WithMinimumLevel(LogLevel.Info)
-                .WithSink(new ConsoleSink());
-            logger.Debug("Debug logging enabled.");
-            // Help handling (no args or explicit help)
-            if (args.Length == 0 ||
-                args[0].Equals("--help", StringComparison.OrdinalIgnoreCase) ||
-                args[0].Equals("-h", StringComparison.OrdinalIgnoreCase) ||
-                args[0].Equals("help", StringComparison.OrdinalIgnoreCase))
+            ArgSchema schema = BuildSchema();
+            Logger logger = CreateLogger();
+
+            if (ShouldExitWithHelp(args))
             {
-                logger.Internal(schema.GetHelp());
+                var helpCliContext = CreateCliContext(
+                    new ArgParser().Parse(schema, Array.Empty<string>()),
+                    schema);
+
+                WriteRootHelp(schema, helpCliContext!);
                 return 0;
             }
 
+            ArgResult parsedArgs = ParseArguments(schema, args, logger);
+            if (!parsedArgs.IsValid)
+                return 1;
+
+            IVersionEnvironment versionEnvironment =
+                CreateVersionEnvironment(parsedArgs, logger);
+
+            ICliContext? cliContext =
+                CreateCliContext(parsedArgs, schema);
+
+            return RouteExecution(versionEnvironment, cliContext!);
+        }
+
+        // ====================================================================
+        // Schema
+        // ====================================================================
+
+        private static ArgSchema BuildSchema()
+        {
+            var schema = ArgSchema.Create(
+                "autoversion",
+                "Semantic versioning tool"
+            );
+
+            schema.Flag(
+                "dry-run",
+                null,
+                "--dry-run",
+                "Simulate operation, do not write files"
+            );
+
+            schema.Flag(
+                "no-normalize",
+                null,
+                "--no-normalize",
+                "Do not normalize when multiple version files are found"
+            );
+
+            schema.Option(
+                "path",
+                "-p",
+                "--path",
+                "Explicit path to version file",
+                requiredFlag: false
+            );
+
+            schema.Command(
+                "current",
+                "Show the current version"
+            );
+
+            schema.Command(
+                "set",
+                "Set the version directly",
+                cmd =>
+                {
+                    cmd.Positional(
+                        "version",
+                        index: 0,
+                        description: "Version to set (e.g., 1.2.3)",
+                        required: true
+                    );
+                }
+            );
+
+            schema.Command(
+                "bump",
+                "Increment version components",
+                bump =>
+                {
+                    bump.Command("patch", "Increment patch version");
+                    bump.Command("minor", "Increment minor version");
+                    bump.Command("major", "Increment major version");
+
+                    bump.Command(
+                        "prerelease",
+                        "Increment prerelease version",
+                        pre =>
+                        {
+                            pre.Option(
+                                "pre",
+                                null,
+                                "--pre",
+                                "Prerelease tag (alpha.1, rc.2, etc.)",
+                                requiredFlag: false
+                            );
+                        }
+                    );
+                }
+            );
+
+            return schema;
+        }
+
+        // ====================================================================
+        // Logging
+        // ====================================================================
+
+        private static Logger CreateLogger()
+        {
+            return new Logger()
+                .WithMinimumLevel(LogLevel.Info)
+                .WithSink(new ConsoleSink(ConsoleSinkRole.Stderr));
+        }
+
+        // ====================================================================
+        // Help / Early Exit
+        // ====================================================================
+
+        private static bool ShouldExitWithHelp(string[] args)
+        {
+            if (args.Length == 0)
+                return true;
+
+            foreach (var arg in args)
+            {
+                if (arg.Equals("-h", StringComparison.OrdinalIgnoreCase) ||
+                    arg.Equals("--help", StringComparison.OrdinalIgnoreCase) ||
+                    arg.Equals("help", StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static void WriteRootHelp(
+            ArgSchema schema,
+            ICliContext cli)
+        {
+            cli.Output.WriteLine(cli.Help.Format(schema));
+        }
+
+        // ====================================================================
+        // Argument Parsing
+        // ====================================================================
+
+        private static ArgResult ParseArguments(
+            ArgSchema schema,
+            string[] args,
+            Logger logger)
+        {
             var parser = new ArgParser();
-            var result = parser.Parse(args, schema);
+            ArgResult result = parser.Parse(schema, args);
 
             if (!result.IsValid)
             {
-                logger.Error("Error: " + result.Error);
-                logger.Internal(schema.GetHelp());
-                return 1;
+                logger.Error(result.Error!);
             }
 
-            // ----------------------------------------------------------------
-            // Composition root: create concrete services here
-            // ----------------------------------------------------------------
-            IVersionEnvironment env = new DefaultVersionEnvironment(logger);
-
-            return CommandRouter.Run(result, schema, env, logger);
+            return result;
         }
 
-        // =====================================================================
-        // SCHEMA DEFINITION
-        // =====================================================================
-        private static ArgSchema BuildSchema()
+        // ====================================================================
+        // Environment Construction
+        // ====================================================================
+
+        private static IVersionEnvironment CreateVersionEnvironment(
+            ArgResult args,
+            Logger logger)
         {
-            var schema = ArgSchema.Create("autoversion", "Semantic versioning tool");
+            IReadOnlyList<FileVersionSource> defaultSources =
+                CreateDefaultVersionSources();
 
-            // GLOBAL FLAGS
-            schema.Flag("dry-run", null, "--dry-run", "Simulate operation, do not write files");
+            bool allowNormalize = !args.Flags.ContainsKey("no-normalize");
 
-            // current
-            schema.Command("current", "Show the current version");
+            return new DefaultVersionEnvironment(
+                configuredDefaultSources: defaultSources,
+                logger: logger,
+                allowNormalize: allowNormalize,
+                context: "AutoVersion CLI"
+            );
+        }
 
-            // set <version>
-            schema.Command("set", "Set the version directly", cmd =>
+        private static ICliContext? CreateCliContext(
+            ArgResult args,
+            ArgSchema schema)
+        {
+            // USER-VISIBLE CLI OUTPUT SINK
+            ITextSink output = new ConsoleTextSink();
+
+            // HELP FORMATTER (presentation concern)
+            HelpFormatter help = new HelpFormatter();
+
+            return new DefaultCliContext(
+                args,
+                schema,
+                help,
+                output);
+        }
+
+        private static IReadOnlyList<FileVersionSource> CreateDefaultVersionSources()
+        {
+            return new List<FileVersionSource>
             {
-                cmd.Positional("version", 0, "Version to set (e.g., 1.2.3)", required: true);
-            });
+                new FileVersionSource("version.txt"),
+                new FileVersionSource("version.json"),
+            };
+        }
 
-            // bump <patch|minor|major|prerelease>
-            schema.Command("bump", "Increment version components", bump =>
-            {
-                bump.Command("patch", "Increment patch version");
-                bump.Command("minor", "Increment minor version");
-                bump.Command("major", "Increment major version");
+        // ====================================================================
+        // Execution
+        // ====================================================================
 
-                bump.Command("prerelease", "Increment prerelease version", pre =>
-                {
-                    pre.Option("pre", "-p", "--pre", "Tag name for prerelease bump (alpha.1, rc.2, etc.)", requiredFlag: false);
-                });
-            });
-
-            return schema;
+        private static int RouteExecution(
+            IVersionEnvironment environment,
+            ICliContext cliContext)
+        {
+            return CommandRouter.Run(environment, cliContext);
         }
     }
 }
